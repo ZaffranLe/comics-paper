@@ -1,0 +1,56 @@
+openapi: "3.0.3"
+info:
+  title: Comics Paper Server
+  version: "1.0"
+servers:
+  - url: https://api.server.test/v1
+paths:
+  /users/signup:
+    post:
+      description: "Sign up for new account"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                nickname:
+                  type: string
+              required:
+                - username
+                - password
+                - email
+
+      responses:
+        "200":
+          description: Successfully registration
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/User"
+
+        400:
+          description: Missing username, password or email
+components:
+  schemas:
+    User:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        username:
+          type: string
+        nickname:
+          type: string
+        email:
+          type: string
+          format: email
