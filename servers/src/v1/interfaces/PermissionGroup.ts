@@ -5,6 +5,7 @@ export interface PermissionGroup {
 }
 
 export enum PermissionGroupEnum {
-  Admin = "admin",
-  User = "user",
+  ADMIN = 0,
+  USER,
+  // GUEST,
 }

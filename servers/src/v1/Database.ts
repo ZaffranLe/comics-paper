@@ -1,6 +1,9 @@
 import DatabaseBuilder, { createTable } from "./utils/DatabaseBuilder";
 import { Logger } from "./utils/Logger";
 
+/**
+ * Table constants to map table naming.
+ */
 export const Tables = {
   // User
   User: "users",
@@ -14,7 +17,7 @@ export async function setupDatabase() {
   console.log("Setting up database");
   // Permission group
   await createTable(Tables.PermissionGroup, (table) => {
-    table.increments("id").primary();
+    table.integer("id").primary();
     table.string("name").notNullable();
     table.string("description").notNullable();
   });
@@ -26,7 +29,8 @@ export async function setupDatabase() {
     table.string(`description`).notNullable();
     table.integer(`permission_group`).notNullable();
   });
-  // ...
+
+  // Users
   await createTable(Tables.User, (table) => {
     Logger.info(`Creating table ${Tables.User}`);
     table.increments("id").primary();
