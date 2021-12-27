@@ -1,23 +1,36 @@
+import { PermissionController } from "./controllers/PermissionController";
 import { Locale } from "./Locale";
 import { Logger } from "./utils/Logger";
 import { PermissionGroupController } from "./controllers/PermissionGroupController";
 import { PermissionGroupEnum } from "./interfaces/PermissionGroup";
+import { PermissionEnum } from "./interfaces/Permission";
 
+/**
+ * Generate a permission group whether not existed.
+ */
 async function generatePermissionGroup(
   id: number,
   name: string,
   description: string
 ) {
   if (!(await PermissionGroupController.hasPermissionGroup(id))) {
-    Logger.info(
-      (
-        await PermissionGroupController.createPermissionGroup(
-          id,
-          name,
-          description
-        )
-      ).toString()
+    Logger.info(`Generating permission group ${id} (${name})...`);
+    await PermissionGroupController.createPermissionGroup(
+      id,
+      name,
+      description
     );
+  }
+}
+
+async function generatePermission(
+  id: number,
+  name: string,
+  description: string
+) {
+  if (!(await PermissionController.hasPermission(id))) {
+    Logger.info(`Generating permission ${id} (${name})...`);
+    await PermissionController.createPermission(id, name, description);
   }
 }
 
@@ -63,51 +76,16 @@ async function setupPermissionGroup() {
 async function setupPermission() {
   Logger.info(`Setting up permission...`);
 
-  // // Admin
-  // await PermissionGroupController.addPermissionToGroup(
-  //   PermissionGroupEnum.ADMIN,
-  //   "admin.create"
-  // );
-  // await PermissionGroupController.addPermissionToGroup(
-  //   PermissionGroupEnum.ADMIN,
-  //   "admin.delete"
-  // );
-  // await PermissionGroupController.addPermissionToGroup(
-  //   PermissionGroupEnum.ADMIN,
-  //   "admin.edit"
-  // );
-  // await PermissionGroupController.addPermissionToGroup(
-  //   PermissionGroupEnum.ADMIN,
-  //   "admin.list"
-  // );
+  generatePermission(
+    PermissionEnum.ADMIN_CREATE_USER,
+    Locale.Permission.AdminCreateUser.Name,
+    Locale.Permission.AdminCreateUser.Description
+  );
 
-  // // User
-  // await PermissionGroupController.addPermissionToGroup(
-  //   PermissionGroupEnum.USER,
-  //   "user.create"
-  // );
-  // await PermissionGroupController.addPermissionToGroup(
-  //   PermissionGroupEnum.USER,
-  //   "user.delete"
-  // );
-  // await PermissionGroupController.addPermissionToGroup(
-  //   PermissionGroupEnum.USER,
-  //   "user.edit"
-  // );
-  // await PermissionGroupController.addPermissionToGroup(
-  //   PermissionGroupEnum.USER,
-  //   "user.list"
-  // );
-
-  // // Print all
-  // console.log(
-  //   "Current Permission Group",
-  //   await PermissionGroupController.getAllPermissionGroups()
-  // );
-  // Logger.info(`Permission setup completed.`);
+  console.log(
+    "All permissions: ",
+    await PermissionController.getAllPermissions()
+  );
 }
 
-export const PermissionInstance = {
-  setupPermissionGroup,
-  setupPermission,
-};
+export { setupPermissionGroup, setupPermission };

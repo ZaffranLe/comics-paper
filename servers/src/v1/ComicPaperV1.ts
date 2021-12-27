@@ -1,4 +1,4 @@
-import { PermissionInstance } from "./Permission";
+import { setupPermission, setupPermissionGroup } from "./Permission";
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import { setupDatabase } from "./Database";
@@ -14,7 +14,9 @@ async function main() {
   // Set up database
   await setupDatabase();
   // Setup permission groups
-  await PermissionInstance.setupPermissionGroup();
+  await setupPermissionGroup();
+  // Setup permission
+  await setupPermission();
 }
 
 main().catch(console.error);

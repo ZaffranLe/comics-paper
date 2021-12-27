@@ -1,4 +1,4 @@
-import DatabaseBuilder, { createTable } from "./utils/DatabaseBuilder";
+import { createTable } from "./utils/DatabaseBuilder";
 import { Logger } from "./utils/Logger";
 
 /**
@@ -19,7 +19,7 @@ export async function setupDatabase() {
   console.log("Setting up database");
   // Permission group
   await createTable(Tables.PermissionGroup, (table) => {
-    table.integer("id").primary();
+    table.increments("id").primary();
     table.string("name").notNullable();
     table.string("description").notNullable();
   });
@@ -29,7 +29,7 @@ export async function setupDatabase() {
     table.increments(`id`).primary();
     table.string(`name`).notNullable();
     table.string(`description`).notNullable();
-    table.integer(`permissionGroup`).notNullable();
+    // table.integer(`permissionGroup`).notNullable();
   });
 
   await createTable(Tables.PermissionInGroup, (table) => {
