@@ -41,11 +41,19 @@ async function setupPermissionGroup() {
     Locale.PermissionGroup.User.Description
   );
 
+  // Mod
+  generatePermissionGroup(
+    PermissionGroupEnum.MOD,
+    Locale.PermissionGroup.Mod.Name,
+    Locale.PermissionGroup.Mod.Description
+  );
+
   // Print all
   console.log(
     "Current Permission Group",
     await PermissionGroupController.getAllPermissionGroups()
   );
+
   Logger.info(`Permission group setup completed.`);
 }
 
