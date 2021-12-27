@@ -11,6 +11,8 @@ export const Tables = {
   PermissionGroup: "permission_groups",
   // Permissions
   Permission: "permissions",
+  // Permission in groups
+  PermissionInGroup: "permission_in_groups",
 };
 
 export async function setupDatabase() {
@@ -27,7 +29,12 @@ export async function setupDatabase() {
     table.increments(`id`).primary();
     table.string(`name`).notNullable();
     table.string(`description`).notNullable();
-    table.integer(`permission_group`).notNullable();
+    table.integer(`permissionGroup`).notNullable();
+  });
+
+  await createTable(Tables.PermissionInGroup, (table) => {
+    table.integer(`permissionGroup`).notNullable();
+    table.integer(`permissionId`).notNullable();
   });
 
   // Users
@@ -38,6 +45,6 @@ export async function setupDatabase() {
     table.string(`password`).unique().notNullable();
     table.string(`email`).unique().notNullable();
     table.string(`nickname`).notNullable();
-    table.boolean(`confirmed`).defaultTo(false);
+    // table.boolean(`confirmed`).defaultTo(false);
   });
 }
