@@ -26,7 +26,7 @@ const Configuration = {
       EnableLogging: true,
     },
   },
-  DEV: {
+  development: {
     Database: {
       Host: "localhost",
       Username: "root",

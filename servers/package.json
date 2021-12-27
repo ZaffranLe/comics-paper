@@ -2,7 +2,7 @@
   "name": "comics-paper-server",
   "private": "true",
   "scripts": {
-    "dev": "NODE_ENV=DEV nodemon -r dotenv/config src/Index.ts"
+    "dev": "NODE_ENV=development nodemon -r dotenv/config src/Index.ts"
   },
   "devDependencies": {
     "nodemon": "^2.0.15",

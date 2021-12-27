@@ -11,6 +11,7 @@ app.use(bodyParser.text());
 
 async function main() {
   console.log("Loading version 1.0");
+
   // Set up database
   await setupDatabase();
   // Setup permission groups
@@ -18,7 +19,6 @@ async function main() {
   // Setup permission
   await setupPermission();
 }
-
 main().catch(console.error);
 
 const ComicPaperV1 = app;

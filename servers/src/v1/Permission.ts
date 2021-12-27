@@ -131,4 +131,8 @@ async function setupDefaultPermissionRelation() {
   // TODO: add permissions to groups
 }
 
-export { setupPermissionGroup, setupPermission };
+export {
+  setupPermissionGroup,
+  setupPermission,
+  setupDefaultPermissionRelation,
+};
