@@ -1,4 +1,4 @@
-import { Permission } from "../interfaces/PermissionInterface";
+import { PermissionInterface } from "../interfaces/PermissionInterface";
 import { Tables } from "./../Database";
 import DatabaseBuilder from "../utils/DatabaseBuilder";
 
@@ -15,7 +15,7 @@ async function hasPermission(id: number) {
 
   const o = await DatabaseBuilder(Tables.PermissionGroup)
     .select()
-    .from<Permission>(Tables.Permission)
+    .from<PermissionInterface>(Tables.Permission)
     .where({ id })
     .first();
   return o !== undefined;

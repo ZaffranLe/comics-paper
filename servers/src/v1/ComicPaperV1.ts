@@ -1,4 +1,8 @@
-import { setupPermission, setupPermissionGroup } from "./Permission";
+import {
+  setupDefaultPermissionRelationship,
+  setupPermission,
+  setupPermissionGroup,
+} from "./Permission";
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import { setupDatabase } from "./Database";
@@ -18,6 +22,8 @@ async function main() {
   await setupPermissionGroup();
   // Setup permission
   await setupPermission();
+  // Setup relationship between permission groups and permissions
+  await setupDefaultPermissionRelationship();
 }
 main().catch(console.error);
 

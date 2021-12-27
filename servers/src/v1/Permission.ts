@@ -1,3 +1,4 @@
+import { PermissionRelationshipController } from "./controllers/PermissionRelationshipController";
 import { PermissionController } from "./controllers/PermissionController";
 import { Locale } from "./Locale";
 import { Logger } from "./utils/Logger";
@@ -34,6 +35,21 @@ async function generatePermission(
   if (!(await PermissionController.hasPermission(id))) {
     Logger.info(`Generating permission ${id} (${name})...`);
     await PermissionController.createPermission(id, name, description);
+  }
+}
+
+async function generateRelation(permissionId: number, permissionGroup: number) {
+  if (
+    !(await PermissionRelationshipController.hasRelation(
+      permissionId,
+      permissionGroup
+    ))
+  ) {
+    Logger.info(`Generating relation ${permissionId} (${permissionGroup})...`);
+    await PermissionRelationshipController.addRelation(
+      permissionId,
+      permissionGroup
+    );
   }
 }
 
@@ -126,12 +142,15 @@ async function setupPermission() {
   console.table(await PermissionController.getAllPermissions());
 }
 
-async function setupDefaultPermissionRelation() {
-  // TODO: add permissions to groups
+async function setupDefaultPermissionRelationship() {
+  // Admin permissions
+  
+
+  // User admin
 }
 
 export {
   setupPermissionGroup,
   setupPermission,
-  setupDefaultPermissionRelation,
+  setupDefaultPermissionRelationship,
 };
