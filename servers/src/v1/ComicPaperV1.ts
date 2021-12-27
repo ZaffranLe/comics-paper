@@ -16,5 +16,5 @@ MainApplication.init(app)
   })
   .catch(console.error);
 
-const ComicPaperV1 = app;
+const ComicPaperV1: express.Application = app;
 export default ComicPaperV1;

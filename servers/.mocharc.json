@@ -1,7 +1,8 @@
 {
   "require": ["ts-node/register"],
   "extensions": ["ts", "js"],
-  "watch-files": ["src/tests/**/*."],
   "inline-diffs": true,
-  "exit": true
+  "exit": true,
+  "watch-files": ["src/test/**/*.ts"],
+  "file": ["src/test/v1/Fixtures.spec.ts"]
 }
