@@ -1,3 +1,4 @@
+import { PermissionGroupEnum } from "./interfaces/PermissionGroupInterface";
 import { createTable } from "./utils/DatabaseBuilder";
 import { Logger } from "./utils/Logger";
 
@@ -13,6 +14,8 @@ export const Tables = {
   Permission: "permissions",
   // Permission in groups
   PermissionRelationship: "permission_relationships",
+  // Users permissions
+  UserPermission: "user_permissions",
 };
 
 export async function setupDatabase() {
@@ -39,12 +42,20 @@ export async function setupDatabase() {
 
   // Users
   await createTable(Tables.User, (table) => {
-    Logger.info(`Creating table ${Tables.User}`);
     table.increments("id").primary();
     table.string(`username`).unique().notNullable();
     table.string(`password`).unique().notNullable();
     table.string(`email`).unique().notNullable();
     table.string(`nickname`).notNullable();
     // table.boolean(`confirmed`).defaultTo(false);
+  });
+
+  // User permissions
+  await createTable(Tables.UserPermission, (table) => {
+    table.integer(`userId`).notNullable();
+    table
+      .integer(`permissionGroupId`)
+      .notNullable()
+      .defaultTo(PermissionGroupEnum.USER);
   });
 }
