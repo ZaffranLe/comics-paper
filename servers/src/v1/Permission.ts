@@ -2,8 +2,8 @@ import { PermissionController } from "./controllers/PermissionController";
 import { Locale } from "./Locale";
 import { Logger } from "./utils/Logger";
 import { PermissionGroupController } from "./controllers/PermissionGroupController";
-import { PermissionGroupEnum } from "./interfaces/PermissionGroup";
-import { PermissionEnum } from "./interfaces/Permission";
+import { PermissionGroupEnum } from "./interfaces/PermissionGroupInterface";
+import { PermissionEnum } from "./interfaces/PermissionInterface";
 
 /**
  * Generate a permission group whether not existed.

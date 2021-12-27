@@ -1,4 +1,4 @@
-import { Permission } from "../interfaces/Permission";
+import { Permission } from "../interfaces/PermissionInterface";
 import { Tables } from "./../Database";
 import DatabaseBuilder from "../utils/DatabaseBuilder";
 
