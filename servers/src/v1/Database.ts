@@ -12,7 +12,7 @@ export const Tables = {
   // Permissions
   Permission: "permissions",
   // Permission in groups
-  PermissionInGroup: "permission_in_groups",
+  PermissionRelationship: "permission_relationships",
 };
 
 export async function setupDatabase() {
@@ -32,7 +32,7 @@ export async function setupDatabase() {
     // table.integer(`permissionGroup`).notNullable();
   });
 
-  await createTable(Tables.PermissionInGroup, (table) => {
+  await createTable(Tables.PermissionRelationship, (table) => {
     table.integer(`permissionGroup`).notNullable();
     table.integer(`permissionId`).notNullable();
   });

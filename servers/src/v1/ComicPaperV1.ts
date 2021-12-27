@@ -6,6 +6,7 @@ import {
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import { setupDatabase } from "./Database";
+import { setupRoutes } from "./Router";
 
 const app = express();
 
@@ -24,7 +25,10 @@ async function main() {
   await setupPermission();
   // Setup relationship between permission groups and permissions
   await setupDefaultPermissionRelationship();
+  // Register routers
+  await setupRoutes(app);
 }
+
 main().catch(console.error);
 
 const ComicPaperV1 = app;

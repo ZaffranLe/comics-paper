@@ -38,7 +38,7 @@ async function generatePermission(
   }
 }
 
-async function generateRelation(permissionId: number, permissionGroup: number) {
+async function generateRelation(permissionGroup: number, permissionId: number) {
   if (
     !(await PermissionRelationshipController.hasRelation(
       permissionId,
@@ -144,9 +144,31 @@ async function setupPermission() {
 
 async function setupDefaultPermissionRelationship() {
   // Admin permissions
-  
+  generateRelation(PermissionGroupEnum.ADMIN, PermissionEnum.ADMIN_CREATE_USER);
+  generateRelation(PermissionGroupEnum.ADMIN, PermissionEnum.ADMIN_DELETE_USER);
+  generateRelation(PermissionGroupEnum.ADMIN, PermissionEnum.ADMIN_UPDATE_USER);
+  generateRelation(
+    PermissionGroupEnum.ADMIN,
+    PermissionEnum.ADMIN_CREATE_PERMISSION_GROUP
+  );
+  generateRelation(
+    PermissionGroupEnum.ADMIN,
+    PermissionEnum.ADMIN_DELETE_PERMISSION_GROUP
+  );
+  generateRelation(
+    PermissionGroupEnum.ADMIN,
+    PermissionEnum.ADMIN_UPDATE_PERMISSION_GROUP
+  );
 
-  // User admin
+  console.log(
+    "Relationships",
+    await PermissionRelationshipController.getGrantedPermissionsFromGroup(
+      PermissionGroupEnum.ADMIN
+    )
+  );
+
+  // Mod permissions
+  // User permissions
 }
 
 export {

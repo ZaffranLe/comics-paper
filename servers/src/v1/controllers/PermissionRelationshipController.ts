@@ -1,5 +1,8 @@
+import { PermissionInterface } from "./../interfaces/PermissionInterface";
 import { Tables } from "../Database";
 import DatabaseBuilder from "../utils/DatabaseBuilder";
+import { PermissionGroupInterface } from "../interfaces/PermissionGroupInterface";
+import { PermissionRelationshipInterface } from "../interfaces/PermissionRelationshipInterface";
 
 /**
  * Check whether the database contains relationship between two tables.
@@ -16,7 +19,7 @@ async function hasRelation(
   if (permissionId === undefined || permissionGroup === undefined) {
     return false;
   }
-  return await DatabaseBuilder(Tables.PermissionInGroup)
+  return await DatabaseBuilder(Tables.PermissionRelationship)
     .select()
     .where({
       permissionId,
@@ -40,13 +43,71 @@ async function addRelation(
     throw new Error("Relationship already exists.");
   }
 
-  await DatabaseBuilder(Tables.PermissionInGroup).insert({
+  await DatabaseBuilder(Tables.PermissionRelationship).insert({
     permissionId,
     permissionGroup,
   });
 }
 
+/**
+ * Retrieves all available permissions in permission group.
+ *
+ * @param permissionGroup a permission group id
+ * @returns return all available permissions in a permission group.
+ */
+async function getGrantedPermissionsFromGroup(permissionGroup: number) {
+  // select * from permission_relationship where permission_group = permission_group
+  const result = await DatabaseBuilder(Tables.PermissionRelationship)
+    .select(
+      `${Tables.PermissionRelationship}.permissionId`,
+      `${Tables.PermissionRelationship}.permissionGroup`,
+      `${Tables.Permission}.name as permissionName`,
+      `${Tables.Permission}.description as permissionDescription`,
+      `${Tables.PermissionGroup}.name as permissionGroupName`,
+      `${Tables.PermissionGroup}.description as permissionGroupDescription`
+    )
+    .from(Tables.PermissionRelationship)
+    .where({ permissionGroup })
+    .innerJoin(
+      Tables.Permission,
+      `${Tables.PermissionRelationship}.permissionId`,
+      `${Tables.Permission}.id`
+    )
+    .innerJoin(
+      Tables.PermissionGroup,
+      `${Tables.PermissionRelationship}.permissionGroup`,
+      `${Tables.PermissionGroup}.id`
+    )
+    .from(Tables.PermissionRelationship);
+
+  const extractedValue: PermissionRelationshipInterface[] =
+    result.map<PermissionRelationshipInterface>(
+      ({
+        permissionId,
+        permissionGroup,
+        permissionGroupName,
+        permissionGroupDescription,
+        permissionName,
+        permissionDescription,
+      }) => {
+        const group: PermissionGroupInterface = {
+          id: permissionGroup,
+          name: permissionGroupName,
+          description: permissionGroupDescription,
+        };
+        const permission: PermissionInterface = {
+          id: permissionId,
+          name: permissionName,
+          description: permissionDescription,
+        };
+        return { permissionGroup: group, permission: permission };
+      }
+    );
+  return extractedValue;
+}
+
 export const PermissionRelationshipController = {
   addRelation,
   hasRelation,
+  getGrantedPermissionsFromGroup,
 };
