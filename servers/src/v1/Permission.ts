@@ -23,6 +23,9 @@ async function generatePermissionGroup(
   }
 }
 
+/**
+ * Generate a permission whether not existed.
+ */
 async function generatePermission(
   id: number,
   name: string,
@@ -76,16 +79,56 @@ async function setupPermissionGroup() {
 async function setupPermission() {
   Logger.info(`Setting up permission...`);
 
+  // Create user permission
   generatePermission(
     PermissionEnum.ADMIN_CREATE_USER,
     Locale.Permission.AdminCreateUser.Name,
     Locale.Permission.AdminCreateUser.Description
   );
 
+  // Delete user permission
+  generatePermission(
+    PermissionEnum.ADMIN_DELETE_USER,
+    Locale.Permission.AdminDeleteUser.Name,
+    Locale.Permission.AdminDeleteUser.Description
+  );
+
+  // Update user permission
+  generatePermission(
+    PermissionEnum.ADMIN_UPDATE_USER,
+    Locale.Permission.AdminUpdateUser.Name,
+    Locale.Permission.AdminUpdateUser.Description
+  );
+
+  // Create permission group permission
+  generatePermission(
+    PermissionEnum.ADMIN_CREATE_PERMISSION_GROUP,
+    Locale.Permission.AdminCreatePermissionGroup.Name,
+    Locale.Permission.AdminCreatePermissionGroup.Description
+  );
+
+  // Delete permission group permission
+  generatePermission(
+    PermissionEnum.ADMIN_DELETE_PERMISSION_GROUP,
+    Locale.Permission.AdminDeletePermissionGroup.Name,
+    Locale.Permission.AdminDeletePermissionGroup.Description
+  );
+
+  // Update permission group permission
+  generatePermission(
+    PermissionEnum.ADMIN_UPDATE_PERMISSION_GROUP,
+    Locale.Permission.AdminUpdatePermissionGroup.Name,
+    Locale.Permission.AdminUpdatePermissionGroup.Description
+  );
+
   console.log(
     "All permissions: ",
     await PermissionController.getAllPermissions()
   );
+}
+
+async function setupDefaultPermissionRelation() {
+  // TODO: add permissions to groups
 }
 
 export { setupPermissionGroup, setupPermission };

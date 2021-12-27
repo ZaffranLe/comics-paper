@@ -29,5 +29,10 @@ export const Locale = {
       Name: "admin_delete_permission_group",
       Description: "Admin delete permission group",
     },
+
+    AdminUpdatePermissionGroup: {
+      Name: "admin_update_permission_group",
+      Description: "Admin update permission group",
+    },
   },
 };
