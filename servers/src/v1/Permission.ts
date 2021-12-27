@@ -55,48 +55,48 @@ async function setupPermissionGroup() {
 async function setupPermission() {
   Logger.info(`Setting up permission...`);
 
-  // Admin
-  await PermissionGroupController.addPermissionToGroup(
-    PermissionGroupEnum.ADMIN,
-    "admin.create"
-  );
-  await PermissionGroupController.addPermissionToGroup(
-    PermissionGroupEnum.ADMIN,
-    "admin.delete"
-  );
-  await PermissionGroupController.addPermissionToGroup(
-    PermissionGroupEnum.ADMIN,
-    "admin.edit"
-  );
-  await PermissionGroupController.addPermissionToGroup(
-    PermissionGroupEnum.ADMIN,
-    "admin.list"
-  );
+  // // Admin
+  // await PermissionGroupController.addPermissionToGroup(
+  //   PermissionGroupEnum.ADMIN,
+  //   "admin.create"
+  // );
+  // await PermissionGroupController.addPermissionToGroup(
+  //   PermissionGroupEnum.ADMIN,
+  //   "admin.delete"
+  // );
+  // await PermissionGroupController.addPermissionToGroup(
+  //   PermissionGroupEnum.ADMIN,
+  //   "admin.edit"
+  // );
+  // await PermissionGroupController.addPermissionToGroup(
+  //   PermissionGroupEnum.ADMIN,
+  //   "admin.list"
+  // );
 
-  // User
-  await PermissionGroupController.addPermissionToGroup(
-    PermissionGroupEnum.USER,
-    "user.create"
-  );
-  await PermissionGroupController.addPermissionToGroup(
-    PermissionGroupEnum.USER,
-    "user.delete"
-  );
-  await PermissionGroupController.addPermissionToGroup(
-    PermissionGroupEnum.USER,
-    "user.edit"
-  );
-  await PermissionGroupController.addPermissionToGroup(
-    PermissionGroupEnum.USER,
-    "user.list"
-  );
+  // // User
+  // await PermissionGroupController.addPermissionToGroup(
+  //   PermissionGroupEnum.USER,
+  //   "user.create"
+  // );
+  // await PermissionGroupController.addPermissionToGroup(
+  //   PermissionGroupEnum.USER,
+  //   "user.delete"
+  // );
+  // await PermissionGroupController.addPermissionToGroup(
+  //   PermissionGroupEnum.USER,
+  //   "user.edit"
+  // );
+  // await PermissionGroupController.addPermissionToGroup(
+  //   PermissionGroupEnum.USER,
+  //   "user.list"
+  // );
 
-  // Print all
-  console.log(
-    "Current Permission Group",
-    await PermissionGroupController.getAllPermissionGroups()
-  );
-  Logger.info(`Permission setup completed.`);
+  // // Print all
+  // console.log(
+  //   "Current Permission Group",
+  //   await PermissionGroupController.getAllPermissionGroups()
+  // );
+  // Logger.info(`Permission setup completed.`);
 }
 
 export const PermissionInstance = {

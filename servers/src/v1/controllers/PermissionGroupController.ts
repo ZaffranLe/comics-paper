@@ -1,3 +1,4 @@
+import { PermissionGroup } from "./../interfaces/PermissionGroup";
 import { Tables } from "./../Database";
 import DatabaseBuilder from "../utils/DatabaseBuilder";
 
@@ -6,7 +7,7 @@ import DatabaseBuilder from "../utils/DatabaseBuilder";
  * @returns  all permission groups
  */
 async function getAllPermissionGroups() {
-  return DatabaseBuilder(Tables.PermissionGroup).select();
+  return DatabaseBuilder.select().from<PermissionGroup>(Tables.PermissionGroup);
 }
 /**
  * Check whether the permission group is existed or not.
