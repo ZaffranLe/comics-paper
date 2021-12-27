@@ -65,10 +65,11 @@ async function setupPermissionGroup() {
   );
 
   // Print all
-  console.log(
-    "Current Permission Group",
-    await PermissionGroupController.getAllPermissionGroups()
-  );
+  // console.log(
+  //   "Current Permission Group",
+
+  // );
+  console.table(await PermissionGroupController.getAllPermissionGroups());
 
   Logger.info(`Permission group setup completed.`);
 }
@@ -121,10 +122,8 @@ async function setupPermission() {
     Locale.Permission.AdminUpdatePermissionGroup.Description
   );
 
-  console.log(
-    "All permissions: ",
-    await PermissionController.getAllPermissions()
-  );
+  // console.log("All permissions: ");
+  console.table(await PermissionController.getAllPermissions());
 }
 
 async function setupDefaultPermissionRelation() {
