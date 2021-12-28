@@ -8,7 +8,7 @@ import {
 } from "./Permission";
 
 async function init(app: express.Application) {
-  console.log("Loading version 1.0");
+  console.log("v1: Initializing application...");
 
   // Set up database
   await setupDatabase();

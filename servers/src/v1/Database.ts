@@ -1,5 +1,7 @@
+import chalk = require("chalk");
+import { isDevelopmentMode, isTestMode } from "./Environment";
 import { PermissionGroupEnum } from "./interfaces/PermissionGroupInterface";
-import { createTable } from "./utils/DatabaseBuilder";
+import DatabaseBuilder, { createTable } from "./utils/DatabaseBuilder";
 import { Logger } from "./utils/Logger";
 
 /**
@@ -58,4 +60,18 @@ export async function setupDatabase() {
       .notNullable()
       .defaultTo(PermissionGroupEnum.USER);
   });
+}
+
+export async function cleanUpDatabase() {
+  if (!isDevelopmentMode() && !isTestMode()) {
+    throw new Error("Unexpected environment (must be development or test)");
+  }
+
+  console.warn(chalk.red(`Invoking clean up database (utility for test)...`));
+  for (let table in Tables) {
+    if (Tables.hasOwnProperty(table)) {
+      console.log(`Cleaning up table ${table}...`);
+      DatabaseBuilder(table).truncate();
+    }
+  }
 }

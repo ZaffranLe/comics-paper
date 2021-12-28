@@ -19,4 +19,7 @@ async function createUser(user: User) {
   return DatabaseBuilder.insert(user).into(Tables.User);
 }
 
-export const UserController = {};
+export const UserController = {
+  createUserPermission,
+  createUser,
+};
