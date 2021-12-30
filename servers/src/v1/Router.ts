@@ -1,5 +1,6 @@
 import * as express from "express";
 import { PermissionRouter } from "./routes/PermissionRouter";
+import UserRouter from "./routes/UserRouter";
 
 /**
  * Class for all available routers
@@ -8,6 +9,10 @@ export const Router = [
   {
     Path: "/permissions",
     Router: PermissionRouter,
+  },
+  {
+    Path: "/users",
+    Router: UserRouter,
   },
 ];
 

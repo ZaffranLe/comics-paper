@@ -17,6 +17,7 @@
   "dependencies": {
     "@types/bcryptjs": "^2.4.2",
     "@types/body-parser": "^1.19.2",
+    "@types/morgan": "^1.9.3",
     "@types/node": "^17.0.4",
     "@types/uuid": "^8.3.3",
     "@types/validator": "^13.7.1",
@@ -26,6 +27,7 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
     "knex": "^0.95.15",
+    "morgan": "^1.10.0",
     "mysql2": "^2.3.3",
     "uuid": "^8.3.2",
     "validator": "^13.7.0"

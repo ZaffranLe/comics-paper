@@ -34,5 +34,8 @@ export const Locale = {
       Name: "admin_update_permission_group",
       Description: "Admin update permission group",
     },
+    HttpResponse: {
+      MissingRequiredFields: "Missing required fields.",
+    },
   },
 };
