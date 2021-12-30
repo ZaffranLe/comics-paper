@@ -1,16 +1,25 @@
-import { express } from "express";
+import * as express from "express";
+import { MiddlewareError } from "../errors/MiddlewareError";
+
 /**
  * Handler any incoming errors.
  */
-export async function ErrorHandler(
+export function ErrorHandler(
+  err: MiddlewareError | Error,
   req: express.Request,
   res: express.Response,
-  next: express.NextFunction,
-  err: Error
+  next: express.Next
 ) {
-  const status = 500;
-  const message = err.message || "Internal server error";
+  let status = err instanceof MiddlewareError ? err.status : 500;
+
+  // log out the middleware errors
+  console.error(err);
+
   res.status(status).json({
-    error: message,
+    error: {
+      message: err.message,
+    },
   });
+
+  // next(err);
 }
