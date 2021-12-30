@@ -62,22 +62,74 @@ async function createUser(
 
 /**
  * Retrieves user via their id. Whether not found is return null.
- *
+ *  NOTE: This function will also return a hashed password of the user.
+ *      Please ensure that fetch the password before response to client
  * @param id a id of the user
  * @returns a user whether exists, null otherwise.
  */
-async function getUserFromUUID(id: string) {
+async function getUserFromUUID(id: string): Promise<UserResponseInterface> {
   // parameter error
   if (!id) {
     throw new Error("Invalid user uuid parameter");
   }
 
   // select from database
-  return await DatabaseBuilder(Tables.User).select().where({ id }).first();
+  const user = await DatabaseBuilder(Tables.User)
+    .select()
+    .where({ id })
+    .first();
+  if (user == null) {
+    return null;
+  }
+
+  return {
+    id: user.id,
+    username: user.username,
+    password: user.password,
+    email: user.email,
+    nickname: user.nickname,
+  };
+}
+
+/**
+ * Check whether the user exists.
+ *
+ * @param id a unique id of the user
+ * @returns true whether exists, false otherwise
+ */
+async function hasUserByUUID(id: string) {
+  // undefined id or null string
+  if (!id) {
+    throw new Error("Invalid user uuid parameter");
+  }
+  const user = await DatabaseBuilder(Tables.User)
+    .select()
+    .where({ id })
+    .first();
+  return user != null;
+}
+
+/**
+ * Check whether the user exists.
+ * @param username a username of the user
+ * @returns true whether exists, false otherwise
+ */
+async function hasUserByUsername(username: string) {
+  // undefined username or null string
+  if (!username) {
+    throw new Error("Invalid username parameter");
+  }
+  const user = await DatabaseBuilder(Tables.User)
+    .select()
+    .where({ username })
+    .first();
+  return user != null;
 }
 
 export const UserController = {
   createUserPermission,
   createUser,
   getUserFromUUID,
+  hasUserByUUID,
+  hasUserByUsername,
 };

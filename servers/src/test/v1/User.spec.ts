@@ -54,6 +54,13 @@ describe(`v1: User `, () => {
   });
 
   describe(`Controller`, () => {
+    // remove user after create user
+    afterEach(async () => {
+      // delete user from database
+      // by using truncate
+      await DatabaseBuilder(Tables.User).truncate();
+    });
+
     it(`should create new user`, async () => {
       const { username, password, email, nickname } = userFieldData;
       const response = await UserController.createUser(
@@ -84,6 +91,70 @@ describe(`v1: User `, () => {
         bcryptjs.compareSync(password, responsesArray[0].password),
         "password is not match or invalid"
       ).to.be.true;
+
+      // delete user from database
+      await DatabaseBuilder(Tables.User).delete().where({ id: response.id });
+    });
+
+    it(`should retrieves a user from the database`, async () => {
+      // create user first
+      const { username, password, email, nickname } = userFieldData;
+      const response = await UserController.createUser(
+        username,
+        password,
+        email,
+        nickname
+      );
+      // make a select again to test again
+      const responseUser = await UserController.getUserFromUUID(response.id);
+      expect(responseUser).to.be.not.undefined;
+      expect(responseUser.username).to.be.equal(username);
+      expect(responseUser.email).to.be.equal(email);
+      expect(responseUser.nickname).to.be.equal(nickname);
+      // id must be a uuid
+      expect(responseUser.id).to.be.not.undefined;
+      // password hash confirm
+      expect(
+        bcryptjs.compareSync(password, responseUser.password),
+        "password is not match or invalid"
+      ).to.be.true;
+    });
+
+    it(`should true whether check has user from username`, async () => {
+      const { username, password, email, nickname } = userFieldData;
+      const response = await UserController.createUser(
+        username,
+        password,
+        email,
+        nickname
+      );
+      const responseUser = await UserController.hasUserByUsername(username);
+      expect(responseUser).to.be.true;
+    });
+
+    it(`should true whether check has user from uuid`, async () => {
+      const { username, password, email, nickname } = userFieldData;
+      const response = await UserController.createUser(
+        username,
+        password,
+        email,
+        nickname
+      );
+      const responseUser = await UserController.hasUserByUUID(response.id);
+      expect(responseUser).to.be.true;
+    });
+
+    // missing arguments for all functions above
+    it(`should throw error when missing arguments`, async () => {
+      try {
+        UserController.hasUserByUsername(undefined);
+        UserController.hasUserByUUID(undefined);
+        UserController.createUser(undefined, undefined, undefined, undefined);
+        UserController.getUserFromUUID(undefined);
+      } catch (error) {
+        expect(error).to.be.a("Error");
+        expect(error.message).to.be.equal(/Invalid/);
+      }
     });
   });
 });
