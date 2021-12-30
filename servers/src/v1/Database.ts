@@ -2,7 +2,6 @@ import chalk = require("chalk");
 import { isDevelopmentMode, isTestMode } from "./Environment";
 import { PermissionGroupEnum } from "./interfaces/PermissionGroupInterface";
 import DatabaseBuilder, { createTable } from "./utils/DatabaseBuilder";
-import { Logger } from "./utils/Logger";
 
 /**
  * Table constants to map table naming.
@@ -44,7 +43,7 @@ export async function setupDatabase() {
 
   // Users
   await createTable(Tables.User, (table) => {
-    table.increments("id").primary();
+    table.string("id").primary().unique().notNullable();
     table.string(`username`).unique().notNullable();
     table.string(`password`).unique().notNullable();
     table.string(`email`).unique().notNullable();
@@ -54,9 +53,9 @@ export async function setupDatabase() {
 
   // User permissions
   await createTable(Tables.UserPermission, (table) => {
-    table.integer(`userId`).notNullable();
+    table.string(`userId`).notNullable();
     table
-      .integer(`permissionGroupId`)
+      .integer(`permissionGroup`)
       .notNullable()
       .defaultTo(PermissionGroupEnum.USER);
   });
@@ -67,11 +66,19 @@ export async function cleanUpDatabase() {
     throw new Error("Unexpected environment (must be development or test)");
   }
 
-  console.warn(chalk.red(`Invoking clean up database (utility for test)...`));
+  // console.warn(chalk.red(`Invoking clean up database (utility for test)...`));
+  // Truncate
   for (let table in Tables) {
     if (Tables.hasOwnProperty(table)) {
-      console.log(`Cleaning up table ${table}...`);
-      DatabaseBuilder(table).truncate();
+      console.log(`Truncating table ${table}...`);
+      await DatabaseBuilder(Tables[table]).truncate();
+    }
+  }
+
+  for (let table in Tables) {
+    if (Tables.hasOwnProperty(table)) {
+      console.log(`Dropping table ${table}...`);
+      await DatabaseBuilder.schema.dropTable(Tables[table]);
     }
   }
 }

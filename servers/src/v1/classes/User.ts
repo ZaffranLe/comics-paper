@@ -9,7 +9,7 @@ export class User implements UserInterface {
   nickname: string;
 
   constructor(user: UserInterface) {
-    this.id = user.id;
+    // this.id = user.id;
     this.username = user.username;
     this.password = user.password;
     this.email = user.email;

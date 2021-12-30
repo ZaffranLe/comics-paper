@@ -53,9 +53,11 @@ async function createPermissionGroup(
   }
 
   // Create a permission group with name
-  return DatabaseBuilder(Tables.PermissionGroup)
-    .insert({ id, name, description })
-    .returning("*");
+  return DatabaseBuilder(Tables.PermissionGroup).insert({
+    id,
+    name,
+    description,
+  });
 }
 
 export const PermissionGroupController = {
