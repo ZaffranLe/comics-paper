@@ -1,22 +1,54 @@
+import { PermissionRelationshipController } from "./controllers/PermissionRelationshipController";
+import { PermissionController } from "./controllers/PermissionController";
 import { Locale } from "./Locale";
 import { Logger } from "./utils/Logger";
 import { PermissionGroupController } from "./controllers/PermissionGroupController";
-import { PermissionGroupEnum } from "./interfaces/PermissionGroup";
+import { PermissionGroupEnum } from "./interfaces/PermissionGroupInterface";
+import { PermissionEnum } from "./interfaces/PermissionInterface";
 
+/**
+ * Generate a permission group whether not existed.
+ */
 async function generatePermissionGroup(
   id: number,
   name: string,
   description: string
 ) {
   if (!(await PermissionGroupController.hasPermissionGroup(id))) {
-    Logger.info(
-      (
-        await PermissionGroupController.createPermissionGroup(
-          id,
-          name,
-          description
-        )
-      ).toString()
+    Logger.info(`Generating permission group ${id} (${name})...`);
+    await PermissionGroupController.createPermissionGroup(
+      id,
+      name,
+      description
+    );
+  }
+}
+
+/**
+ * Generate a permission whether not existed.
+ */
+async function generatePermission(
+  id: number,
+  name: string,
+  description: string
+) {
+  if (!(await PermissionController.hasPermission(id))) {
+    Logger.info(`Generating permission ${id} (${name})...`);
+    await PermissionController.createPermission(id, name, description);
+  }
+}
+
+async function generateRelation(permissionGroup: number, permissionId: number) {
+  if (
+    !(await PermissionRelationshipController.hasRelation(
+      permissionId,
+      permissionGroup
+    ))
+  ) {
+    Logger.info(`Generating relation ${permissionId} (${permissionGroup})...`);
+    await PermissionRelationshipController.addRelation(
+      permissionId,
+      permissionGroup
     );
   }
 }
@@ -49,10 +81,11 @@ async function setupPermissionGroup() {
   );
 
   // Print all
-  console.log(
-    "Current Permission Group",
-    await PermissionGroupController.getAllPermissionGroups()
-  );
+  // console.log(
+  //   "Current Permission Group",
+
+  // );
+  console.table(await PermissionGroupController.getAllPermissionGroups());
 
   Logger.info(`Permission group setup completed.`);
 }
@@ -63,51 +96,83 @@ async function setupPermissionGroup() {
 async function setupPermission() {
   Logger.info(`Setting up permission...`);
 
-  // // Admin
-  // await PermissionGroupController.addPermissionToGroup(
-  //   PermissionGroupEnum.ADMIN,
-  //   "admin.create"
-  // );
-  // await PermissionGroupController.addPermissionToGroup(
-  //   PermissionGroupEnum.ADMIN,
-  //   "admin.delete"
-  // );
-  // await PermissionGroupController.addPermissionToGroup(
-  //   PermissionGroupEnum.ADMIN,
-  //   "admin.edit"
-  // );
-  // await PermissionGroupController.addPermissionToGroup(
-  //   PermissionGroupEnum.ADMIN,
-  //   "admin.list"
-  // );
+  // Create user permission
+  generatePermission(
+    PermissionEnum.ADMIN_CREATE_USER,
+    Locale.Permission.AdminCreateUser.Name,
+    Locale.Permission.AdminCreateUser.Description
+  );
 
-  // // User
-  // await PermissionGroupController.addPermissionToGroup(
-  //   PermissionGroupEnum.USER,
-  //   "user.create"
-  // );
-  // await PermissionGroupController.addPermissionToGroup(
-  //   PermissionGroupEnum.USER,
-  //   "user.delete"
-  // );
-  // await PermissionGroupController.addPermissionToGroup(
-  //   PermissionGroupEnum.USER,
-  //   "user.edit"
-  // );
-  // await PermissionGroupController.addPermissionToGroup(
-  //   PermissionGroupEnum.USER,
-  //   "user.list"
-  // );
+  // Delete user permission
+  generatePermission(
+    PermissionEnum.ADMIN_DELETE_USER,
+    Locale.Permission.AdminDeleteUser.Name,
+    Locale.Permission.AdminDeleteUser.Description
+  );
 
-  // // Print all
-  // console.log(
-  //   "Current Permission Group",
-  //   await PermissionGroupController.getAllPermissionGroups()
-  // );
-  // Logger.info(`Permission setup completed.`);
+  // Update user permission
+  generatePermission(
+    PermissionEnum.ADMIN_UPDATE_USER,
+    Locale.Permission.AdminUpdateUser.Name,
+    Locale.Permission.AdminUpdateUser.Description
+  );
+
+  // Create permission group permission
+  generatePermission(
+    PermissionEnum.ADMIN_CREATE_PERMISSION_GROUP,
+    Locale.Permission.AdminCreatePermissionGroup.Name,
+    Locale.Permission.AdminCreatePermissionGroup.Description
+  );
+
+  // Delete permission group permission
+  generatePermission(
+    PermissionEnum.ADMIN_DELETE_PERMISSION_GROUP,
+    Locale.Permission.AdminDeletePermissionGroup.Name,
+    Locale.Permission.AdminDeletePermissionGroup.Description
+  );
+
+  // Update permission group permission
+  generatePermission(
+    PermissionEnum.ADMIN_UPDATE_PERMISSION_GROUP,
+    Locale.Permission.AdminUpdatePermissionGroup.Name,
+    Locale.Permission.AdminUpdatePermissionGroup.Description
+  );
+
+  // console.log("All permissions: ");
+  console.table(await PermissionController.getAllPermissions());
 }
 
-export const PermissionInstance = {
+async function setupDefaultPermissionRelationship() {
+  // Admin permissions
+  generateRelation(PermissionGroupEnum.ADMIN, PermissionEnum.ADMIN_CREATE_USER);
+  generateRelation(PermissionGroupEnum.ADMIN, PermissionEnum.ADMIN_DELETE_USER);
+  generateRelation(PermissionGroupEnum.ADMIN, PermissionEnum.ADMIN_UPDATE_USER);
+  generateRelation(
+    PermissionGroupEnum.ADMIN,
+    PermissionEnum.ADMIN_CREATE_PERMISSION_GROUP
+  );
+  generateRelation(
+    PermissionGroupEnum.ADMIN,
+    PermissionEnum.ADMIN_DELETE_PERMISSION_GROUP
+  );
+  generateRelation(
+    PermissionGroupEnum.ADMIN,
+    PermissionEnum.ADMIN_UPDATE_PERMISSION_GROUP
+  );
+
+  console.log(
+    "Relationships",
+    await PermissionRelationshipController.getGrantedPermissionsFromGroup(
+      PermissionGroupEnum.ADMIN
+    )
+  );
+
+  // Mod permissions
+  // User permissions
+}
+
+export {
   setupPermissionGroup,
   setupPermission,
+  setupDefaultPermissionRelationship,
 };

@@ -1,4 +1,4 @@
-import { PermissionGroup } from "./../interfaces/PermissionGroup";
+import { PermissionGroupInterface } from "../interfaces/PermissionGroupInterface";
 import { Tables } from "./../Database";
 import DatabaseBuilder from "../utils/DatabaseBuilder";
 
@@ -7,8 +7,11 @@ import DatabaseBuilder from "../utils/DatabaseBuilder";
  * @returns  all permission groups
  */
 async function getAllPermissionGroups() {
-  return DatabaseBuilder.select().from<PermissionGroup>(Tables.PermissionGroup);
+  return DatabaseBuilder.select().from<PermissionGroupInterface>(
+    Tables.PermissionGroup
+  );
 }
+
 /**
  * Check whether the permission group is existed or not.
  * @param id a number of permission group
@@ -50,9 +53,11 @@ async function createPermissionGroup(
   }
 
   // Create a permission group with name
-  return DatabaseBuilder(Tables.PermissionGroup)
-    .insert({ id, name, description })
-    .returning("*");
+  return DatabaseBuilder(Tables.PermissionGroup).insert({
+    id,
+    name,
+    description,
+  });
 }
 
 export const PermissionGroupController = {

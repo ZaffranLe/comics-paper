@@ -1,11 +1,11 @@
-export interface PermissionGroup {
+export interface PermissionGroupInterface {
   id: number;
   name: string;
   description: string;
 }
 
 export enum PermissionGroupEnum {
-  ADMIN = 0,
+  ADMIN = 1,
   USER,
   MOD,
 }

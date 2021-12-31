@@ -14,10 +14,10 @@ interface ConfigurationSchema {
 
 const Configuration = {
   /**
-   * This is for a test environment
+   * This is for a production environment
    * @type {ConfigurationSchema}
    */
-  TEST: {
+  production: {
     Database: {
       Host: "localhost",
       Username: "root",
@@ -26,13 +26,28 @@ const Configuration = {
       EnableLogging: true,
     },
   },
-  DEV: {
+  /**
+   * For development environment
+   */
+  development: {
     Database: {
       Host: "localhost",
       Username: "root",
       Password: "123",
       Database: "comics_paper",
       EnableLogging: true,
+    },
+  },
+  /**
+   * For testing environment
+   */
+  test: {
+    Database: {
+      Host: "localhost",
+      Username: "root",
+      Password: "123",
+      Database: "comics_paper_test",
+      EnableLogging: false,
     },
   },
 };
@@ -49,6 +64,7 @@ function hasConfigurationEnvironment(environmentName: string) {
     throw new Error("Configuration environment is not available.");
   }
 }
+
 /**
  * Get the ConfigurationSchema of current environment (process.env.NODE_ENV).
  * @returns a ConfigurationSchema object.

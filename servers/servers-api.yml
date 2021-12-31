@@ -27,6 +27,7 @@ paths:
                 - username
                 - password
                 - email
+                - nickname
 
       responses:
         "200":
@@ -35,22 +36,48 @@ paths:
             application/json:
               schema:
                 type: object
-                $ref: "#/components/schemas/User"
+                $ref: "#/components/schemas/UserResponseInterface"
 
-        400:
+        "400":
           description: Missing username, password or email
+          # content:
+          # application/json:
+  /users/signin:
+    post:
+      description: "Sign in as a user"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: "#/components/schemas/UserRequestSignInInterface"
+      responses:
+        "200":
+          description: "Successfully sign in"
 components:
   schemas:
-    User:
+    UserResponseInterface:
       type: "object"
       properties:
         id:
-          type: "integer"
-          format: "int64"
+          type: "string"
+          format: "uuid"
         username:
-          type: string
-        nickname:
           type: string
         email:
           type: string
           format: email
+        nickname:
+          type: string
+
+    UserRequestSignInInterface:
+      type: "object"
+      properties:
+        username:
+          type: "string"
+        password:
+          type: "string"
+          format: "password"
+      required:
+        - username
+        - password
