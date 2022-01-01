@@ -3,11 +3,11 @@ info:
   title: Comics Paper Server
   version: "1.0"
 servers:
-  - url: https://api.server.test/v1
+  - url: https://localhost:3000/v1
 paths:
   /users/signup:
     post:
-      description: "Sign up for new account"
+      description: "Sign up for new account and provides a information which were just generated."
       requestBody:
         content:
           application/json:
@@ -40,11 +40,13 @@ paths:
 
         "400":
           description: Missing username, password or email
-          # content:
-          # application/json:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
   /users/signin:
     post:
-      description: "Sign in as a user"
+      description: "Check the existence of user and provides a API token as JsonWebToken. Expires in one more hour (1h). "
       requestBody:
         content:
           application/json:
@@ -54,7 +56,57 @@ paths:
       responses:
         "200":
           description: "Successfully sign in"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponseInterface"
+        "400":
+          description: Invalid username or password
+  /users/profile:
+    post:
+      description: "Check the existence of user and retrieves user profile information."
+      security:
+        - BearerAuth: [http]
+
+      responses:
+        "200":
+          description: "Successfully validate a token and provides user profile information"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProfileResponseInterface"
+
+        "400":
+          description: No token provide.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+        "401":
+          description: Unauthenticated user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /permissions/roles:
+    get:
+      description: Retrieves all current permission roles in database.
+      responses:
+        "200":
+          description: "Successfully retrieve permission roles"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PermissionGroupInterface"
+
+# A components schemas
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
   schemas:
     UserResponseInterface:
       type: "object"
@@ -62,22 +114,63 @@ components:
         id:
           type: "string"
           format: "uuid"
+          description: "Unique identifier of that player, as UUID v4()."
         username:
           type: string
+          description: "A username of the user"
         email:
           type: string
           format: email
+          description: "An email of the user"
         nickname:
           type: string
+          description: "A nickname, which is alphanumeric, lower than 20 characters, contains dots (.) and underscores (_)"
 
     UserRequestSignInInterface:
       type: "object"
       properties:
         username:
           type: "string"
+          description: "Username of the user"
         password:
           type: "string"
           format: "password"
+          description: "Password of the user"
       required:
         - username
         - password
+
+    TokenResponseInterface:
+      type: object
+      properties:
+        token:
+          type: string
+          format: "jwt"
+          description: "A token for user to sign in, put it into header token when request."
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          description: "A message of the error occurred."
+
+    ProfileResponseInterface:
+      allOf:
+        - $ref: "#/components/schemas/UserResponseInterface"
+        - type: "object"
+          properties:
+            role:
+              enum:
+                - 1
+                - 2
+                - 3
+    PermissionGroupInterface:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string

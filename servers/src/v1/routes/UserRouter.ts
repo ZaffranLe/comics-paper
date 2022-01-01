@@ -6,6 +6,9 @@ import isEmail from "validator/lib/isEmail";
 import { createUrlPathFromHost } from "../utils/PathUtils";
 import { isValidNickname } from "../utils/ValidatorUtils";
 const router = express.Router();
+import * as bcryptjs from "bcryptjs";
+import { generateToken } from "../utils/TokenUtils";
+import { getAuth } from "../middlewares/AuthMiddleware";
 
 router.get(
   `/`,
@@ -59,6 +62,13 @@ router.post(
         );
       }
 
+      // Whether has that user
+      if (await UserController.hasUserByUsername(username)) {
+        return next(
+          new MiddlewareError(Locale.HttpResponseMessage.UserAlreadyExists, 400)
+        );
+      }
+
       // Insert user into database
       const responseUser = await UserController.createUser(
         username,
@@ -81,6 +91,77 @@ router.post(
       console.error(error);
       next(new MiddlewareError("UnexpectedError", 500));
     }
+  }
+);
+
+router.post(
+  "/signin",
+  async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    const { username, password } = req.body;
+    if (!username || !password) {
+      return next(
+        new MiddlewareError(
+          Locale.HttpResponseMessage.MissingRequiredFields,
+          400
+        )
+      );
+    }
+    // Get user first
+    const user = await UserController.getUserFromUsername(username);
+    // Not found user
+    if (!user) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.UserNotFound, 400)
+      );
+    }
+
+    // Found, check password
+    // Unless the password is correct
+    if (!bcryptjs.compareSync(password, user.password)) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.IncorrectPassword, 400)
+      );
+    }
+
+    // Success, create web token
+    const token = await generateToken({ id: user.id, generatedAt: new Date() });
+    res.json({ token: token.token });
+  }
+);
+
+router.post(
+  "/profile",
+  getAuth,
+  async (req: express.Request, res: express.Response, next: express.Next) => {
+    // Token not found
+    if (!req.TokenRequest) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.NoTokenProvided, 400)
+      );
+    }
+
+    // Not found a user, response unauthorized
+    if (!req.UserRequest) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401)
+      );
+    }
+
+    // Extract password from user request
+    const { username, email, nickname, id } = req.UserRequest;
+
+    // Response
+    res.json({
+      id,
+      username,
+      email,
+      nickname,
+      role: req.PermissionRoleRequest,
+    });
   }
 );
 

@@ -40,5 +40,11 @@ export const Locale = {
     InvalidNickname:
       "Invalid nickname. It must contain only letters, numbers, dots, and underscores.",
     InvalidEmail: "Invalid email.",
+    UserAlreadyExists: "User already exists.",
+    UserNotFound: "User not found.",
+    IncorrectPassword: "Incorrect password.",
+    NoTokenProvided: "No token provided in header.",
+    TokenNotJsonWebToken: "Token is not a JsonWebToken (invalid)",
+    Unauthorized: "Unauthorized."
   },
 };

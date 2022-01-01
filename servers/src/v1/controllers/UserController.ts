@@ -2,12 +2,10 @@ import { PermissionGroupEnum } from "./../interfaces/PermissionGroupInterface";
 import { User } from "./../classes/User";
 import { Tables } from "./../Database";
 import DatabaseBuilder from "../utils/DatabaseBuilder";
-import {
-  UserRequestInterface,
-  UserResponseInterface,
-} from "../interfaces/UserInterface";
+import { UserResponseInterface } from "../interfaces/UserInterface";
 import { v4 as uuid } from "uuid";
 import * as bcryptjs from "bcryptjs";
+import validator from "validator";
 
 /**
  *  Create a native relation between user and permission group.
@@ -126,10 +124,39 @@ async function hasUserByUsername(username: string) {
   return user != null;
 }
 
+/**
+ * Retrieves a user from it username.
+ * @param username a username of the user
+ * @returns a user whether exists, null otherwise
+ */
+async function getUserFromUsername(username: string) {
+  if (!username) {
+    throw new Error("Invalid username parameter");
+  }
+  return await DatabaseBuilder(Tables.User)
+    .select()
+    .where({ username })
+    .first();
+}
+
+async function getPermissionGroupFromUserId(userId: string) {
+  // Must not be empty and format of uuid
+  if (!userId || !validator.isUUID(userId)) {
+    throw new Error("Invalid user id parameter");
+  }
+  /// Return
+  return await DatabaseBuilder(Tables.UserPermission)
+    .select()
+    .where({ userId })
+    .first();
+}
+
 export const UserController = {
   createUserPermission,
   createUser,
   getUserFromUUID,
   hasUserByUUID,
   hasUserByUsername,
+  getUserFromUsername,
+  getPermissionGroupFromUserId,
 };
