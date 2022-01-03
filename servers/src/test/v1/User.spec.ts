@@ -1,3 +1,4 @@
+import { PermissionEnum } from "./../../v1/interfaces/PermissionInterface";
 import * as bcryptjs from "bcryptjs";
 import { Tables } from "./../../v1/Database";
 import {
@@ -25,7 +26,7 @@ describe(`v1: User `, () => {
     });
 
     it(`create user interface`, () => {
-      const user = new User(userFieldData);
+      const user: UserInterface = new User(userFieldData);
 
       // expect(user.id).to.be.equal(1);
       expect(user.username).to.be.equal(userFieldData.username);
@@ -144,13 +145,53 @@ describe(`v1: User `, () => {
       expect(responseUser).to.be.true;
     });
 
+    // retrieve list of permissions from user id
+    it(`should retrieve list of permissions from user id`, async () => {
+      const { username, password, email, nickname } = userFieldData;
+      const response = await UserController.createUser(
+        username,
+        password,
+        email,
+        nickname
+      );
+      const responseUser = await UserController.getAllPermissionsFromUserId(
+        response.id
+      );
+      expect(responseUser).to.be.not.undefined;
+      expect(responseUser.length).to.be.equal(0);
+    });
+
+    // check has permissions from user id
+    it(`should check has permissions from user id`, async () => {
+      const { username, password, email, nickname } = userFieldData;
+      const response = await UserController.createUser(
+        username,
+        password,
+        email,
+        nickname
+      );
+      const responseUser = await UserController.hasPermissionByUserId(
+        response.id,
+        PermissionEnum.ADMIN_DELETE_USER
+      );
+      // Return false because the user did not permit this permission
+      expect(responseUser).to.be.false;
+    });
+
     // missing arguments for all functions above
     it(`should throw error when missing arguments`, async () => {
       try {
-        UserController.hasUserByUsername(undefined);
-        UserController.hasUserByUUID(undefined);
-        UserController.createUser(undefined, undefined, undefined, undefined);
-        UserController.getUserFromUUID(undefined);
+        await UserController.hasUserByUsername(undefined);
+        await UserController.hasUserByUUID(undefined);
+        await UserController.createUser(
+          undefined,
+          undefined,
+          undefined,
+          undefined
+        );
+        await UserController.getUserFromUUID(undefined);
+        await UserController.getAllPermissionsFromUserId(undefined);
+        await UserController.hasPermissionByUserId(undefined, undefined);
       } catch (error) {
         expect(error).to.be.a("Error");
         expect(error.message).to.be.equal(/Invalid/);

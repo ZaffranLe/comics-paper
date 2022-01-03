@@ -17,8 +17,6 @@ export interface UserResponseInterface extends UserInterface {
 
 /**
  *
- * @deprecated separate UserRequestInterface
- *  into UserRequestSignInInterface, ...
  */
 export interface UserRequestInterface extends UserInterface {}
 

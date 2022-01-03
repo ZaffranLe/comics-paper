@@ -101,6 +101,15 @@ paths:
               schema:
                 $ref: "#/components/schemas/PermissionGroupInterface"
 
+  /resources/new
+    post:
+      description: Creates new resource file in database. The accepted files are jpeg or png.
+      
+      responses: 
+        "200":
+          description: "File lists as array after uploaded"
+           content: 
+
 # A components schemas
 components:
   securitySchemes:

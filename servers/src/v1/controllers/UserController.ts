@@ -1,4 +1,8 @@
-import { PermissionGroupEnum } from "./../interfaces/PermissionGroupInterface";
+import { PermissionInterface } from "./../interfaces/PermissionInterface";
+import {
+  PermissionGroupEnum,
+  PermissionGroupInterface,
+} from "./../interfaces/PermissionGroupInterface";
 import { User } from "./../classes/User";
 import { Tables } from "./../Database";
 import DatabaseBuilder from "../utils/DatabaseBuilder";
@@ -139,16 +143,112 @@ async function getUserFromUsername(username: string) {
     .first();
 }
 
-async function getPermissionGroupFromUserId(userId: string) {
+/**
+ * Retrieves a permission group from provided user.
+ * @param userId a user identifier
+ * @returns a permission group interface
+ *
+ */
+async function getPermissionGroupFromUserId(
+  userId: string
+): Promise<PermissionGroupInterface> {
   // Must not be empty and format of uuid
   if (!userId || !validator.isUUID(userId)) {
     throw new Error("Invalid user id parameter");
   }
-  /// Return
-  return await DatabaseBuilder(Tables.UserPermission)
-    .select()
+  const response = await DatabaseBuilder(Tables.UserPermission)
+    // .select("id", "name", "description")
+    // select full name  (contains table name)
+    .select(
+      `${Tables.PermissionGroup}.id`,
+      `${Tables.PermissionGroup}.name`,
+      `${Tables.PermissionGroup}.description`
+    )
     .where({ userId })
+    .innerJoin(
+      Tables.PermissionGroup,
+      `${Tables.UserPermission}.permissionGroup`,
+      `${Tables.PermissionGroup}.id`
+    )
     .first();
+  // Return
+  return response;
+}
+
+async function getAllPermissionsFromUserId(userId: string) {
+  // Must not be empty and format of uuid
+  if (!userId || !validator.isUUID(userId)) {
+    throw new Error("Invalid user id parameter");
+  }
+  // Select the user group
+  const selectUserGroupQuery = DatabaseBuilder(Tables.UserPermission)
+    .select(`up.permissionGroup`)
+    .from({ up: Tables.UserPermission })
+    .where({ "up.userId": userId });
+
+  // Select the permission from a group
+  const selectPermissionsFromGroupQuery = await DatabaseBuilder(
+    Tables.Permission
+  )
+    .select({
+      PermissionId: "p.id",
+      PermissionName: "p.name",
+      PermissionDescription: "p.description",
+    })
+    .from({ pr: Tables.PermissionRelationship })
+    .innerJoin({ p: Tables.Permission }, "pr.permissionId", "p.id")
+    .where({ "pr.permissionGroup": selectUserGroupQuery });
+
+  // Return as an interface array
+  const response: PermissionInterface[] = selectPermissionsFromGroupQuery.map(
+    ({ PermissionId, PermissionName, PermissionDescription }) => {
+      return {
+        id: PermissionId,
+        name: PermissionName,
+        description: PermissionDescription,
+      };
+    }
+  );
+  return response;
+}
+
+async function hasPermissionByUserId(
+  userId: string,
+  permissionId: number
+): Promise<boolean> {
+  // Must not be empty and format of uuid
+  if (!userId || !validator.isUUID(userId)) {
+    throw new Error("Invalid user id parameter");
+  }
+
+  // Must not be empty
+  if (!permissionId) {
+    throw new Error("Invalid permission id parameter");
+  }
+
+  // Select the user group
+  const selectUserGroupQuery = DatabaseBuilder(Tables.UserPermission)
+    .select(`up.permissionGroup`)
+    .from({ up: Tables.UserPermission })
+    .where({ "up.userId": userId });
+
+  // Select the permission from a group
+  const response = await DatabaseBuilder(Tables.Permission)
+    .select({
+      PermissionId: "p.id",
+      PermissionName: "p.name",
+      PermissionDescription: "p.description",
+    })
+    .from({ pr: Tables.PermissionRelationship })
+    .innerJoin({ p: Tables.Permission }, "pr.permissionId", "p.id")
+    .where({
+      "pr.permissionGroup": selectUserGroupQuery,
+      "p.id": permissionId,
+    })
+    .first();
+
+  // Return as an interface array
+  return response != null;
 }
 
 export const UserController = {
@@ -159,4 +259,6 @@ export const UserController = {
   hasUserByUsername,
   getUserFromUsername,
   getPermissionGroupFromUserId,
+  getAllPermissionsFromUserId,
+  hasPermissionByUserId
 };

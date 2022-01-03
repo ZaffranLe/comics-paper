@@ -1,3 +1,5 @@
+import { PermissionEnum } from "./../interfaces/PermissionInterface";
+import { User } from "./../classes/User";
 import * as jwt from "jsonwebtoken";
 import { UserController } from "./../controllers/UserController";
 import { Locale } from "./../Locale";
@@ -41,16 +43,14 @@ export async function getAuth(
     }
     const data: any = jwt.verify(token, process.env.JWT_SECRET);
     // Get user information
-    const userResponse: UserResponseInterface =
-      await UserController.getUserFromUUID(data.id);
+    const userResponse: User = new User(
+      await UserController.getUserFromUUID(data.id),
+      data.id
+    );
 
-    const role = (
-      await UserController.getPermissionGroupFromUserId(userResponse.id)
-    ).permissionGroup;
     // Set into request object
     req.UserRequest = userResponse;
     req.TokenRequest = token;
-    req.PermissionRoleRequest = role;
 
     // Call next middleware function
     next();

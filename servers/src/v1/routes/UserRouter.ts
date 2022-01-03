@@ -1,3 +1,4 @@
+import { User } from "./../classes/User";
 import { UserController } from "./../controllers/UserController";
 import { Locale } from "./../Locale";
 import { MiddlewareError } from "./../errors/MiddlewareError";
@@ -133,6 +134,9 @@ router.post(
   }
 );
 
+/**
+ * Retrieves all general information of user.
+ */
 router.post(
   "/profile",
   getAuth,
@@ -152,15 +156,16 @@ router.post(
     }
 
     // Extract password from user request
-    const { username, email, nickname, id } = req.UserRequest;
-
+    const userRequest: User = req.UserRequest;
+    const { username, email, nickname, id } = userRequest;
     // Response
     res.json({
       id,
       username,
       email,
       nickname,
-      role: req.PermissionRoleRequest,
+      role: await userRequest.getRole(),
+      permissions: await userRequest.getPermissions(),
     });
   }
 );
