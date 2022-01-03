@@ -72,13 +72,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
         "400":
-          description: Empty body, or body is invalid.
+          description: Body is invalid.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
         "304":
-          description: "No modified"
+          description: "No modified. Using when the body is empty"
     post:
       description: "Check the existence of user and retrieves user profile information."
       security:

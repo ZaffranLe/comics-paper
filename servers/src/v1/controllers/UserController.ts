@@ -270,8 +270,16 @@ async function hasPermissionByUserId(
   return response != null;
 }
 
-async function changeProfile(
-  userId: number,
+/**
+ * Update user profile.
+ *
+ * @param userId a user identifier to change
+ * @param nickname a new nickname
+ * @param introduction a new introduction
+ * @returns a rows affected.
+ */
+async function updateUserProfile(
+  userId: string,
   nickname: string,
   introduction: string
 ) {
@@ -304,4 +312,5 @@ export const UserController = {
   getPermissionGroupFromUserId,
   getAllPermissionsFromUserId,
   hasPermissionByUserId,
+  updateUserProfile,
 };

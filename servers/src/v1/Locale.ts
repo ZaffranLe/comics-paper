@@ -34,14 +34,17 @@ export const Locale = {
       Name: "admin_update_permission_group",
       Description: "Admin update permission group",
     },
+
     UserRoleChange: {
       Name: "user_role_change",
       Description: "Change role of user, only admin can do this",
     },
+
     UserUpdateProfile: {
       Name: "user_update_profile",
       Description: "Update user profile",
     },
+    
   },
   HttpResponseMessage: {
     MissingRequiredFields: "Missing required fields.",

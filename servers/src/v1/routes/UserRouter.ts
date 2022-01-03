@@ -211,7 +211,55 @@ router.get(
 router.put(
   `/profile`,
   getAuth,
-  async (req: express.Request, res: express.Response, next: express.Next) => {}
+  async (req: express.Request, res: express.Response, next: express.Next) => {
+    // Token not found
+    if (!req.TokenRequest) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.NoTokenProvided, 400)
+      );
+    }
+
+    // Not found a user, response unauthorized
+    if (!req.UserRequest) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401)
+      );
+    }
+
+    // Extract user from request
+    const userRequest: User = req.UserRequest;
+    const { nickname, introduction } = req.body;
+
+    // Whether provide nothing. Not modified
+    if (!nickname && !introduction) {
+      return res.status(304).end();
+    }
+
+    // Validate nickname
+    if (nickname && !isValidNickname(nickname)) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.InvalidNickname, 400)
+      );
+    }
+    // Validate introduction
+    if (introduction && !isValidIntroduction(introduction)) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.InvalidIntroduction, 400)
+      );
+    }
+
+    // Update user
+    console.log(
+      await UserController.updateUserProfile(
+        userRequest.id,
+        nickname,
+        introduction
+      )
+    );
+
+    // Response
+    res.status(204).end();
+  }
 );
 
 const UserRouter = router;

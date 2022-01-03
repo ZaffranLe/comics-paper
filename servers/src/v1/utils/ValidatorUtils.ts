@@ -7,11 +7,6 @@ import validator from "validator";
  * @returns true whether a string is a valid, false otherwise
  */
 export function isValidNickname(str: string): boolean {
-  // Check whether the username is not empty
-  if (validator.isEmpty(str)) {
-    return false;
-  }
-
   // Check whether length > 0 and < 30
   if (str.length < 1 || str.length > 30) {
     return false;
