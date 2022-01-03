@@ -12,21 +12,6 @@ import * as bcryptjs from "bcryptjs";
 import { generateToken } from "../utils/TokenUtils";
 import { getAuth } from "../middlewares/AuthMiddleware";
 
-router.get(
-  `/`,
-  (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    res.json({
-      routes: [
-        {
-          path: createUrlPathFromHost(`/v1/users/`),
-          method: `post`,
-          description: `Create a new user.`,
-        },
-      ],
-    });
-  }
-);
-
 /**
  * Create a new user.
  */
@@ -234,7 +219,7 @@ router.put(
     // Check for permission
     if (!userRequest.hasPermission(PermissionEnum.USER_UPDATE_PROFILE)) {
       return next(
-        new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401)
+        new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403)
       );
     }
 
