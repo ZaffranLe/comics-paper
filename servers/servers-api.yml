@@ -79,6 +79,12 @@ paths:
                 $ref: "#/components/schemas/Error"
         "304":
           description: "No modified. Using when the body is empty"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
     post:
       description: "Check the existence of user and retrieves user profile information."
       security:

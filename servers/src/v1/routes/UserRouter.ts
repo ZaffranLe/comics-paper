@@ -1,3 +1,4 @@
+import { PermissionEnum } from "./../interfaces/PermissionInterface";
 import { User } from "./../classes/User";
 import { UserController } from "./../controllers/UserController";
 import { Locale } from "./../Locale";
@@ -230,6 +231,13 @@ router.put(
     const userRequest: User = req.UserRequest;
     const { nickname, introduction } = req.body;
 
+    // Check for permission
+    if (!userRequest.hasPermission(PermissionEnum.USER_UPDATE_PROFILE)) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401)
+      );
+    }
+
     // Whether provide nothing. Not modified
     if (!nickname && !introduction) {
       return res.status(304).end();
@@ -249,12 +257,10 @@ router.put(
     }
 
     // Update user
-    console.log(
-      await UserController.updateUserProfile(
-        userRequest.id,
-        nickname,
-        introduction
-      )
+    await UserController.updateUserProfile(
+      userRequest.id,
+      nickname,
+      introduction
     );
 
     // Response
