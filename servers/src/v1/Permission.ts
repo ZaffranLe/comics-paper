@@ -138,6 +138,19 @@ async function setupPermission() {
     Locale.Permission.AdminUpdatePermissionGroup.Description
   );
 
+  // Users permissions
+  generatePermission(
+    PermissionEnum.USER_ROLE_CHANGE,
+    Locale.Permission.UserRoleChange.Name,
+    Locale.Permission.UserRoleChange.Description
+  );
+
+  generatePermission(
+    PermissionEnum.USER_UPDATE_PROFILE,
+    Locale.Permission.UserUpdateProfile.Name,
+    Locale.Permission.UserUpdateProfile.Description
+  );
+
   // console.log("All permissions: ");
   console.table(await PermissionController.getAllPermissions());
 }
@@ -158,6 +171,11 @@ async function setupDefaultPermissionRelationship() {
   generateRelation(
     PermissionGroupEnum.ADMIN,
     PermissionEnum.ADMIN_UPDATE_PERMISSION_GROUP
+  );
+
+  generateRelation(
+    PermissionGroupEnum.USER,
+    PermissionEnum.USER_UPDATE_PROFILE
   );
 
   console.log(

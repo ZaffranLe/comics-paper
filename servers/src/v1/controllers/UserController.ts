@@ -31,13 +31,16 @@ async function createUserPermission(userId: string, permissionGroup: number) {
  * @param password a password of the user
  * @param email an email of the user
  * @param nickname a nickname of the user
- * @returns a response user bare unique id
+ * @param introduction a introduction of the user
+ *
+ * @returns a user interface which generated from database
  */
 async function createUser(
   username: string,
   password: string,
   email: string,
-  nickname: string
+  nickname: string,
+  introduction?: string | "" // optional
 ) {
   // generate uuid
   const id = uuid();
@@ -48,13 +51,14 @@ async function createUser(
     bcryptjs.genSaltSync(parseInt(process.env.USER_PASSWORD_SALT_ROUNDING))
   );
 
-  // create user
+  // Creating new user
   const response: UserResponseInterface = {
     id,
     username,
     password: hashedPassword,
     email,
     nickname,
+    introduction,
   };
   await DatabaseBuilder.insert(response).into(Tables.User);
   await createUserPermission(id, PermissionGroupEnum.USER);
@@ -90,6 +94,7 @@ async function getUserFromUUID(id: string): Promise<UserResponseInterface> {
     password: user.password,
     email: user.email,
     nickname: user.nickname,
+    introduction: user.introduction,
   };
 }
 
@@ -175,6 +180,13 @@ async function getPermissionGroupFromUserId(
   return response;
 }
 
+/**
+ * Get all permissions from provided user.
+ * Permissions required from permission group (role) of user.
+ *
+ * @param userId a user identifier (uuid) to get permissions
+ * @returns a permission list from provided user
+ */
 async function getAllPermissionsFromUserId(userId: string) {
   // Must not be empty and format of uuid
   if (!userId || !validator.isUUID(userId)) {
@@ -212,6 +224,13 @@ async function getAllPermissionsFromUserId(userId: string) {
   return response;
 }
 
+/**
+ * Check permission by provide it an id of user and permission.
+ *
+ * @param userId a user identifier to get permissions
+ * @param permissionId a permission identifier to check
+ * @returns true whether user permitted that permission, false otherwise;
+ */
 async function hasPermissionByUserId(
   userId: string,
   permissionId: number
@@ -251,6 +270,30 @@ async function hasPermissionByUserId(
   return response != null;
 }
 
+async function changeProfile(
+  userId: number,
+  nickname: string,
+  introduction: string
+) {
+  // Validate identifier
+  if (!userId) {
+    throw new Error("Invalid user id parameter");
+  }
+
+  // Check user existence
+  if (!(await hasUserByUUID(userId.toString()))) {
+    throw new Error("User not found");
+  }
+
+  // Update user profile
+  return DatabaseBuilder(Tables.User)
+    .update({
+      nickname,
+      introduction,
+    })
+    .where({ id: userId });
+}
+
 export const UserController = {
   createUserPermission,
   createUser,
@@ -260,5 +303,5 @@ export const UserController = {
   getUserFromUsername,
   getPermissionGroupFromUserId,
   getAllPermissionsFromUserId,
-  hasPermissionByUserId
+  hasPermissionByUserId,
 };

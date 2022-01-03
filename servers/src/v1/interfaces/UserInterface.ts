@@ -6,6 +6,7 @@ export interface UserInterface {
   password: string;
   email: string;
   nickname: string;
+  introduction: string;
 }
 
 /**

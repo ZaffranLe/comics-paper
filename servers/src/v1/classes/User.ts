@@ -2,6 +2,8 @@ import { UserInterface } from "./../interfaces/UserInterface";
 import validator from "validator";
 import { UserController } from "../controllers/UserController";
 import { PermissionGroupInterface } from "../interfaces/PermissionGroupInterface";
+import { isValidIntroduction, isValidNickname } from "../utils/ValidatorUtils";
+import { Locale } from "../Locale";
 
 export class User implements UserInterface {
   id: string;
@@ -9,6 +11,7 @@ export class User implements UserInterface {
   password: string;
   email: string;
   nickname: string;
+  introduction: string;
 
   constructor(user: UserInterface, id?: string) {
     this.id = id;
@@ -16,16 +19,7 @@ export class User implements UserInterface {
     this.password = user.password;
     this.email = user.email;
     this.nickname = user.nickname;
-
-    // Validate email
-    if (!validator.isEmail(this.email)) {
-      throw new Error("Invalid email");
-    }
-
-    // Validate nickname
-    if (!validator.isLength(this.nickname, { min: 3, max: 20 })) {
-      throw new Error("Invalid nickname");
-    }
+    this.introduction = user.introduction;
   }
 
   /**
@@ -51,5 +45,19 @@ export class User implements UserInterface {
    */
   async getPermissions(): Promise<PermissionGroupInterface[]> {
     return await UserController.getAllPermissionsFromUserId(this.id);
+  }
+
+  async changeProfile(nickname: string, introduction: string) {
+    // Nickname is valid or not
+    if (!isValidNickname(nickname)) {
+      throw new Error(Locale.HttpResponseMessage.InvalidNickname);
+    }
+
+    // Introduction is valid or not
+    if (!isValidIntroduction(introduction)) {
+      throw new Error(Locale.HttpResponseMessage.InvalidIntroduction);
+    }
+
+    // Update user profile
   }
 }

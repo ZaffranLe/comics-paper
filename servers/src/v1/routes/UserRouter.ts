@@ -5,7 +5,7 @@ import { MiddlewareError } from "./../errors/MiddlewareError";
 import * as express from "express";
 import isEmail from "validator/lib/isEmail";
 import { createUrlPathFromHost } from "../utils/PathUtils";
-import { isValidNickname } from "../utils/ValidatorUtils";
+import { isValidIntroduction, isValidNickname } from "../utils/ValidatorUtils";
 const router = express.Router();
 import * as bcryptjs from "bcryptjs";
 import { generateToken } from "../utils/TokenUtils";
@@ -37,7 +37,7 @@ router.post(
     next: express.NextFunction
   ) => {
     try {
-      const { username, password, email, nickname } = req.body;
+      const { username, password, email, nickname, introduction } = req.body;
 
       // Validate fields
       if (!username || !password || !email || !nickname) {
@@ -51,6 +51,7 @@ router.post(
 
       // Validate nickname
       if (!isValidNickname(nickname)) {
+        // console.log(nickname);
         return next(
           new MiddlewareError(Locale.HttpResponseMessage.InvalidNickname, 400)
         );
@@ -60,6 +61,15 @@ router.post(
       if (!isEmail(email)) {
         return next(
           new MiddlewareError(Locale.HttpResponseMessage.InvalidEmail, 400)
+        );
+      }
+      // Validate introduction
+      if (!isValidIntroduction(introduction)) {
+        return next(
+          new MiddlewareError(
+            Locale.HttpResponseMessage.InvalidIntroduction,
+            400
+          )
         );
       }
 
@@ -75,7 +85,8 @@ router.post(
         username,
         password,
         email,
-        nickname
+        nickname,
+        introduction || ""
       );
 
       // Filter password out
@@ -84,10 +95,11 @@ router.post(
         username: responseUser.username,
         email: responseUser.email,
         nickname: responseUser.nickname,
+        introduction: responseUser.introduction,
       };
 
-      // Response
-      res.json(filteredResponseUser);
+      // Response with status 201
+      res.status(201).json(filteredResponseUser);
     } catch (error) {
       console.error(error);
       next(new MiddlewareError("UnexpectedError", 500));
@@ -95,6 +107,9 @@ router.post(
   }
 );
 
+/**
+ * Login a user. Return a token.
+ */
 router.post(
   "/signin",
   async (
@@ -168,6 +183,35 @@ router.post(
       permissions: await userRequest.getPermissions(),
     });
   }
+);
+
+/**
+ * Public information of user.
+ */
+router.get(
+  "/:id",
+  async (req: express.Request, res: express.Response, next: express.Next) => {
+    // Get the user information
+    const user = await UserController.getUserFromUUID(req.params.id);
+    // Not found user
+    if (!user) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.UserNotFound, 400)
+      );
+    }
+    // Response a user information (username, nickname)
+    res.json({
+      id: user.id,
+      username: user.username,
+      nickname: user.nickname,
+    });
+  }
+);
+
+router.put(
+  `/profile`,
+  getAuth,
+  async (req: express.Request, res: express.Response, next: express.Next) => {}
 );
 
 const UserRouter = router;

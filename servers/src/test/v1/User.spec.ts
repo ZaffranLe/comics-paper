@@ -17,6 +17,7 @@ const userFieldData = {
   password: "test",
   email: "example@email.com",
   nickname: "test",
+  introduction: "Hello, i am an admin",
 };
 
 describe(`v1: User `, () => {
@@ -43,6 +44,7 @@ describe(`v1: User `, () => {
       password,
       email,
       nickname,
+      introduction: "Hello, i am an admin",
     };
 
     // expect not undefined
@@ -52,6 +54,7 @@ describe(`v1: User `, () => {
     expect(user.password).to.be.equal(userFieldData.password);
     expect(user.email).to.be.equal(userFieldData.email);
     expect(user.nickname).to.be.equal(userFieldData.nickname);
+    expect(user.introduction).to.be.equal(userFieldData.introduction);
   });
 
   describe(`Controller`, () => {
@@ -194,7 +197,7 @@ describe(`v1: User `, () => {
         await UserController.hasPermissionByUserId(undefined, undefined);
       } catch (error) {
         expect(error).to.be.a("Error");
-        expect(error.message).to.be.equal(/Invalid/);
+        expect(error.message).to.match(/Invalid/);
       }
     });
   });
