@@ -48,7 +48,7 @@ export async function setupDatabase() {
     table.string(`password`).unique().notNullable();
     table.string(`email`).unique().notNullable();
     table.string(`nickname`).notNullable();
-    // table.boolean(`confirmed`).defaultTo(false);
+    table.string(`introduction`).notNullable().defaultTo("");
   });
 
   // User permissions

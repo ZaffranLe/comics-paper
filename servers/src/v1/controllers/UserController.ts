@@ -1,13 +1,14 @@
-import { PermissionGroupEnum } from "./../interfaces/PermissionGroupInterface";
-import { User } from "./../classes/User";
+import { PermissionInterface } from "./../interfaces/PermissionInterface";
+import {
+  PermissionGroupEnum,
+  PermissionGroupInterface,
+} from "./../interfaces/PermissionGroupInterface";
 import { Tables } from "./../Database";
 import DatabaseBuilder from "../utils/DatabaseBuilder";
-import {
-  UserRequestInterface,
-  UserResponseInterface,
-} from "../interfaces/UserInterface";
+import { UserResponseInterface } from "../interfaces/UserInterface";
 import { v4 as uuid } from "uuid";
-import * as bcryptjs from "bcryptjs";
+import validator from "validator";
+import PasswordUtils from "../utils/PasswordUtil";
 
 /**
  *  Create a native relation between user and permission group.
@@ -29,30 +30,31 @@ async function createUserPermission(userId: string, permissionGroup: number) {
  * @param password a password of the user
  * @param email an email of the user
  * @param nickname a nickname of the user
- * @returns a response user bare unique id
+ * @param introduction a introduction of the user
+ *
+ * @returns a user interface which generated from database
  */
 async function createUser(
   username: string,
   password: string,
   email: string,
-  nickname: string
+  nickname: string,
+  introduction?: string | "" // optional
 ) {
   // generate uuid
   const id = uuid();
-  // hash password
 
-  const hashedPassword = bcryptjs.hashSync(
-    password,
-    bcryptjs.genSaltSync(parseInt(process.env.USER_PASSWORD_SALT_ROUNDING))
-  );
+  // Hash a password, more secure (who dont want huh?)
+  const hashedPassword = PasswordUtils.hash(password);
 
-  // create user
+  // Creating new user
   const response: UserResponseInterface = {
     id,
     username,
     password: hashedPassword,
     email,
     nickname,
+    introduction,
   };
   await DatabaseBuilder.insert(response).into(Tables.User);
   await createUserPermission(id, PermissionGroupEnum.USER);
@@ -88,6 +90,7 @@ async function getUserFromUUID(id: string): Promise<UserResponseInterface> {
     password: user.password,
     email: user.email,
     nickname: user.nickname,
+    introduction: user.introduction,
   };
 }
 
@@ -126,10 +129,215 @@ async function hasUserByUsername(username: string) {
   return user != null;
 }
 
+/**
+ * Retrieves a user from it username.
+ * @param username a username of the user
+ * @returns a user whether exists, null otherwise
+ */
+async function getUserFromUsername(username: string) {
+  if (!username) {
+    throw new Error("Invalid username parameter");
+  }
+  return await DatabaseBuilder(Tables.User)
+    .select()
+    .where({ username })
+    .first();
+}
+
+/**
+ * Retrieves a permission group from provided user.
+ * @param userId a user identifier
+ * @returns a permission group interface
+ *
+ */
+async function getPermissionGroupFromUserId(
+  userId: string
+): Promise<PermissionGroupInterface> {
+  // Must not be empty and format of uuid
+  if (!userId || !validator.isUUID(userId)) {
+    throw new Error("Invalid user id parameter");
+  }
+  const response = await DatabaseBuilder(Tables.UserPermission)
+    // .select("id", "name", "description")
+    // select full name  (contains table name)
+    .select(
+      `${Tables.PermissionGroup}.id`,
+      `${Tables.PermissionGroup}.name`,
+      `${Tables.PermissionGroup}.description`
+    )
+    .where({ userId })
+    .innerJoin(
+      Tables.PermissionGroup,
+      `${Tables.UserPermission}.permissionGroup`,
+      `${Tables.PermissionGroup}.id`
+    )
+    .first();
+  // Return
+  return response;
+}
+
+/**
+ * Get all permissions from provided user.
+ * Permissions required from permission group (role) of user.
+ *
+ * @param userId a user identifier (uuid) to get permissions
+ * @returns a permission list from provided user
+ */
+async function getAllPermissionsFromUserId(userId: string) {
+  // Must not be empty and format of uuid
+  if (!userId || !validator.isUUID(userId)) {
+    throw new Error("Invalid user id parameter");
+  }
+  // Select the user group
+  const selectUserGroupQuery = DatabaseBuilder(Tables.UserPermission)
+    .select(`up.permissionGroup`)
+    .from({ up: Tables.UserPermission })
+    .where({ "up.userId": userId });
+
+  // Select the permission from a group
+  const selectPermissionsFromGroupQuery = await DatabaseBuilder(
+    Tables.Permission
+  )
+    .select({
+      PermissionId: "p.id",
+      PermissionName: "p.name",
+      PermissionDescription: "p.description",
+    })
+    .from({ pr: Tables.PermissionRelationship })
+    .innerJoin({ p: Tables.Permission }, "pr.permissionId", "p.id")
+    .where({ "pr.permissionGroup": selectUserGroupQuery });
+
+  // Return as an interface array
+  const response: PermissionInterface[] = selectPermissionsFromGroupQuery.map(
+    ({ PermissionId, PermissionName, PermissionDescription }) => {
+      return {
+        id: PermissionId,
+        name: PermissionName,
+        description: PermissionDescription,
+      };
+    }
+  );
+  return response;
+}
+
+/**
+ * Check permission by provide it an id of user and permission.
+ *
+ * @param userId a user identifier to get permissions
+ * @param permissionId a permission identifier to check
+ * @returns true whether user permitted that permission, false otherwise;
+ */
+async function hasPermissionByUserId(
+  userId: string,
+  permissionId: number
+): Promise<boolean> {
+  // Must not be empty and format of uuid
+  if (!userId || !validator.isUUID(userId)) {
+    throw new Error("Invalid user id parameter");
+  }
+
+  // Must not be empty
+  if (!permissionId) {
+    throw new Error("Invalid permission id parameter");
+  }
+
+  // Select the user group
+  const selectUserGroupQuery = DatabaseBuilder(Tables.UserPermission)
+    .select(`up.permissionGroup`)
+    .from({ up: Tables.UserPermission })
+    .where({ "up.userId": userId });
+
+  // Select the permission from a group
+  const response = await DatabaseBuilder(Tables.Permission)
+    .select({
+      PermissionId: "p.id",
+      PermissionName: "p.name",
+      PermissionDescription: "p.description",
+    })
+    .from({ pr: Tables.PermissionRelationship })
+    .innerJoin({ p: Tables.Permission }, "pr.permissionId", "p.id")
+    .where({
+      "pr.permissionGroup": selectUserGroupQuery,
+      "p.id": permissionId,
+    })
+    .first();
+
+  // Return as an interface array
+  return response != null;
+}
+
+/**
+ * Update user profile.
+ *
+ * @param userId a user identifier to change
+ * @param nickname a new nickname
+ * @param introduction a new introduction
+ * @returns a rows affected.
+ */
+async function updateUserProfile(
+  userId: string,
+  nickname: string,
+  introduction: string
+) {
+  // Validate identifier
+  if (!userId) {
+    throw new Error("Invalid user id parameter");
+  }
+
+  // Check user existence
+  if (!(await hasUserByUUID(userId.toString()))) {
+    throw new Error("User not found");
+  }
+
+  // Update user profile
+  return await DatabaseBuilder(Tables.User)
+    .update({
+      nickname,
+      introduction,
+    })
+    .where({ id: userId });
+}
+
+/**
+ * Change the current password of user.
+ * @param uuid a identifier of user to change password
+ * @param password a new password
+ * @returns true whether changed, false otherwise
+ */
+async function updateUserPassword(uuid: string, password: string) {
+  // Validate identifier
+  if (!uuid) {
+    throw new Error("Invalid user uuid parameter");
+  }
+
+  // Check user existence
+  if (!(await hasUserByUUID(uuid.toString()))) {
+    throw new Error("User not found");
+  }
+
+  // Using bcrypt to hash password
+  const hashedPassword = PasswordUtils.hash(password);
+
+  // Update user profile
+  return (
+    (await DatabaseBuilder(Tables.User)
+      .update({
+        password: hashedPassword,
+      })
+      .where({ id: uuid })) == 1
+  );
+}
+
 export const UserController = {
   createUserPermission,
   createUser,
   getUserFromUUID,
   hasUserByUUID,
   hasUserByUsername,
+  getUserFromUsername,
+  getPermissionGroupFromUserId,
+  getAllPermissionsFromUserId,
+  hasPermissionByUserId,
+  updateUserProfile,
+  updateUserPassword,
 };

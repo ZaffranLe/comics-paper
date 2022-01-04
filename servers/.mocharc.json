@@ -1,9 +1,5 @@
 {
-  "require": [
-    "ts-node/register",
-    "./src/test/v1/Fixtures.spec.ts",
-    "dotenv/config"
-  ],
+  "require": ["ts-node/register", "./src/test/v1/Fixtures.spec.ts"],
   "extensions": ["ts", "js"],
   "inline-diffs": true,
   "exit": true,

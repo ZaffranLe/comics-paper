@@ -6,6 +6,7 @@ export interface UserInterface {
   password: string;
   email: string;
   nickname: string;
+  introduction: string;
 }
 
 /**
@@ -17,8 +18,6 @@ export interface UserResponseInterface extends UserInterface {
 
 /**
  *
- * @deprecated separate UserRequestInterface
- *  into UserRequestSignInInterface, ...
  */
 export interface UserRequestInterface extends UserInterface {}
 

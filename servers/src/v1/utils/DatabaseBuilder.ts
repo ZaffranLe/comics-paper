@@ -6,6 +6,8 @@ import { Logger } from "./Logger";
  * Database builder structure to retrieve database queries.
  *
  */
+console.log(getCurrentConfiguration().Database);
+
 const DatabaseBuilder = knex({
   client: "mysql2",
   connection: {

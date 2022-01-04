@@ -3,7 +3,7 @@
   "private": "true",
   "scripts": {
     "dev": "NODE_ENV=development nodemon -r dotenv/config src/Index.ts",
-    "test": "NODE_ENV=test mocha src/test/**/*.spec.ts"
+    "test": "NODE_ENV=test mocha -r dotenv/config src/test/**/*.spec.ts"
   },
   "devDependencies": {
     "@types/chai": "^4.3.0",
@@ -17,6 +17,7 @@
   "dependencies": {
     "@types/bcryptjs": "^2.4.2",
     "@types/body-parser": "^1.19.2",
+    "@types/jsonwebtoken": "^8.5.6",
     "@types/morgan": "^1.9.3",
     "@types/node": "^17.0.4",
     "@types/uuid": "^8.3.3",
@@ -26,6 +27,7 @@
     "chalk": "4.1.2",
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
+    "jsonwebtoken": "^8.5.1",
     "knex": "^0.95.15",
     "morgan": "^1.10.0",
     "mysql2": "^2.3.3",

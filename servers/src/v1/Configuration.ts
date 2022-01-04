@@ -19,11 +19,12 @@ const Configuration = {
    */
   production: {
     Database: {
-      Host: "localhost",
-      Username: "root",
-      Password: "",
-      Database: "",
-      EnableLogging: true,
+      Host: process.env.MYSQL_HOST || "localhost",
+      Port: process.env.MYSQL_PORT || "3306",
+      Username: process.env.MYSQL_USERNAME || "root",
+      Password: process.env.MYSQL_PASSWORD || "",
+      Database: process.env.MYSQL_DATABASE || "comic_paper",
+      EnableLogging: process.env.MYSQL_ENABLE_LOGGING === "true",
     },
   },
   /**
@@ -31,11 +32,12 @@ const Configuration = {
    */
   development: {
     Database: {
-      Host: "localhost",
-      Username: "root",
-      Password: "123",
-      Database: "comics_paper",
-      EnableLogging: true,
+      Host: process.env.MYSQL_DEV_HOST || "localhost",
+      Port: process.env.MYSQL_DEV_PORT || "3306",
+      Username: process.env.MYSQL_DEV_USERNAME || "root",
+      Password: process.env.MYSQL_DEV_PASSWORD || "",
+      Database: process.env.MYSQL_DEV_DATABASE || "",
+      EnableLogging: process.env.MYSQL_DEV_ENABLE_LOGGING === "true" || true,
     },
   },
   /**
@@ -43,11 +45,12 @@ const Configuration = {
    */
   test: {
     Database: {
-      Host: "localhost",
-      Username: "root",
-      Password: "123",
-      Database: "comics_paper_test",
-      EnableLogging: false,
+      Host: process.env.MYSQL_TEST_HOST || "localhost",
+      Port: process.env.MYSQL_TEST_PORT || "3306",
+      Username: process.env.MYSQL_TEST_USERNAME || "root",
+      Password: process.env.MYSQL_TEST_PASSWORD || "",
+      Database: process.env.MYSQL_TEST_DATABASE || "comics_paper_test",
+      EnableLogging: process.env.MYSQL_TEST_ENABLE_LOGGING === "true" || false,
     },
   },
 };

@@ -1,3 +1,4 @@
+import { PermissionEnum } from "./../../v1/interfaces/PermissionInterface";
 import * as bcryptjs from "bcryptjs";
 import { Tables } from "./../../v1/Database";
 import {
@@ -9,6 +10,7 @@ import * as chai from "chai";
 import { UserController } from "../../v1/controllers/UserController";
 import DatabaseBuilder from "../../v1/utils/DatabaseBuilder";
 import validator from "validator";
+import PasswordUtils from "../../v1/utils/PasswordUtil";
 const expect = chai.expect;
 
 const userFieldData = {
@@ -16,6 +18,7 @@ const userFieldData = {
   password: "test",
   email: "example@email.com",
   nickname: "test",
+  introduction: "Hello, i am an admin",
 };
 
 describe(`v1: User `, () => {
@@ -25,7 +28,7 @@ describe(`v1: User `, () => {
     });
 
     it(`create user interface`, () => {
-      const user = new User(userFieldData);
+      const user: UserInterface = new User(userFieldData);
 
       // expect(user.id).to.be.equal(1);
       expect(user.username).to.be.equal(userFieldData.username);
@@ -42,6 +45,7 @@ describe(`v1: User `, () => {
       password,
       email,
       nickname,
+      introduction: "Hello, i am an admin",
     };
 
     // expect not undefined
@@ -51,6 +55,7 @@ describe(`v1: User `, () => {
     expect(user.password).to.be.equal(userFieldData.password);
     expect(user.email).to.be.equal(userFieldData.email);
     expect(user.nickname).to.be.equal(userFieldData.nickname);
+    expect(user.introduction).to.be.equal(userFieldData.introduction);
   });
 
   describe(`Controller`, () => {
@@ -144,16 +149,90 @@ describe(`v1: User `, () => {
       expect(responseUser).to.be.true;
     });
 
+    // retrieve list of permissions from user id
+    it(`should retrieve list of permissions from user id`, async () => {
+      const { username, password, email, nickname } = userFieldData;
+      const response = await UserController.createUser(
+        username,
+        password,
+        email,
+        nickname
+      );
+      const responseUser = await UserController.getAllPermissionsFromUserId(
+        response.id
+      );
+      expect(responseUser).to.be.not.undefined;
+      expect(responseUser.length).to.not.be.equal(0);
+    });
+
+    // check has permissions from user id
+    it(`should check has permissions from user id`, async () => {
+      const { username, password, email, nickname } = userFieldData;
+      const response = await UserController.createUser(
+        username,
+        password,
+        email,
+        nickname
+      );
+      const responseUser = await UserController.hasPermissionByUserId(
+        response.id,
+        PermissionEnum.ADMIN_DELETE_USER
+      );
+      // Return false because the user did not permit this permission
+      expect(responseUser).to.be.false;
+    });
+
+    it(`should update user password `, async () => {
+      const { username, password, email, nickname } = userFieldData;
+      const response = await UserController.createUser(
+        username,
+        password,
+        email,
+        nickname
+      );
+      await UserController.updateUserPassword(response.id, "newpassword");
+      const ru = await UserController.getUserFromUUID(response.id);
+      expect(PasswordUtils.compare("newpassword", ru.password)).to.be.true;
+    });
+
+    it(`should update profile `, async () => {
+      const { username, password, email, nickname } = userFieldData;
+      const response = await UserController.createUser(
+        username,
+        password,
+        email,
+        nickname
+      );
+      await UserController.updateUserProfile(
+        response.id,
+        "newnickname",
+        "newintroduction"
+      );
+      const ru = await UserController.getUserFromUUID(response.id);
+
+      expect(ru.nickname).to.be.equal("newnickname");
+      expect(ru.introduction).to.be.equal("newintroduction");
+    });
+
     // missing arguments for all functions above
     it(`should throw error when missing arguments`, async () => {
       try {
-        UserController.hasUserByUsername(undefined);
-        UserController.hasUserByUUID(undefined);
-        UserController.createUser(undefined, undefined, undefined, undefined);
-        UserController.getUserFromUUID(undefined);
+        await UserController.hasUserByUsername(undefined);
+        await UserController.hasUserByUUID(undefined);
+        await UserController.createUser(
+          undefined,
+          undefined,
+          undefined,
+          undefined
+        );
+        await UserController.getUserFromUUID(undefined);
+        await UserController.getAllPermissionsFromUserId(undefined);
+        await UserController.hasPermissionByUserId(undefined, undefined);
+        await UserController.updateUserPassword(undefined, undefined);
+        await UserController.updateUserProfile(undefined, undefined, undefined);
       } catch (error) {
         expect(error).to.be.a("Error");
-        expect(error.message).to.be.equal(/Invalid/);
+        expect(error.message).to.match(/Invalid/);
       }
     });
   });
