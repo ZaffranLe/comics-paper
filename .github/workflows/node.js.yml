@@ -15,9 +15,8 @@ jobs:
     strategy:
       matrix:
         node-version: [12.x, 14.x, 16.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     env:
-    MYSQL_TEST_HOST: "localhost"
+      MYSQL_TEST_HOST: "localhost"
       MYSQL_TEST_PORT: "3306"
       MYSQL_TEST_USER: "root"
       MYSQL_TEST_PASSWORD: "root"
