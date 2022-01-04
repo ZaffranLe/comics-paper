@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "install": "npm run install:server",
+    "install:server": "cd servers && npm install",
+    "test": "npm run test:server",
+    "test:server": "cd servers && npm test"
+  }
+}
