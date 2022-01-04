@@ -3,13 +3,12 @@ import {
   PermissionGroupEnum,
   PermissionGroupInterface,
 } from "./../interfaces/PermissionGroupInterface";
-import { User } from "./../classes/User";
 import { Tables } from "./../Database";
 import DatabaseBuilder from "../utils/DatabaseBuilder";
 import { UserResponseInterface } from "../interfaces/UserInterface";
 import { v4 as uuid } from "uuid";
-import * as bcryptjs from "bcryptjs";
 import validator from "validator";
+import PasswordUtils from "../utils/PasswordUtil";
 
 /**
  *  Create a native relation between user and permission group.
@@ -44,12 +43,9 @@ async function createUser(
 ) {
   // generate uuid
   const id = uuid();
-  // hash password
 
-  const hashedPassword = bcryptjs.hashSync(
-    password,
-    bcryptjs.genSaltSync(parseInt(process.env.USER_PASSWORD_SALT_ROUNDING))
-  );
+  // Hash a password, more secure (who dont want huh?)
+  const hashedPassword = PasswordUtils.hash(password);
 
   // Creating new user
   const response: UserResponseInterface = {
@@ -294,12 +290,42 @@ async function updateUserProfile(
   }
 
   // Update user profile
-  return DatabaseBuilder(Tables.User)
+  return await DatabaseBuilder(Tables.User)
     .update({
       nickname,
       introduction,
     })
     .where({ id: userId });
+}
+
+/**
+ * Change the current password of user.
+ * @param uuid a identifier of user to change password
+ * @param password a new password
+ * @returns true whether changed, false otherwise
+ */
+async function updateUserPassword(uuid: string, password: string) {
+  // Validate identifier
+  if (!uuid) {
+    throw new Error("Invalid user uuid parameter");
+  }
+
+  // Check user existence
+  if (!(await hasUserByUUID(uuid.toString()))) {
+    throw new Error("User not found");
+  }
+
+  // Using bcrypt to hash password
+  const hashedPassword = PasswordUtils.hash(password);
+
+  // Update user profile
+  return (
+    (await DatabaseBuilder(Tables.User)
+      .update({
+        password: hashedPassword,
+      })
+      .where({ id: uuid })) == 1
+  );
 }
 
 export const UserController = {
@@ -313,4 +339,5 @@ export const UserController = {
   getAllPermissionsFromUserId,
   hasPermissionByUserId,
   updateUserProfile,
+  updateUserPassword,
 };

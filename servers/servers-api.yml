@@ -85,6 +85,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+        "403":
+          description: "Forbidden"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
     post:
       description: "Check the existence of user and retrieves user profile information."
       security:
@@ -142,6 +148,39 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/UserGeneralInterface"
+
+  /users/change-password:
+    put:
+      description: "Change password of user. <b>This method request a permission to change password</b>"
+      security:
+        - BearerAuth: [http]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PasswordChangeInterface"
+
+      responses:
+        "204":
+          description: "Successfully changed password of user without responses"
+        "404":
+          description: "User not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "400":
+          description: Body is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
   /permissions/roles:
     get:
@@ -276,3 +315,24 @@ components:
         introduction:
           type: string
           description: A new introduction in order to change.
+
+    PasswordChangeInterface:
+      type: object
+      properties:
+        oldPassword:
+          type: string
+          format: password
+          description: "The old password of user"
+        newPassword:
+          type: string
+          format: password
+          description: "The new password of user"
+        confirmPassword:
+          type: string
+          format: password
+          description: "The confirm password of user"
+
+      required:
+        - oldPassword
+        - newPassword
+        - confirmPassword

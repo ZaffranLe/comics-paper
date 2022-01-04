@@ -5,12 +5,15 @@ import { Locale } from "./../Locale";
 import { MiddlewareError } from "./../errors/MiddlewareError";
 import * as express from "express";
 import isEmail from "validator/lib/isEmail";
-import { createUrlPathFromHost } from "../utils/PathUtils";
-import { isValidIntroduction, isValidNickname } from "../utils/ValidatorUtils";
+import {
+  isValidIntroduction,
+  isValidNickname,
+  isValidPassword,
+} from "../utils/ValidatorUtils";
 const router = express.Router();
-import * as bcryptjs from "bcryptjs";
 import { generateToken } from "../utils/TokenUtils";
 import { getAuth } from "../middlewares/AuthMiddleware";
+import PasswordUtils from "../utils/PasswordUtil";
 
 /**
  * Create a new user.
@@ -56,6 +59,13 @@ router.post(
             Locale.HttpResponseMessage.InvalidIntroduction,
             400
           )
+        );
+      }
+
+      // Validate password
+      if (!isValidPassword(password)) {
+        return next(
+          new MiddlewareError(Locale.HttpResponseMessage.InvalidPassword, 400)
         );
       }
 
@@ -123,7 +133,7 @@ router.post(
 
     // Found, check password
     // Unless the password is correct
-    if (!bcryptjs.compareSync(password, user.password)) {
+    if (!PasswordUtils.compare(password, user.password)) {
       return next(
         new MiddlewareError(Locale.HttpResponseMessage.IncorrectPassword, 400)
       );
@@ -194,6 +204,10 @@ router.get(
   }
 );
 
+/**
+ * Update the profile whenever user
+ *  is signed in (contains a token at header)
+ */
 router.put(
   `/profile`,
   getAuth,
@@ -249,6 +263,77 @@ router.put(
     );
 
     // Response
+    res.status(204).end();
+  }
+);
+
+/**
+ * Change password
+ */
+router.put(
+  `/change-password`,
+  getAuth,
+  async (req: express.Request, res: express.Response, next: express.Next) => {
+    // Token is existed
+    if (!req.TokenRequest) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.NoTokenProvided, 400)
+      );
+    }
+
+    // Not found a user, response unauthorized
+    if (!req.UserRequest) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401)
+      );
+    }
+
+    // Extract user from request
+    const userRequest: User = req.UserRequest;
+    const { oldPassword, confirmPassword, newPassword } = req.body;
+    // await UserController.updateUserPassword(userRequest.id, newPassword);
+
+    // Must exists all fields
+    if (!oldPassword || !confirmPassword || !newPassword) {
+      return next(
+        new MiddlewareError(
+          Locale.HttpResponseMessage.MissingRequiredFields,
+          400
+        )
+      );
+    }
+
+    // Check for permission
+    if (!userRequest.hasPermission(PermissionEnum.USER_UPDATE_PROFILE)) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403)
+      );
+    }
+
+    // Check password
+    if (!PasswordUtils.compare(oldPassword, userRequest.password)) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.IncorrectPassword, 400)
+      );
+    }
+
+    // The new password with the current password must not be equal
+    if (PasswordUtils.compare(newPassword, userRequest.password)) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.SamePassword, 400)
+      );
+    }
+
+    // Check whether new password is valid
+    if (!isValidPassword(newPassword)) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.InvalidPassword, 400)
+      );
+    }
+
+    // Change password
+    await UserController.updateUserPassword(userRequest.id, newPassword);
+    // Response status
     res.status(204).end();
   }
 );

@@ -10,6 +10,7 @@ import * as chai from "chai";
 import { UserController } from "../../v1/controllers/UserController";
 import DatabaseBuilder from "../../v1/utils/DatabaseBuilder";
 import validator from "validator";
+import PasswordUtils from "../../v1/utils/PasswordUtil";
 const expect = chai.expect;
 
 const userFieldData = {
@@ -161,7 +162,7 @@ describe(`v1: User `, () => {
         response.id
       );
       expect(responseUser).to.be.not.undefined;
-      expect(responseUser.length).to.be.equal(0);
+      expect(responseUser.length).to.not.be.equal(0);
     });
 
     // check has permissions from user id
@@ -181,6 +182,38 @@ describe(`v1: User `, () => {
       expect(responseUser).to.be.false;
     });
 
+    it(`should update user password `, async () => {
+      const { username, password, email, nickname } = userFieldData;
+      const response = await UserController.createUser(
+        username,
+        password,
+        email,
+        nickname
+      );
+      await UserController.updateUserPassword(response.id, "newpassword");
+      const ru = await UserController.getUserFromUUID(response.id);
+      expect(PasswordUtils.compare("newpassword", ru.password)).to.be.true;
+    });
+
+    it(`should update profile `, async () => {
+      const { username, password, email, nickname } = userFieldData;
+      const response = await UserController.createUser(
+        username,
+        password,
+        email,
+        nickname
+      );
+      await UserController.updateUserProfile(
+        response.id,
+        "newnickname",
+        "newintroduction"
+      );
+      const ru = await UserController.getUserFromUUID(response.id);
+
+      expect(ru.nickname).to.be.equal("newnickname");
+      expect(ru.introduction).to.be.equal("newintroduction");
+    });
+
     // missing arguments for all functions above
     it(`should throw error when missing arguments`, async () => {
       try {
@@ -195,6 +228,8 @@ describe(`v1: User `, () => {
         await UserController.getUserFromUUID(undefined);
         await UserController.getAllPermissionsFromUserId(undefined);
         await UserController.hasPermissionByUserId(undefined, undefined);
+        await UserController.updateUserPassword(undefined, undefined);
+        await UserController.updateUserProfile(undefined, undefined, undefined);
       } catch (error) {
         expect(error).to.be.a("Error");
         expect(error.message).to.match(/Invalid/);

@@ -44,7 +44,6 @@ export const Locale = {
       Name: "user_update_profile",
       Description: "Update user profile",
     },
-    
   },
   HttpResponseMessage: {
     MissingRequiredFields: "Missing required fields.",
@@ -52,11 +51,16 @@ export const Locale = {
       "Invalid nickname. It must contain only letters, numbers, dots, and underscores.",
     InvalidEmail: "Invalid email.",
     InvalidIntroduction: "Invalid introduction.",
+    InvalidPassword:
+      "Invalid password. Password must be at least 8 characters long and at least one uppercase letter.",
     UserAlreadyExists: "User already exists.",
     UserNotFound: "User not found.",
     IncorrectPassword: "Incorrect password.",
     NoTokenProvided: "No token provided in header.",
     TokenNotJsonWebToken: "Token is not a JsonWebToken (invalid)",
     Unauthorized: "Unauthorized.",
+    Forbidden: "Forbidden.",
+    SamePassword:
+      "The current password must not be the same as the previous password.",
   },
 };

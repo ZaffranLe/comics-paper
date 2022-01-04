@@ -41,3 +41,36 @@ export function isValidIntroduction(str: string): boolean {
 
   return true;
 }
+
+/**
+ * Check the password whether is valid or not. The password contains at least one uppercase character,
+ *  and the size must greater than 8.
+ *
+ * @param str a string to check
+ * @returns true whether a string is a valid, false otherwise
+ */
+export function isValidPassword(str: string): boolean {
+  // Check whether the password is not empty
+  if (validator.isEmpty(str)) {
+    return false;
+  }
+
+  // Check whether the password is at least 8 characters
+  if (str.length < 8) {
+    return false;
+  }
+
+  // Check at least 1 uppercase
+  let currentUppercase = -1;
+  for (let i = 0; i < str.length; i++) {
+    if (str[i] >= "A" && str[i] <= "Z") {
+      currentUppercase = i;
+      break;
+    }
+  }
+  if (currentUppercase === -1) {
+    return false;
+  }
+
+  return true;
+}
