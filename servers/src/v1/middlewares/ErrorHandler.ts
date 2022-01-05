@@ -8,7 +8,7 @@ export function ErrorHandler(
   err: MiddlewareError | Error,
   req: express.Request,
   res: express.Response,
-  next: express.Next
+  next: express.NextFunction
 ) {
   let status = err instanceof MiddlewareError ? err.status : 500;
 

@@ -1,8 +1,8 @@
-import * as chalk from "chalk";
+import chalk from "chalk";
 import { MainApplication } from "./MainApplication";
-import * as express from "express";
-import * as bodyParser from "body-parser";
-import * as morgan from "morgan";
+import express from "express";
+import bodyParser from "body-parser";
+import morgan from "morgan";
 import { readFileSync } from "fs";
 import { ErrorHandler } from "./middlewares/ErrorHandler";
 

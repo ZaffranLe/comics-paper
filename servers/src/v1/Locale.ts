@@ -62,5 +62,6 @@ export const Locale = {
     Forbidden: "Forbidden.",
     SamePassword:
       "The current password must not be the same as the previous password.",
+    InvalidFileType: "Invalid file type.",
   },
 };

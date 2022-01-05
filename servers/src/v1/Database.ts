@@ -17,6 +17,8 @@ export const Tables = {
   PermissionRelationship: "permission_relationships",
   // Users permissions
   UserPermission: "user_permissions",
+  // Resources
+  Resource: "resources",
 };
 
 export async function setupDatabase() {
@@ -58,6 +60,18 @@ export async function setupDatabase() {
       .integer(`permissionGroup`)
       .notNullable()
       .defaultTo(PermissionGroupEnum.USER);
+  });
+
+  await createTable(Tables.Resource, (table) => {
+    table.increments("id").primary();
+    table.string("name").notNullable();
+    table.string(`path`).notNullable();
+    table.integer(`size`).notNullable();
+    table.integer(`uploader`).notNullable();
+    table
+      .dateTime(`uploadedAt`)
+      .notNullable()
+      .defaultTo(DatabaseBuilder.fn.now());
   });
 }
 
