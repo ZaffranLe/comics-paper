@@ -1,0 +1,338 @@
+openapi: "3.0.3"
+info:
+  title: Comics Paper Server
+  version: "1.0"
+servers:
+  - url: https://localhost:3000/v1
+paths:
+  /users/signup:
+    post:
+      description: "Sign up for new account and provides a information which were just generated."
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserSignUpInterface"
+
+      responses:
+        "201":
+          description: Successfully registration
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/UserResponseInterface"
+
+        "400":
+          description: Missing username, password or email
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /users/signin:
+    post:
+      description: "Check the existence of user and provides a API token as JsonWebToken. The token expiration is one hour after generated"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: "#/components/schemas/UserRequestSignInInterface"
+      responses:
+        "200":
+          description: "Successfully sign in"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponseInterface"
+        "400":
+          description: Invalid username or password
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /users/profile:
+    put:
+      description: Using to update the profile of user. If you want to change password, using /users/change-password. <b>This method request a permission to change profile</b>.
+      security:
+        - BearerAuth: [http]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfileModifyInterface"
+
+      responses:
+        "204":
+          description: "Successfully changed profile of user without responses"
+        "404":
+          description: "User not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "400":
+          description: Body is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "304":
+          description: "No modified. Using when the body is empty"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: "Forbidden"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      description: "Check the existence of user and retrieves user profile information."
+      security:
+        - BearerAuth: [http]
+
+      responses:
+        "200":
+          description: "Successfully validate a token and provides user profile information"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProfileResponseInterface"
+
+        "400":
+          description: No token provide.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+        "401":
+          description: Unauthenticated user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /users/{id}:
+    get:
+      description: "Retrieves general user information (id, username, and nickname)"
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        500:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                # type: object
+                $ref: "#/components/schemas/Error"
+        404:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                # type: object
+                $ref: "#/components/schemas/Error"
+        200:
+          description: "Successfully retrieve user information"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserGeneralInterface"
+
+  /users/change-password:
+    put:
+      description: "Change password of user. <b>This method request a permission to change password</b>"
+      security:
+        - BearerAuth: [http]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PasswordChangeInterface"
+
+      responses:
+        "204":
+          description: "Successfully changed password of user without responses"
+        "404":
+          description: "User not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "400":
+          description: Body is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /permissions/roles:
+    get:
+      description: Retrieves all current permission roles in database.
+      responses:
+        "200":
+          description: "Successfully retrieve permission roles"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PermissionGroupInterface"
+
+  # /resources/new
+  #   post:
+  #     description: Creates new resource file in database. The accepted files are jpeg or png.
+
+  #     responses:
+  #       "200":
+  #         description: "File lists as array after uploaded"
+  #          content:
+
+# A components schemas
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    UserSignUpInterface:
+      type: object
+      properties:
+        username:
+          type: string
+          description: A username of the user to sign up.
+        password:
+          type: string
+          description: A password for authentication.
+        email:
+          type: string
+          format: email
+          description: A email of user to create.
+        nickname:
+          type: string
+          description: A nickname of user, primary display on website.
+        introduction:
+          type: string
+          description: "A short introduction of the user"
+      required:
+        - username
+        - password
+        - email
+        - nickname
+    UserResponseInterface:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+          format: "uuid"
+          description: "Unique identifier of that player, as UUID v4()."
+        username:
+          type: string
+          description: "A username of the user"
+        email:
+          type: string
+          format: email
+          description: "An email of the user"
+        nickname:
+          type: string
+          description: "A nickname, which is alphanumeric, lower than 20 characters, contains dots (.) and underscores (_)"
+
+    UserRequestSignInInterface:
+      type: "object"
+      properties:
+        username:
+          type: "string"
+          description: "Username of the user"
+        password:
+          type: "string"
+          format: "password"
+          description: "Password of the user"
+      required:
+        - username
+        - password
+
+    TokenResponseInterface:
+      type: object
+      properties:
+        token:
+          type: string
+          format: "jwt"
+          description: "A token for user to sign in, put it into header token when request."
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          description: "A message of the error occurred."
+
+    ProfileResponseInterface:
+      allOf:
+        - $ref: "#/components/schemas/UserResponseInterface"
+        - type: "object"
+          properties:
+            role:
+              enum:
+                - 1
+                - 2
+                - 3
+    PermissionGroupInterface:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+    UserGeneralInterface:
+      type: object
+      properties:
+        username:
+          type: string
+        nickname:
+          type: string
+    ProfileModifyInterface:
+      type: object
+      properties:
+        nickname:
+          type: string
+          description: A new nickname in order to change.
+        introduction:
+          type: string
+          description: A new introduction in order to change.
+
+    PasswordChangeInterface:
+      type: object
+      properties:
+        oldPassword:
+          type: string
+          format: password
+          description: "The old password of user"
+        newPassword:
+          type: string
+          format: password
+          description: "The new password of user"
+        confirmPassword:
+          type: string
+          format: password
+          description: "The confirm password of user"
+
+      required:
+        - oldPassword
+        - newPassword
+        - confirmPassword
