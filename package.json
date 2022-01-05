@@ -1,4 +1,6 @@
 {
+  "name": "comics-paper",
+  "private": true,
   "scripts": {
     "install": "npm run install:server",
     "install:server": "cd servers && npm install",
