@@ -8,7 +8,7 @@ import DatabaseBuilder from "../utils/DatabaseBuilder";
 import { UserResponseInterface } from "../interfaces/UserInterface";
 import { v4 as uuid } from "uuid";
 import validator from "validator";
-import PasswordUtils from "../utils/PasswordUtil";
+import PasswordUtils from "../utils/PasswordUtils";
 
 /**
  *  Create a native relation between user and permission group.

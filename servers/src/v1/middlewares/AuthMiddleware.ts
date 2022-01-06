@@ -49,8 +49,8 @@ export async function getAuth(
     );
 
     // Set into request object
-    req.UserRequest = userResponse;
-    req.TokenRequest = token;
+    req["UserRequest"] = userResponse;
+    req["TokenRequest"] = token;
 
     // Call next middleware function
     next();

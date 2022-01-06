@@ -151,6 +151,13 @@ async function setupPermission() {
     Locale.Permission.UserUpdateProfile.Description
   );
 
+  // Resources
+  generatePermission(
+    PermissionEnum.RESOURCE_CREATE,
+    Locale.Permission.ResourceCreate.Name,
+    Locale.Permission.ResourceCreate.Description
+  );
+
   // console.log("All permissions: ");
   console.table(await PermissionController.getAllPermissions());
 }
@@ -164,10 +171,15 @@ async function setupDefaultPermissionRelationship() {
     PermissionGroupEnum.ADMIN,
     PermissionEnum.ADMIN_CREATE_PERMISSION_GROUP
   );
+  // Admin can modify resource
+  generateRelation(PermissionGroupEnum.ADMIN, PermissionEnum.RESOURCE_CREATE);
+
+  // Modify permission
   generateRelation(
     PermissionGroupEnum.ADMIN,
     PermissionEnum.ADMIN_DELETE_PERMISSION_GROUP
   );
+
   generateRelation(
     PermissionGroupEnum.ADMIN,
     PermissionEnum.ADMIN_UPDATE_PERMISSION_GROUP

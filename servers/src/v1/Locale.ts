@@ -44,6 +44,11 @@ export const Locale = {
       Name: "user_update_profile",
       Description: "Update user profile",
     },
+    
+    ResourceCreate: {
+      Name: "resource_create",
+      Description: "Create new resource",
+    }
   },
   HttpResponseMessage: {
     MissingRequiredFields: "Missing required fields.",
@@ -62,5 +67,7 @@ export const Locale = {
     Forbidden: "Forbidden.",
     SamePassword:
       "The current password must not be the same as the previous password.",
+    InvalidFileType: "Invalid file type.",
+    AcceptOnlyImage: "Accept only image.",
   },
 };

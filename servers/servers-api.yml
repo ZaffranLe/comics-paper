@@ -193,14 +193,44 @@ paths:
               schema:
                 $ref: "#/components/schemas/PermissionGroupInterface"
 
-  # /resources/new
-  #   post:
-  #     description: Creates new resource file in database. The accepted files are jpeg or png.
-
-  #     responses:
-  #       "200":
-  #         description: "File lists as array after uploaded"
-  #          content:
+  /resources/:
+    post:
+      description:
+        Creates new resource file in database. The accepted files are jpeg or png. The file size is less than 5MB.
+        <b>Request a permission to create new resource.</b>. Accept image/jpeg, image/gif, or image/png filetype.
+      security:
+        - BearerAuth: [http]
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                files:
+                  type: array
+                  format: binary
+                  description: "The file list to upload"
+      responses:
+        "200":
+          description: "File lists as array after uploaded"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ResourceResponseInterface"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
 # A components schemas
 components:
@@ -336,3 +366,24 @@ components:
         - oldPassword
         - newPassword
         - confirmPassword
+
+    ResourceResponseInterface:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        path:
+          type: string
+          format: url
+        size:
+          type: integer
+          format: byte
+        uploadAt:
+          type: string
+          format: date-time
+        uploader:
+          type: string
+          format: uuid

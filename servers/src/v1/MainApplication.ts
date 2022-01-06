@@ -1,4 +1,4 @@
-import { express } from "express";
+import * as express from "express";
 import { setupDatabase } from "./Database";
 import { setupRoutes } from "./Router";
 import {
