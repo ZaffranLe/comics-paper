@@ -22,4 +22,7 @@ export enum PermissionEnum {
   // User
   USER_ROLE_CHANGE,
   USER_UPDATE_PROFILE,
+
+  // Resource
+  RESOURCE_CREATE,
 }

@@ -63,11 +63,11 @@ export async function setupDatabase() {
   });
 
   await createTable(Tables.Resource, (table) => {
-    table.increments("id").primary();
+    table.string("id").primary();
     table.string("name").notNullable();
     table.string(`path`).notNullable();
     table.integer(`size`).notNullable();
-    table.integer(`uploader`).notNullable();
+    table.string(`uploader`).notNullable();
     table
       .dateTime(`uploadedAt`)
       .notNullable()
