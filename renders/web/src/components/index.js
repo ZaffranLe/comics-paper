@@ -1,4 +1,5 @@
 import UserLayout from "./layout/user-layout";
-import MangaThumbnail from "./card/manga-thumbnail";
+import BookThumbnail from "./card/book-thumbnail";
+import BookTrending from "./card/book-trending";
 
-export { UserLayout, MangaThumbnail };
+export { UserLayout, BookThumbnail, BookTrending };
