@@ -25,4 +25,11 @@ export enum PermissionEnum {
 
   // Resource
   RESOURCE_CREATE,
+  RESOURCE_UPDATE,
+  RESOURCE_ACCESS_ALL,
+  RESOURCE_DELETE,
+
+  // Comic
+  COMIC_CREATE,
+  COMIC_UPDATE,
 }

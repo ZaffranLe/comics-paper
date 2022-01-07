@@ -19,6 +19,8 @@ export const Tables = {
   UserPermission: "user_permissions",
   // Resources
   Resource: "resources",
+  // Comic
+  Comic: "comics",
 };
 
 export async function setupDatabase() {
@@ -68,6 +70,21 @@ export async function setupDatabase() {
     table.string(`path`).notNullable();
     table.integer(`size`).notNullable();
     table.string(`uploader`).notNullable();
+    table
+      .dateTime(`uploadedAt`)
+      .notNullable()
+      .defaultTo(DatabaseBuilder.fn.now());
+  });
+
+  await createTable(Tables.Comic, (table) => {
+    table.string("id").primary();
+    table.string("name").notNullable();
+    table.string(`description`).notNullable();
+    table.string(`postedBy`).notNullable();
+    table
+      .dateTime(`createdAt`)
+      .notNullable()
+      .defaultTo(DatabaseBuilder.fn.now());
     table
       .dateTime(`uploadedAt`)
       .notNullable()

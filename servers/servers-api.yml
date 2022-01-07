@@ -159,7 +159,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/PasswordChangeInterface"
-
       responses:
         "204":
           description: "Successfully changed password of user without responses"
@@ -211,7 +210,7 @@ paths:
                   format: binary
                   description: "The file list to upload"
       responses:
-        "200":
+        "201":
           description: "File lists as array after uploaded"
           content:
             application/json:
@@ -232,6 +231,79 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /resources/metadata/{id}:
+    get:
+      description: Get resource file from file system.
+      security:
+        - BearerAuth: [http]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "200":
+          description: "Retrieves a resource as binary (or buffer)"
+          content:
+            image/*:
+              schema:
+                $ref: "#/components/schemas/ResourceResponseInterface"
+        "404":
+          description: "Resource not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "400":
+          description: "Bad request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /resources/{id}:
+    get:
+      description: Get resource file from file system.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "200":
+          description: "Retrieves a resource as binary (or buffer)"
+          content:
+            image/*:
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: "Resource not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "400":
+          description: "Bad request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 # A components schemas
 components:
   securitySchemes:

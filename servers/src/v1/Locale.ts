@@ -44,12 +44,38 @@ export const Locale = {
       Name: "user_update_profile",
       Description: "Update user profile",
     },
-    
+
     ResourceCreate: {
       Name: "resource_create",
       Description: "Create new resource",
-    }
+    },
+
+    ResourceAccessAll: {
+      Name: "resource_access_all",
+      Description: "Access into all resources",
+    },
+
+    ResourceUpdate: {
+      Name: "resource_update",
+      Description: "Update resource information",
+    },
+
+    ResourceDelete: {
+      Name: "resource_delete",
+      Description: "Delete a specific resource",
+    },
+
+    ComicCreate: {
+      Name: "comic_create",
+      Description: "Create a new comic",
+    },
+
+    ComicUpdate: {
+      Name: "comic_update",
+      Description: "Update a comic",
+    },
   },
+
   HttpResponseMessage: {
     MissingRequiredFields: "Missing required fields.",
     InvalidNickname:
@@ -69,5 +95,8 @@ export const Locale = {
       "The current password must not be the same as the previous password.",
     InvalidFileType: "Invalid file type.",
     AcceptOnlyImage: "Accept only image.",
+    ResourceNotFound: "Resource not found.",
+    BadRequest: "Bad request",
+    ComicNotFound: "Comic not found.",
   },
 };

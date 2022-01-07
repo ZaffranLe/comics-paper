@@ -158,6 +158,38 @@ async function setupPermission() {
     Locale.Permission.ResourceCreate.Description
   );
 
+  generatePermission(
+    PermissionEnum.RESOURCE_ACCESS_ALL,
+    Locale.Permission.ResourceAccessAll.Name,
+    Locale.Permission.ResourceAccessAll.Description
+  );
+
+  generatePermission(
+    PermissionEnum.RESOURCE_UPDATE,
+    Locale.Permission.ResourceUpdate.Name,
+    Locale.Permission.ResourceUpdate.Description
+  );
+
+  generatePermission(
+    PermissionEnum.RESOURCE_DELETE,
+    Locale.Permission.ResourceDelete.Name,
+    Locale.Permission.ResourceDelete.Description
+  );
+
+  generatePermission(
+    PermissionEnum.COMIC_CREATE,
+    Locale.Permission.ComicCreate.Name,
+    Locale.Permission.ComicCreate.Description
+  );
+
+  generatePermission(
+    PermissionEnum.COMIC_UPDATE,
+    Locale.Permission.ComicUpdate.Name,
+    Locale.Permission.ComicUpdate.Description
+  );
+
+  
+
   // console.log("All permissions: ");
   console.table(await PermissionController.getAllPermissions());
 }
@@ -174,6 +206,17 @@ async function setupDefaultPermissionRelationship() {
   // Admin can modify resource
   generateRelation(PermissionGroupEnum.ADMIN, PermissionEnum.RESOURCE_CREATE);
 
+  // Admin can access all Resources
+  generateRelation(
+    PermissionGroupEnum.ADMIN,
+    PermissionEnum.RESOURCE_ACCESS_ALL
+  );
+  // Admin can modify(update ) resource
+  generateRelation(PermissionGroupEnum.ADMIN, PermissionEnum.RESOURCE_UPDATE);
+
+  // And also can remove resource
+  generateRelation(PermissionGroupEnum.ADMIN, PermissionEnum.RESOURCE_DELETE);
+
   // Modify permission
   generateRelation(
     PermissionGroupEnum.ADMIN,
@@ -185,20 +228,27 @@ async function setupDefaultPermissionRelationship() {
     PermissionEnum.ADMIN_UPDATE_PERMISSION_GROUP
   );
 
+  // able to create new comic
+  generateRelation(PermissionGroupEnum.ADMIN, PermissionEnum.COMIC_CREATE);
+
+  // Mod permissions
+  // Able to create a new comic
+  generateRelation(PermissionGroupEnum.MOD, PermissionEnum.COMIC_CREATE);
+  // Able to update comic
+  generateRelation(PermissionGroupEnum.MOD, PermissionEnum.COMIC_UPDATE);
+
+  // User permissions
   generateRelation(
     PermissionGroupEnum.USER,
     PermissionEnum.USER_UPDATE_PROFILE
   );
 
-  console.log(
-    "Relationships",
-    await PermissionRelationshipController.getGrantedPermissionsFromGroup(
-      PermissionGroupEnum.ADMIN
-    )
-  );
-
-  // Mod permissions
-  // User permissions
+  // console.log(
+  //   "Relationships",
+  //   await PermissionRelationshipController.getGrantedPermissionsFromGroup(
+  //     PermissionGroupEnum.ADMIN
+  //   )
+  // );
 }
 
 export {
