@@ -25,18 +25,19 @@ export const Tables = {
 
 export async function setupDatabase() {
   console.log("Setting up database");
+
   // Permission group
   await createTable(Tables.PermissionGroup, (table) => {
     table.increments("id").primary();
     table.string("name").notNullable();
-    table.string("description").notNullable();
+    table.text("description").notNullable();
   });
 
   // Permissions
   await createTable(Tables.Permission, (table) => {
     table.increments(`id`).primary();
     table.string(`name`).notNullable();
-    table.string(`description`).notNullable();
+    table.text(`description`).notNullable();
     // table.integer(`permissionGroup`).notNullable();
   });
 
@@ -79,14 +80,14 @@ export async function setupDatabase() {
   await createTable(Tables.Comic, (table) => {
     table.string("id").primary();
     table.string("name").notNullable();
-    table.string(`description`).notNullable();
+    table.text(`description`).notNullable();
     table.string(`postedBy`).notNullable();
     table
       .dateTime(`createdAt`)
       .notNullable()
       .defaultTo(DatabaseBuilder.fn.now());
     table
-      .dateTime(`uploadedAt`)
+      .dateTime(`updatedAt`)
       .notNullable()
       .defaultTo(DatabaseBuilder.fn.now());
   });
