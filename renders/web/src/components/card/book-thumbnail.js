@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 function BookThumbnail({ info }) {
     return (
         <>
-            <Link to={`/series/${info.url}-${info.id}`}>
+            <Link to={`/series/${info.url}`}>
                 <div>
                     <div
                         style={{
@@ -12,7 +12,7 @@ function BookThumbnail({ info }) {
                             backgroundSize: "cover",
                             backgroundPositionX: "center",
                         }}
-                        className="peer rounded-xl h-60 cursor-pointer overflow-hidden"
+                        className="peer rounded-xl h-60 cursor-pointer overflow-hidden ring-1 ring-gray-800"
                     >
                         <div className="h-full bg-gradient-to-t from-black via-transparent p-2">
                             <div className="flex h-1/2 items-start justify-end">

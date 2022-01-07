@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Banner from "../../assets/img/megumi-bg.jpg";
 
 function UserLayout() {
     const [pageMenuOpen, setPageMenuOpen] = useState(false);
@@ -13,23 +14,23 @@ function UserLayout() {
         },
         {
             name: "Truyện tranh",
-            key: "manga",
-            path: "/manga",
+            key: "comic",
+            path: "/series?type=comic",
         },
         {
             name: "Novel",
             key: "novel",
-            path: "/novel",
+            path: "/series?type=novel",
         },
         {
             name: "Tìm kiếm",
             key: "search",
-            path: "/tim-kiem",
+            path: "/advanced-search",
         },
     ];
     return (
         <>
-            <nav className="bg-gray-800">
+            <nav className="bg-gray-800 sticky top-0">
                 <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
                     <div className="relative flex items-center justify-between h-16">
                         <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -185,8 +186,20 @@ function UserLayout() {
                 )}
             </nav>
             <main>
-                <Outlet />
+                <div id="home-banner" className="w-full shadow">
+                    <img src={Banner} alt="megumi banner" className="mx-auto" />
+                </div>
+                <div className="max-w-screen-xl grid grid-rows-1 gap-16 mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+                    <Outlet />
+                </div>
             </main>
+            <footer>
+                <div className="flex items-center bg-gray-800 text-gray-300 p-3">
+                    <span className="mx-auto">
+                        Player Zaff, 2020. All rights reserved.
+                    </span>
+                </div>
+            </footer>
         </>
     );
 }

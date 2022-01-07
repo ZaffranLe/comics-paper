@@ -54,7 +54,7 @@ function ComicTrendingSection() {
                     ))}
                 </div>
                 <div className="grid grid-rows-1 divide-y">
-                    {mangaList.slice(0, 5).map((_manga, _idx) => (
+                    {mangaList.slice(0, 6).map((_manga, _idx) => (
                         <BookTrending
                             key={_manga.id}
                             info={_manga}

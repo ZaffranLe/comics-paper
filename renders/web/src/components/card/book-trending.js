@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 function BookTrending({ info, idx }) {
     return (
         <>
-            <Link to={`/${info.type}/${info.url}-${info.id}`}>
+            <Link to={`/${info.type}/${info.url}`}>
                 <div className="group cursor:pointer p-4 grid grid-cols-8">
                     <div className="col-span-1 text-center flex items-center">
                         <button className="ring ring-gray-800 rounded-xl w-6 h-6">

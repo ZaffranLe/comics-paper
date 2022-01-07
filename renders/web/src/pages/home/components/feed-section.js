@@ -22,30 +22,30 @@ function FeedSection() {
                     <table className="border-collapse table-auto w-full text-left">
                         <thead>
                             <tr className="border-b border-gray-800">
-                                <th className="w-12 lg:w-36">Thể loại</th>
-                                <th>Truyện</th>
-                                <th>Chương</th>
-                                <th>Thời gian</th>
+                                <th className="w-12 lg:w-36 pb-4">Thể loại</th>
+                                <th className="pb-4">Truyện</th>
+                                <th className="pb-4">Chương</th>
+                                <th className="pb-4">Thời gian</th>
                             </tr>
                         </thead>
                         <tbody>
                             {latestChapters.map((_chapter, _idx) => (
-                                <tr key={_idx}>
-                                    <td className="border-b border-gray-200 p-2">
+                                <tr key={_idx} className="hover:bg-gray-100 border-b border-gray-200">
+                                    <td className="p-3">
                                         <span className="capitalize bg-gray-800 text-white px-2 py-1 rounded">
                                             {_chapter.type}
                                         </span>
                                     </td>
-                                    <td className="border-b border-gray-200 p-2">
+                                    <td className="p-3">
                                         <Link
-                                            to={`/series/${_chapter.url}-${_chapter.id}`}
+                                            to={`/series/${_chapter.url}`}
                                         >
                                             {_chapter.title}
                                         </Link>
                                     </td>
-                                    <td className="border-b border-gray-200 p-2">
+                                    <td className="p-3">
                                         <Link
-                                            to={`/series/${_chapter.url}-${_chapter.id}/chapter/${_chapter.chapter}`}
+                                            to={`/series/${_chapter.url}/chapter/${_chapter.chapter}`}
                                         >
                                             <span className="block md:hidden">
                                                 Ch.{_chapter.chapter}
@@ -55,7 +55,7 @@ function FeedSection() {
                                             </span>
                                         </Link>
                                     </td>
-                                    <td className="border-b border-gray-200 p-2">
+                                    <td className="p-3">
                                         {_chapter.time.toLocaleDateString()}
                                     </td>
                                 </tr>
