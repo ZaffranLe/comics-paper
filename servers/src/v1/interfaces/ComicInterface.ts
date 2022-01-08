@@ -8,6 +8,7 @@ export interface ComicInterface {
   postedBy: string;
   createdAt: Date;
   updatedAt: Date;
+  thumbnail?: string;
 }
 
 /**

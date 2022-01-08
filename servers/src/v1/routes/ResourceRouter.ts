@@ -47,39 +47,49 @@ const upload = multer({
  * Retrieves all resources, need permissions
  */
 router.get("/", getAuth, async (req, res, next) => {
-  const user = await req["UserRequest"];
-
-  // Check authorization
-  if (!user) {
-    return next(
-      new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401)
-    );
-  }
-
-  // Check user permission to access all resources
-  if (!(await user.hasPermission(PermissionEnum.RESOURCE_ACCESS_ALL))) {
-    return next(new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403));
-  }
-
-  // Get limit and offset
-  const limit = parseInt(req.query.limit as any) || 10;
-  const offset = parseInt(req.query.offset as any) || 0;
-  const orderBy = (req.query.orderBy as string) || "uploadedAt";
-  const order = (req.query.order as any) || 0;
-
   try {
+    const user = await req["UserRequest"];
+
+    // Check authorization
+    if (!user) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401)
+      );
+    }
+
+    // Check user permission to access all resources
+    if (!(await user.hasPermission(PermissionEnum.RESOURCE_ACCESS_ALL))) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403)
+      );
+    }
+
+    // Get limit and offset
+    const limit = parseInt(req.query.limit as any) || 10;
+    const page = parseInt(req.query.page as any) || 0;
+    const orderBy = (req.query.orderBy as string) || "uploadedAt";
+    const order = req.query.order as string;
+
     // Retrieve all resources
     const resources = await ResourceController.getResources(
       limit,
-      offset,
+      page,
       orderBy,
       order
     );
+
+    const length = (await ResourceController.countAllResources())[0][
+      "count(*)"
+    ];
     // Debug out
     console.log(
-      `[resources] fetch all resource by filter limit ${limit}, offset ${offset}, orderBy ${orderBy}, order ${order}`
+      `[resources] fetch all resource by filter limit ${limit}, page ${page}, orderBy ${orderBy}, order ${order}`
     );
-    res.status(200).json(resources);
+    console.log(`[resources] total ${length}`);
+    res.status(200).json({
+      length: length,
+      resources: resources,
+    });
   } catch (err) {
     next(new MiddlewareError(err.message, 500));
   }

@@ -74,6 +74,11 @@ export const Locale = {
       Name: "comic_update",
       Description: "Update a comic",
     },
+
+    ComicDelete: {
+      Name: "comic_delete",
+      Description: "Delete a comic",
+    },
   },
 
   HttpResponseMessage: {

@@ -13,16 +13,19 @@ import validator from "validator";
 async function createComic(
   name: string,
   description: string,
-  postedBy: string
+  postedBy: string,
+  thumbnail?: string
 ): Promise<ComicInterface> {
   const comic: ComicInterface = {
     id: uuid(),
     name,
     description,
     postedBy,
+    thumbnail,
     createdAt: new Date(),
     updatedAt: new Date(),
   };
+
   await DatabaseBuilder(Tables.Comic).insert(comic);
   return comic;
 }
@@ -58,12 +61,27 @@ async function updateComic(id: string, name: string, description: string) {
   // Retrieve comic
   await DatabaseBuilder(Tables.Comic)
     .where({ id })
-    .update({ name, description });
+    .update({ name, description, updatedAt: new Date() });
+}
+
+/**
+ * Remove a comic by its id.
+ * @param id a comic id to delete
+ */
+async function deleteComic(id: string) {
+  // check parameters
+  if (!id || !validator.isUUID(id)) {
+    throw new Error("id is required");
+  }
+
+  // Retrieve comic
+  await DatabaseBuilder(Tables.Comic).where({ id }).del();
 }
 
 const ComicController = {
   createComic,
   getComic,
   updateComic,
+  deleteComic,
 };
 export default ComicController;

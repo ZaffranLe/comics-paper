@@ -188,10 +188,14 @@ async function setupPermission() {
     Locale.Permission.ComicUpdate.Description
   );
 
-  
+  generatePermission(
+    PermissionEnum.COMIC_DELETE,
+    Locale.Permission.ComicDelete.Name,
+    Locale.Permission.ComicDelete.Description
+  );
 
   // console.log("All permissions: ");
-  console.table(await PermissionController.getAllPermissions());
+  console.table(await PermissionController.getPermissions());
 }
 
 async function setupDefaultPermissionRelationship() {
@@ -230,12 +234,28 @@ async function setupDefaultPermissionRelationship() {
 
   // able to create new comic
   generateRelation(PermissionGroupEnum.ADMIN, PermissionEnum.COMIC_CREATE);
+  // able to update new comic
+  generateRelation(PermissionGroupEnum.ADMIN, PermissionEnum.COMIC_UPDATE);
+  // Able to delete comic
+  generateRelation(PermissionGroupEnum.ADMIN, PermissionEnum.COMIC_DELETE);
 
+  // Comic chapter permissions
+  generateRelation(
+    PermissionGroupEnum.ADMIN,
+    PermissionEnum.COMIC_CHAPTER_CREATE
+  );
   // Mod permissions
   // Able to create a new comic
   generateRelation(PermissionGroupEnum.MOD, PermissionEnum.COMIC_CREATE);
   // Able to update comic
   generateRelation(PermissionGroupEnum.MOD, PermissionEnum.COMIC_UPDATE);
+  // Able to delete comic
+  generateRelation(PermissionGroupEnum.MOD, PermissionEnum.COMIC_DELETE);
+  // Comic chapters
+  generateRelation(
+    PermissionGroupEnum.MOD,
+    PermissionEnum.COMIC_CHAPTER_CREATE
+  );
 
   // User permissions
   generateRelation(

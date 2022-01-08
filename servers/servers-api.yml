@@ -192,6 +192,46 @@ paths:
               schema:
                 $ref: "#/components/schemas/PermissionGroupInterface"
 
+  /permissions/:
+    get:
+      description: Retrieves all current permission in database.
+      responses:
+        "200":
+          description: "Successfully retrieve permission"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PermissionInterface"
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /permissions/roles/{roleId}:
+    get:
+      description: Retrieves the permission by roles' id.
+      parameters:
+        - in: path
+          name: roleId
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "200":
+          description: "Successfully retrieve permission"
+          content:
+            application/json:
+              schema:
+                type: array
+                $ref: "#/components/schemas/PermissionInterface"
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
   /resources/:
     post:
       description:
@@ -230,7 +270,57 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-
+    get:
+      description: Retrieves all resource files in database as metadata.
+        <b>Request a permission to get all resource files in database.</b>
+      security:
+        - BearerAuth: [http]
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            format: int32
+            default: 1
+          description: "The page number to retrieve"
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            format: int32
+          description: "The number of items per page"
+        - in: query
+          name: orderBy
+          schema:
+            type: string
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          description: "The order of items"
+      responses:
+        "200":
+          description: "Successfully retrieve resource files"
+          content:
+            application/json:
+              schema:
+                properties:
+                  length:
+                    type: number
+                    format: int32
+                  resources:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ResourceResponseInterface"
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
   /resources/metadata/{id}:
     get:
       description: Get resource file from file system.
@@ -304,6 +394,171 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+
+  /comics/:
+    post:
+      description: Creates new comic in database.
+        <b>Request a permission to create new comic.</b>
+      security:
+        - BearerAuth: [http]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ComicRequestInterface"
+      responses:
+        "201":
+          description: "Successfully created comic"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ComicResponseInterface"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: "Forbidden"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /comics/{id}:
+    get:
+      description: Retrieves the comic by id.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "200":
+          description: "Successfully retrieve comic"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ComicResponseInterface"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: "Comic not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      description: Updates the comic by id.
+        <b>This method request a permission to update</b>
+      security:
+        - BearerAuth: [http]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ComicRequestInterface"
+      responses:
+        "200":
+          description: "Successfully updated comic"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ComicResponseInterface"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: "Comic not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: "Forbidden"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      description: Deletes the comic by id.
+        <b>This method request a permission to delete</b>
+      security:
+        - BearerAuth: [http]
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "200":
+          description: "Successfully deleted comic"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ComicResponseInterface"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: "Comic not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: "Forbidden"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
 # A components schemas
 components:
   securitySchemes:
@@ -457,5 +712,52 @@ components:
           type: string
           format: date-time
         uploader:
+          type: string
+          format: uuid
+    PermissionInterface:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+    ComicRequestInterface:
+      type: object
+      properties:
+        title:
+          type: string
+          description: A title of the comic
+        description:
+          type: string
+          description: A description of the comic
+        thumbnail:
+          type: string
+          description: A thumbnail of the comic as resource id
+      required:
+        - title
+        - description
+        - thumbnail
+    ComicResponseInterface:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        thumbnail:
+          type: string
+          format: uuid
+        updatedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        postedBy:
           type: string
           format: uuid

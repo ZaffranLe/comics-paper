@@ -32,4 +32,8 @@ export enum PermissionEnum {
   // Comic
   COMIC_CREATE,
   COMIC_UPDATE,
+  COMIC_DELETE,
+
+  // Comic chapter
+  COMIC_CHAPTER_CREATE,
 }

@@ -72,13 +72,28 @@ async function getResourceMetadata(id: string): Promise<ResourceInterface> {
  */
 async function getResources(
   limit?: number,
-  offset?: number,
+  page?: number,
   orderBy?: string,
-  order?: number
+  order?: string
 ): Promise<ResourceInterface[]> {
   // Check valid limit parameter
   if (limit && !Number.isInteger(limit)) {
     throw new Error("Limit must be a integer");
+  }
+
+  // Check valid page parameter
+  if (page && !Number.isInteger(page)) {
+    throw new Error("Page must be a integer");
+  }
+
+  // Page must higher than 0
+  if (page && page < 0) {
+    throw new Error("Page must be higher than 0");
+  }
+
+  // Check valid order parameter
+  if (order && !["asc", "desc"].includes(order)) {
+    throw new Error("Order must be asc or desc");
   }
 
   // Resource metadata
@@ -86,10 +101,16 @@ async function getResources(
   return await DatabaseBuilder(Tables.Resource)
     .select()
     .limit(limit)
-    .offset(offset)
-    .orderBy(orderBy, order === 0 ? "asc" : "desc");
+    .offset(page * limit)
+    .orderBy(orderBy, order);
+}
 
-  // return resources;
+/**
+ * Retrieves number of resources contain in database.
+ * @returns a number of resources contain in database.
+ */
+async function countAllResources(): Promise<number> {
+  return await DatabaseBuilder(Tables.Resource).count();
 }
 
 /**
@@ -122,6 +143,22 @@ async function deleteResource(id: string): Promise<boolean> {
 }
 
 /**
+ * Check whether a resource exists or not.
+ *
+ * @param id a id of the resource to check
+ * @returns true whether the resource existed, false otherwise
+ */
+async function hasResource(id: string): Promise<boolean> {
+  // Check all parameters
+  if (!id) {
+    throw new Error("Missing parameters");
+  }
+
+  // Resource metadata
+  return (await DatabaseBuilder(Tables.Resource).where({ id }).first()) != null;
+}
+
+/**
  * Export resource controller.
  */
 const ResourceController = {
@@ -129,6 +166,8 @@ const ResourceController = {
   getResourceMetadata,
   getResources,
   updateResource,
-  deleteResource, 
+  deleteResource,
+  hasResource,
+  countAllResources,
 };
 export default ResourceController;

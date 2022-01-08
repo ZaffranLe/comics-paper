@@ -60,8 +60,22 @@ async function createPermissionGroup(
   });
 }
 
+async function getPermissionsByGroup(id: number) {
+  return DatabaseBuilder()
+    .select({
+      PermissionName: "p.name",
+      PermissionId: "p.id",
+      PermissionDescription: "p.description",
+    })
+    .from({ pr: Tables.PermissionRelationship })
+    .innerJoin({ pg: Tables.PermissionGroup }, "pg.id", "pr.permissionGroup")
+    .innerJoin({ p: Tables.Permission }, "p.id", "pr.permissionId")
+    .where({ "pr.permissionGroup": id });
+}
+
 export const PermissionGroupController = {
   createPermissionGroup,
   hasPermissionGroup,
   getAllPermissionGroups,
+  getPermissionsByGroup,
 };
