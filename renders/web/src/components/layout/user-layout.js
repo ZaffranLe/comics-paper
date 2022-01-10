@@ -13,14 +13,9 @@ function UserLayout() {
             path: "/",
         },
         {
-            name: "Truyện tranh",
+            name: "Danh sách truyện",
             key: "comic",
-            path: "/series?type=comic",
-        },
-        {
-            name: "Novel",
-            key: "novel",
-            path: "/series?type=novel",
+            path: "/series",
         },
         {
             name: "Tìm kiếm",
@@ -81,7 +76,7 @@ function UserLayout() {
                             <input
                                 placeholder="Tìm kiếm..."
                                 aria-placeholder="Tìm kiếm"
-                                className="search p-1 rounded bg-gray-700 text-white"
+                                className="hidden sm:block p-1 rounded bg-gray-700 text-white"
                             />
                             <button
                                 type="button"
@@ -171,6 +166,11 @@ function UserLayout() {
                 {pageMenuOpen && (
                     <div className="sm:hidden" id="mobile-menu">
                         <div className="px-2 pt-2 pb-3 space-y-1">
+                            <input
+                                placeholder="Tìm kiếm..."
+                                aria-placeholder="Tìm kiếm"
+                                className="w-full p-1 rounded bg-gray-700 text-white"
+                            />
                             {/* <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" --> */}
                             {pageMenu.map((_menu, _idx) => (
                                 <Link
