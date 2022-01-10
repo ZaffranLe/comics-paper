@@ -8,10 +8,13 @@ import { classNames } from "../../utils/common";
 
 function Series() {
     const [searchParams, setSearchParams] = useSearchParams();
-    const [serializedSearchParams, setSerializedSearchParams] = useState({});
-
+    const [serializedSearchParams, setSerializedSearchParams] = useState({
+        type: null,
+        tags: [],
+        notTags: [],
+    });
+    const [filterSectionOpen, setFilterSectionOpen] = useState(false);
     useEffect(() => {
-        console.log(Object.fromEntries([...searchParams]));
         setSerializedSearchParams(Object.fromEntries([...searchParams]));
     }, [searchParams]);
 
@@ -19,7 +22,13 @@ function Series() {
         setSearchParams({
             ...serializedSearchParams,
             type: selectedType,
-            tags: ["abc", "123"],
+        });
+    };
+
+    const handleFilterTags = (name) => (selectedTags) => {
+        setSearchParams({
+            ...serializedSearchParams,
+            [name]: selectedTags.map((_tag) => _tag.value).join(","),
         });
     };
 
@@ -36,17 +45,105 @@ function Series() {
 
     return (
         <>
-            <div className="grid grid-cols-3 gap-8">
-                <div className="col-span-2">
+            <div className="grid grid-rows-1 md:grid-cols-3 gap-8">
+                <div
+                    className={classNames(
+                        filterSectionOpen && "ring-2 ring-gray-800",
+                        "block md:hidden bg-gray-800 rounded-xl cursor-pointer"
+                    )}
+                >
+                    <div
+                        className="text-white rounded p-3 font-bold text-lg"
+                        onClick={() => setFilterSectionOpen(!filterSectionOpen)}
+                    >
+                        <div className="flex">
+                            <div className="grow">
+                                <FontAwesomeIcon icon="sliders-h" /> Bộ lọc
+                            </div>
+                            <div>
+                                <FontAwesomeIcon
+                                    icon={
+                                        filterSectionOpen
+                                            ? "chevron-down"
+                                            : "chevron-right"
+                                    }
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    {filterSectionOpen && (
+                        <div className="grid grid-rows-1 divide-y bg-white rounded-b-xl p-3">
+                            <div className="p-4">
+                                <div className="font-bold text-xl mb-4">
+                                    Danh mục
+                                </div>
+                                <div className="grid grid-flow-col auto-cols-auto">
+                                    {typeOptions.map((_option) => (
+                                        <div key={_option.key}>
+                                            <span
+                                                className={classNames(
+                                                    serializedSearchParams.type ===
+                                                        _option.key
+                                                        ? "font-bold bg-gray-200"
+                                                        : "font-medium",
+                                                    "cursor-pointer hover:underline hover:bg-gray-100 rounded px-2 py-1"
+                                                )}
+                                                onClick={() =>
+                                                    handleSelectType(
+                                                        _option.key
+                                                    )
+                                                }
+                                            >
+                                                {_option.label}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="p-4 grid grid-rows-1 gap-4">
+                                <div className="font-bold text-xl">
+                                    Thể loại
+                                </div>
+                                <div>
+                                    <div className="font-semibold text-lg">
+                                        Tìm trong
+                                    </div>
+                                    <Select
+                                        options={tags}
+                                        className="hover:ring-1 hover:ring-gray-400 rounded"
+                                        styles={{ cursor: "pointer" }}
+                                        isMulti
+                                        onChange={handleFilterTags("tags")}
+                                        // value={serializedSearchParams.tags}
+                                    />
+                                </div>
+                                <div>
+                                    <div className="font-semibold text-lg">
+                                        Không tìm trong
+                                    </div>
+                                    <Select
+                                        options={tags}
+                                        className="hover:ring-1 hover:ring-gray-400 rounded"
+                                        styles={{ cursor: "pointer" }}
+                                        isMulti
+                                        onChange={handleFilterTags("notTags")}
+                                        // value={serializedSearchParams.notTags}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+                <div className="md:col-span-2">
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
                         {mangaList.map((_manga) => (
                             <BookThumbnail info={_manga} key={_manga.id} />
                         ))}
                     </div>
                 </div>
-                <div className="col-span-1">
+                <div className="hidden md:block col-span-1">
                     <div className="bg-gray-800 text-white rounded p-2 font-bold text-xl">
-                        <FontAwesomeIcon icon="sliders-h" /> Lọc truyện
+                        <FontAwesomeIcon icon="sliders-h" /> Bộ lọc
                     </div>
                     <div className="grid grid-rows-1 divide-y">
                         <div className="p-4">
@@ -74,15 +171,34 @@ function Series() {
                                 ))}
                             </div>
                         </div>
-                        <div className="p-4">
-                            <div className="font-bold text-xl mb-4">
-                                Thể loại
+                        <div className="p-4 grid grid-rows-1 gap-4">
+                            <div className="font-bold text-xl">Thể loại</div>
+                            <div>
+                                <div className="font-semibold text-lg">
+                                    Tìm trong
+                                </div>
+                                <Select
+                                    options={tags}
+                                    className="hover:ring-1 hover:ring-gray-400 rounded"
+                                    styles={{ cursor: "pointer" }}
+                                    isMulti
+                                    onChange={handleFilterTags("tags")}
+                                    // value={serializedSearchParams.tags}
+                                />
                             </div>
-                            <Select
-                                options={tags}
-                                className="hover:ring-1 hover:ring-gray-400 rounded"
-                                styles={{ cursor: "pointer" }}
-                            />
+                            <div>
+                                <div className="font-semibold text-lg">
+                                    Không tìm trong
+                                </div>
+                                <Select
+                                    options={tags}
+                                    className="hover:ring-1 hover:ring-gray-400 rounded"
+                                    styles={{ cursor: "pointer" }}
+                                    isMulti
+                                    onChange={handleFilterTags("notTags")}
+                                    // value={serializedSearchParams.notTags}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
