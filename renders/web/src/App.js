@@ -4,12 +4,15 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import {
     faAlignJustify,
     faBell,
+    faBook,
     faChevronDown,
     faChevronRight,
     faSlidersH,
     faStar,
     faTimes,
     faTrophy,
+    faUnlockAlt,
+    faUser,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -20,7 +23,10 @@ library.add(
     faStar,
     faSlidersH,
     faChevronDown,
-    faChevronRight
+    faChevronRight,
+    faUser,
+    faUnlockAlt,
+    faBook
 );
 
 function App() {
