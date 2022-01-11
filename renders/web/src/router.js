@@ -1,10 +1,13 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 // pages
+// -- user
 import Home from "./pages/home";
 import Series from "./pages/series";
+// -- admin
+import Dashboard from "./pages/admin/dashboard";
 // components
-import { UserLayout } from "./components";
+import { AdminLayout, UserLayout } from "./components";
 
 function AppRouter() {
     return (
@@ -14,8 +17,11 @@ function AppRouter() {
                     <Route path="/" element={<UserLayout />}>
                         <Route index element={<Home />} />
                         <Route path="series" element={<Series />} />
+                        <Route path="*" element={<Home />} />
                     </Route>
-                    <Route path="*" element={<Home />} />
+                    <Route path="/dashboard" element={<AdminLayout />}>
+                        <Route index element={<Dashboard />} />
+                    </Route>
                 </Routes>
             </BrowserRouter>
         </>
