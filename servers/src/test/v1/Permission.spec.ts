@@ -177,7 +177,7 @@ describe(`v1: Permission`, () => {
      * Get all functionality
      */
     it(`should get all permissions`, async () => {
-      const response = await PermissionController.getAllPermissions();
+      const response = await PermissionController.getPermissions();
 
       expect(response).to.be.not.undefined;
       expect(response).to.be.an("array");
@@ -190,6 +190,5 @@ describe(`v1: Permission`, () => {
 
   describe(`Implementation`, () => {
     // check all permission enums as each case
-    
   });
 });

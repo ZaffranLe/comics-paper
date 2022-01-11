@@ -80,3 +80,13 @@ Sử dụng các lệnh sau đây để chay ứng dụng, thay thế `npm` thà
 - `npm run dev`: chạy ứng dụng với thông số của nhà phát triển trên localhost:3000.
 - `npm test`: thực thi test unit và integration.
 - `npm run build`: dùng để xây dựng ứng dụng. Vì ứng dụng xây dựng thông qua [TypeScript](https://www.typescriptlang.org/). Ứng dụng sau khi build sẽ nằm ở `./dist/`.
+
+## Tải lên
+
+Mục tải lên cơ bản sẽ nằm ở `./tmp/uploads`. Bạn có thể thay thế cho nó bằng thư mục khác nếu bạn muốn thông qua tệp `.env` ở mục `OUTPUT_DIR`. Hãy chắc chắn rằng bạn có quyền ghi vào thư mục này và đủ dung lượng lưu trữ.
+
+# Hệ thống
+
+## Sơ đồ quan hệ dữ liệu
+
+https://dbdiagram.io/d/612dda98825b5b0146ec23a4

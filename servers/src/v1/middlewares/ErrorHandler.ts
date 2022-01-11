@@ -10,8 +10,10 @@ export function ErrorHandler(
   res: express.Response,
   next: express.NextFunction
 ) {
-  // let status = err instanceof MiddlewareError ? err.status : 500;
-  // console.log(err, status);
+  if (res.headersSent) {
+    return next(err);
+  }
+
   // log out the middleware errors
   console.error(err);
 
