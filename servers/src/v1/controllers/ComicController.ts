@@ -3,7 +3,10 @@ import { ComicInterface } from "../interfaces/ComicInterface";
 import DatabaseBuilder from "../utils/DatabaseBuilder";
 import { v4 as uuid } from "uuid";
 import validator from "validator";
+import slugify from "slugify";
+
 /**
+ * Create a new comic into database.
  *
  * @param name a name of a comic
  * @param description a description of a comic
@@ -24,6 +27,9 @@ async function createComic(
     thumbnail,
     createdAt: new Date(),
     updatedAt: new Date(),
+    slug: slugify(name, { lower: true, remove: /[*+~.()'"!:@]/g }),
+    likes: 0,
+    views: 0,
   };
 
   await DatabaseBuilder(Tables.Comic).insert(comic);
@@ -61,7 +67,12 @@ async function updateComic(id: string, name: string, description: string) {
   // Retrieve comic
   await DatabaseBuilder(Tables.Comic)
     .where({ id })
-    .update({ name, description, updatedAt: new Date() });
+    .update({
+      name,
+      description,
+      updatedAt: new Date(),
+      slug: slugify(name, { lower: true, remove: /[*+~.()'"!:@]/g }),
+    });
 }
 
 /**
@@ -78,10 +89,44 @@ async function deleteComic(id: string) {
   await DatabaseBuilder(Tables.Comic).where({ id }).del();
 }
 
+/**
+ * Increase the number of views of a comic by 1.
+ * @param id identify of the comic
+ */
+async function updateViewComic(id: string) {
+  // check parameters
+  if (!id || !validator.isUUID(id)) {
+    throw new Error("id is required");
+  }
+  // Retrieve comic
+  await DatabaseBuilder(Tables.Comic)
+    .where({ id })
+    .update({
+      views: DatabaseBuilder.raw("views + 1"),
+    });
+}
+
+/**
+ * Check the comic existence.
+ * @param id a comic id
+ * @returns true if the comic exists, false otherwise.
+ */
+async function hasComic(id: string) {
+  // check parameters
+  if (!id || !validator.isUUID(id)) {
+    throw new Error("id is required");
+  }
+  // Retrieve comic
+  const comic = await DatabaseBuilder(Tables.Comic).where({ id }).first();
+  return !!comic;
+}
+
 const ComicController = {
   createComic,
   getComic,
   updateComic,
   deleteComic,
+  updateViewComic,
+  hasComic,
 };
 export default ComicController;

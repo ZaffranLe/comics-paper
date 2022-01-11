@@ -79,6 +79,10 @@ export const Locale = {
       Name: "comic_delete",
       Description: "Delete a comic",
     },
+    ComicChapterCreate: {
+      Name: "comic_chapter_create",
+      Description: "Create a new comic chapter",
+    },
   },
 
   HttpResponseMessage: {
@@ -103,5 +107,6 @@ export const Locale = {
     ResourceNotFound: "Resource not found.",
     BadRequest: "Bad request",
     ComicNotFound: "Comic not found.",
+    ChapterViewTypeInvalid: "Invalid view type, must be `image` or `text`.",
   },
 };

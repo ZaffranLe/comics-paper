@@ -9,6 +9,9 @@ export interface ComicInterface {
   createdAt: Date;
   updatedAt: Date;
   thumbnail?: string;
+  slug: string;
+  likes: number;
+  views: number;
 }
 
 /**

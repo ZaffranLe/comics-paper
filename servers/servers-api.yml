@@ -558,6 +558,211 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+  /comics/{id}/viewed:
+    post:
+      description: Increase a view count of comic 1 unit.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ComicRequestInterface"
+      responses:
+        "204":
+          description: "Successfully updated comic"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: "Comic not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: "Forbidden"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /comics/{id}/chapters:
+    post:
+      description: Creates new chapter in comic.
+      security:
+        - BearerAuth: [http]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChapterRequestInterface"
+      responses:
+        "404":
+          description: "Comic not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "201":
+          description: "Successfully created chapter"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChapterResponseInterface"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: "Forbidden"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    get:
+      description: Retrieves the chapters of a comic.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            format: int32
+          required: false
+        - in: query
+          name: page
+          schema:
+            type: integer
+            format: int32
+          required: false
+        - in: query
+          name: sortedBy
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: order
+          schema:
+            enum:
+              - asc
+              - desc
+          required: false
+      responses:
+        "200":
+          description: "Successfully retrieve chapters"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ChapterResponseInterface"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: "Comic not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /comics/chapters/chapter/{chapterId}:
+    get:
+      description: Retrieves the chapter by id.
+      parameters:
+        - in: path
+          name: chapterId
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "200":
+          description: "Successfully retrieve chapter"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChapterResponseInterface"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: "Chapter not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /comics/chapters/viewType:
+    get:
+      description: Retrieves the view types of a comic chapter.
+      responses:
+        "200":
+          description: "Successfully retrieve view types"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ViewTypeResponseInterface"
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
 # A components schemas
 components:
@@ -761,3 +966,67 @@ components:
         postedBy:
           type: string
           format: uuid
+    ChapterRequestInterface:
+      type: object
+      properties:
+        name:
+          type: string
+          description: A name of the chapter
+        viewType:
+          enum:
+            - image
+            - text
+          description: A view type of the chapter, 1 as image. otherwise as text.
+        thumbnail:
+          type: string
+          description: A thumbnail of the chapter as resource id
+        content:
+          type: string
+          description: A content of the chapter
+      required:
+        - title
+        - description
+        - thumbnail
+        - content
+    ChapterResponseInterface:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        viewType:
+          type: integer
+          format: int32
+        thumbnail:
+          type: string
+          format: uuid
+        content:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        postedBy:
+          type: string
+          format: uuid
+        length:
+          type: integer
+          format: int32
+        blocks:
+          type: array
+    ViewTypeResponseInterface:
+      type: object
+      description: The view type
+        of the chapter, instruct chapter what type to display.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: View type id
+        name:
+          type: string
+          description: View type name

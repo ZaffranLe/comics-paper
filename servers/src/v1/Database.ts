@@ -1,4 +1,3 @@
-import chalk = require("chalk");
 import { isDevelopmentMode, isTestMode } from "./Environment";
 import { ComicChapterViewTypeEnum } from "./interfaces/ComicChapterInterface";
 import { PermissionGroupEnum } from "./interfaces/PermissionGroupInterface";
@@ -84,7 +83,7 @@ export async function setupDatabase() {
 
   await createTable(Tables.Comic, (table) => {
     table.string("id").primary();
-    table.string("name").notNullable();
+    table.string("name").notNullable().unique();
     table.text(`description`).notNullable();
     table.string(`postedBy`).notNullable();
     table
@@ -96,6 +95,9 @@ export async function setupDatabase() {
       .notNullable()
       .defaultTo(DatabaseBuilder.fn.now());
     table.string(`thumbnail`).nullable();
+    table.integer(`views`).notNullable().defaultTo(0);
+    table.integer(`likes`).notNullable().defaultTo(0);
+    table.string(`slug`).notNullable();
   });
 
   await createTable(Tables.ComicChapter, (table) => {
