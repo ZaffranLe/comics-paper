@@ -1,4 +1,4 @@
-import * as express from "express";
+import express from "express";
 const app = express();
 import ComicPaperV1 from "./v1/ComicPaperV1";
 

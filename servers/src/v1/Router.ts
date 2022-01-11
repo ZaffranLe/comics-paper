@@ -1,5 +1,7 @@
 import * as express from "express";
+import ComicRouter from "./routes/ComicRouter";
 import { PermissionRouter } from "./routes/PermissionRouter";
+import ResourceRouter from "./routes/ResourceRouter";
 import UserRouter from "./routes/UserRouter";
 
 /**
@@ -13,6 +15,14 @@ export const Router = [
   {
     Path: "/users",
     Router: UserRouter,
+  },
+  {
+    Path: "/resources",
+    Router: ResourceRouter,
+  },
+  {
+    Path: "/comics",
+    Router: ComicRouter,
   },
 ];
 

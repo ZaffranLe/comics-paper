@@ -3,7 +3,7 @@ import { User } from "./../classes/User";
 import { UserController } from "./../controllers/UserController";
 import { Locale } from "./../Locale";
 import { MiddlewareError } from "./../errors/MiddlewareError";
-import * as express from "express";
+import express from "express";
 import isEmail from "validator/lib/isEmail";
 import {
   isValidIntroduction,
@@ -13,7 +13,7 @@ import {
 const router = express.Router();
 import { generateToken } from "../utils/TokenUtils";
 import { getAuth } from "../middlewares/AuthMiddleware";
-import PasswordUtils from "../utils/PasswordUtil";
+import PasswordUtils from "../utils/PasswordUtils";
 
 /**
  * Create a new user.
@@ -151,23 +151,27 @@ router.post(
 router.post(
   "/profile",
   getAuth,
-  async (req: express.Request, res: express.Response, next: express.Next) => {
+  async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
     // Token not found
-    if (!req.TokenRequest) {
+    if (!req["TokenRequest"]) {
       return next(
         new MiddlewareError(Locale.HttpResponseMessage.NoTokenProvided, 400)
       );
     }
 
     // Not found a user, response unauthorized
-    if (!req.UserRequest) {
+    if (!req["UserRequest"]) {
       return next(
         new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401)
       );
     }
 
     // Extract password from user request
-    const userRequest: User = req.UserRequest;
+    const userRequest: User = req["UserRequest"];
     const { username, email, nickname, id } = userRequest;
     // Response
     res.json({
@@ -186,7 +190,11 @@ router.post(
  */
 router.get(
   "/:id",
-  async (req: express.Request, res: express.Response, next: express.Next) => {
+  async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
     // Get the user information
     const user = await UserController.getUserFromUUID(req.params.id);
     // Not found user
@@ -211,23 +219,27 @@ router.get(
 router.put(
   `/profile`,
   getAuth,
-  async (req: express.Request, res: express.Response, next: express.Next) => {
+  async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
     // Token not found
-    if (!req.TokenRequest) {
+    if (!req["TokenRequest"]) {
       return next(
         new MiddlewareError(Locale.HttpResponseMessage.NoTokenProvided, 400)
       );
     }
 
     // Not found a user, response unauthorized
-    if (!req.UserRequest) {
+    if (!req["UserRequest"]) {
       return next(
         new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401)
       );
     }
 
     // Extract user from request
-    const userRequest: User = req.UserRequest;
+    const userRequest: User = req["UserRequest"];
     const { nickname, introduction } = req.body;
 
     // Check for permission
@@ -273,23 +285,27 @@ router.put(
 router.put(
   `/change-password`,
   getAuth,
-  async (req: express.Request, res: express.Response, next: express.Next) => {
+  async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
     // Token is existed
-    if (!req.TokenRequest) {
+    if (!req["TokenRequest"]) {
       return next(
         new MiddlewareError(Locale.HttpResponseMessage.NoTokenProvided, 400)
       );
     }
 
     // Not found a user, response unauthorized
-    if (!req.UserRequest) {
+    if (!req["UserRequest"]) {
       return next(
         new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401)
       );
     }
 
     // Extract user from request
-    const userRequest: User = req.UserRequest;
+    const userRequest: User = req["UserRequest"];
     const { oldPassword, confirmPassword, newPassword } = req.body;
     // await UserController.updateUserPassword(userRequest.id, newPassword);
 

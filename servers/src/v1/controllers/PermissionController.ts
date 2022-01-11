@@ -60,12 +60,12 @@ async function createPermission(id: number, name: string, description: string) {
  * Retrieves all permissions
  * @return all existed permissions in database
  */
-async function getAllPermissions() {
+async function getPermissions() {
   return await DatabaseBuilder(Tables.Permission).select();
 }
 
 export const PermissionController = {
   hasPermission,
   createPermission,
-  getAllPermissions,
+  getPermissions,
 };

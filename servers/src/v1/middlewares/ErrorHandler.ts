@@ -5,17 +5,19 @@ import { MiddlewareError } from "../errors/MiddlewareError";
  * Handler any incoming errors.
  */
 export function ErrorHandler(
-  err: MiddlewareError | Error,
+  err: MiddlewareError,
   req: express.Request,
   res: express.Response,
-  next: express.Next
+  next: express.NextFunction
 ) {
-  let status = err instanceof MiddlewareError ? err.status : 500;
+  if (res.headersSent) {
+    return next(err);
+  }
 
   // log out the middleware errors
   console.error(err);
 
-  res.status(status).json({
+  res.status(err.status || 500).json({
     error: {
       message: err.message,
     },

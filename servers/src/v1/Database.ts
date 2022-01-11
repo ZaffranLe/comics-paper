@@ -1,5 +1,5 @@
-import chalk = require("chalk");
 import { isDevelopmentMode, isTestMode } from "./Environment";
+import { ComicChapterViewTypeEnum } from "./interfaces/ComicChapterInterface";
 import { PermissionGroupEnum } from "./interfaces/PermissionGroupInterface";
 import DatabaseBuilder, { createTable } from "./utils/DatabaseBuilder";
 
@@ -17,22 +17,31 @@ export const Tables = {
   PermissionRelationship: "permission_relationships",
   // Users permissions
   UserPermission: "user_permissions",
+  // Resources
+  Resource: "resources",
+  // Comic
+  Comic: "comics",
+  // Comic chapters
+  ComicChapter: "comic_chapters",
+  // Comic chapter blocks
+  ComicChapterBlock: "comic_chapter_blocks",
 };
 
 export async function setupDatabase() {
   console.log("Setting up database");
+
   // Permission group
   await createTable(Tables.PermissionGroup, (table) => {
     table.increments("id").primary();
     table.string("name").notNullable();
-    table.string("description").notNullable();
+    table.text("description").notNullable();
   });
 
   // Permissions
   await createTable(Tables.Permission, (table) => {
     table.increments(`id`).primary();
     table.string(`name`).notNullable();
-    table.string(`description`).notNullable();
+    table.text(`description`).notNullable();
     // table.integer(`permissionGroup`).notNullable();
   });
 
@@ -58,6 +67,64 @@ export async function setupDatabase() {
       .integer(`permissionGroup`)
       .notNullable()
       .defaultTo(PermissionGroupEnum.USER);
+  });
+
+  await createTable(Tables.Resource, (table) => {
+    table.string("id").primary();
+    table.string("name").notNullable();
+    table.string(`path`).notNullable();
+    table.integer(`size`).notNullable();
+    table.string(`uploader`).notNullable();
+    table
+      .dateTime(`uploadedAt`)
+      .notNullable()
+      .defaultTo(DatabaseBuilder.fn.now());
+  });
+
+  await createTable(Tables.Comic, (table) => {
+    table.string("id").primary();
+    table.string("name").notNullable().unique();
+    table.text(`description`).notNullable();
+    table.string(`postedBy`).notNullable();
+    table
+      .dateTime(`createdAt`)
+      .notNullable()
+      .defaultTo(DatabaseBuilder.fn.now());
+    table
+      .dateTime(`updatedAt`)
+      .notNullable()
+      .defaultTo(DatabaseBuilder.fn.now());
+    table.string(`thumbnail`).nullable();
+    table.integer(`views`).notNullable().defaultTo(0);
+    table.integer(`likes`).notNullable().defaultTo(0);
+    table.string(`slug`).notNullable();
+  });
+
+  await createTable(Tables.ComicChapter, (table) => {
+    table.string("id").primary();
+    table.string("name").notNullable();
+    table.string(`comicId`).notNullable();
+    table.string(`postedBy`).notNullable();
+    table
+      .dateTime(`createdAt`)
+      .notNullable()
+      .defaultTo(DatabaseBuilder.fn.now());
+    table
+      .dateTime(`updatedAt`)
+      .notNullable()
+      .defaultTo(DatabaseBuilder.fn.now());
+    table
+      .integer("viewType")
+      .notNullable()
+      .defaultTo(ComicChapterViewTypeEnum.COMIC_CHAPTER_VIEW_TYPE_IMAGE);
+    table.integer("length").notNullable().defaultTo(0);
+  });
+
+  await createTable(Tables.ComicChapterBlock, (table) => {
+    table.string("id").primary();
+    table.string("chapterId").notNullable();
+    table.integer("index").notNullable();
+    table.string("content").notNullable();
   });
 }
 

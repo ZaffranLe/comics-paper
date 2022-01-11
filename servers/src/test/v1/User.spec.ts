@@ -10,7 +10,7 @@ import * as chai from "chai";
 import { UserController } from "../../v1/controllers/UserController";
 import DatabaseBuilder from "../../v1/utils/DatabaseBuilder";
 import validator from "validator";
-import PasswordUtils from "../../v1/utils/PasswordUtil";
+import PasswordUtils from "../../v1/utils/PasswordUtils";
 const expect = chai.expect;
 
 const userFieldData = {
