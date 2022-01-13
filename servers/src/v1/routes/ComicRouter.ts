@@ -1,3 +1,4 @@
+import { keyword } from "chalk";
 import { ComicChapterViewTypeEnum } from "./../interfaces/ComicChapterInterface";
 import { ComicInterface } from "./../interfaces/ComicInterface";
 import { PermissionEnum } from "./../interfaces/PermissionInterface";
@@ -10,6 +11,7 @@ import ComicController from "../controllers/ComicController";
 import ResourceController from "../controllers/ResourceController";
 import ComicChapterBlockController from "../controllers/ComicChapterBlockController";
 import ComicChapterController from "../controllers/ComicChapterController";
+import ComicTagController from "../controllers/ComicTagController";
 const router = express.Router();
 
 /**
@@ -338,6 +340,58 @@ router.get(`/chapters/chapter/:chapterId/`, async (req, res, next) => {
     return next(new MiddlewareError(err.message, 500));
   }
 });
+
+/**
+ * Create new tag with specific keyword
+ */
+router.post(`/tags/`, getAuth, async (req, res, next) => {
+  try {
+    // Check authorization
+    const user: User = req["UserRequest"];
+    if (!user) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401)
+      );
+    }
+
+    // Check permissions
+    if (!(await user.hasPermission(PermissionEnum.COMIC_TAG_CREATE))) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403)
+      );
+    }
+    const { keyword } = req.body;
+
+    // Check field
+    if (!keyword) {
+      return next(
+        new MiddlewareError(
+          Locale.HttpResponseMessage.MissingRequiredFields,
+          400
+        )
+      );
+    }
+
+    // Check whether tag exists
+    if ((await ComicTagController.getTag(keyword)) != null) {
+      return next(
+        new MiddlewareError(
+          Locale.HttpResponseMessage.ComicTagAlreadyExists,
+          400
+        )
+      );
+    }
+
+    const tag = await ComicTagController.createTag(keyword);
+    res.json({
+      tag,
+    });
+  } catch (err) {
+    next(new MiddlewareError(err.message, 500));
+  }
+});
+
+
 
 const ComicRouter = router;
 export default ComicRouter;

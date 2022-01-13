@@ -39,4 +39,8 @@ export enum PermissionEnum {
 
   // Comic chapter
   COMIC_CHAPTER_CREATE,
+
+
+  // Comic tag
+  COMIC_TAG_CREATE,
 }

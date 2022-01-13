@@ -194,7 +194,6 @@ router.post(`/roles/grant`, getAuth, async (req, res, next) => {
  * Revokes permissions from group
  *
  */
-
 router.delete(`/roles/revoke`, async (req, res, next) => {
   try {
     const permissionGroupId = req.body.permissionGroupId as any;

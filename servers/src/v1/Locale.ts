@@ -93,6 +93,10 @@ export const Locale = {
       Description:
         "Revoke permission from group (remove permission from a permission group)",
     },
+    ComicTagCreate: {
+      Name: "comic_tag_create",
+      Description: "Create a new comic tag",
+    },
   },
 
   HttpResponseMessage: {
@@ -123,5 +127,6 @@ export const Locale = {
     PermissionGroupExists: "Permission group already exists.",
     PermissionNotExists: "Permission not exists.",
     PermissionGroupNotExists: "Permission group not exists.",
+    ComicTagAlreadyExists: "Comic tag already exists.",
   },
 };

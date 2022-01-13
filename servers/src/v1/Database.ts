@@ -25,6 +25,10 @@ export const Tables = {
   ComicChapter: "comic_chapters",
   // Comic chapter blocks
   ComicChapterBlock: "comic_chapter_blocks",
+  // Comic tag
+  ComicTag: "comic_tags",
+  // Comic book tag
+  ComicBookTag: "comic_book_tags",
 };
 
 export async function setupDatabase() {
@@ -32,7 +36,7 @@ export async function setupDatabase() {
 
   // Permission group
   await createTable(Tables.PermissionGroup, (table) => {
-  table.increments("id").primary();
+    table.increments("id").primary();
     table.string("name").notNullable().unique();
     table.text("description").notNullable();
   });
@@ -125,6 +129,18 @@ export async function setupDatabase() {
     table.string("chapterId").notNullable();
     table.integer("index").notNullable();
     table.string("content").notNullable();
+  });
+  
+  await createTable(Tables.ComicTag, (table) => {
+    // id, keywords
+    table.string("id").primary();
+    table.string("keywords").notNullable();
+  });
+
+  await createTable(Tables.ComicBookTag, (table) => {
+    //comicId and tagId
+    table.string("comicId").notNullable();
+    table.string("tagId").notNullable();
   });
 }
 
