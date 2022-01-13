@@ -353,6 +353,48 @@ router.put(
     res.status(204).end();
   }
 );
+/**
+ * Grant a permission to user
+ */
+router.post(`/permissions/`, getAuth, async (req, res, next) => {
+  try {
+    // Get user from token provided
+    const userRequest: User = req["UserRequest"];
+    // Not contains user
+    if (!userRequest) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401)
+      );
+    }
+
+    // If user is not admin, return forbidden
+    if (
+      !userRequest.hasPermission(PermissionEnum.ADMIN_UPDATE_PERMISSION_GROUP)
+    ) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403)
+      );
+    }
+
+    // Get from body userId and permissionId
+    const { userId, permissionId } = req.body;
+    if (!userId || !permissionId) {
+      return next(
+        new MiddlewareError(
+          Locale.HttpResponseMessage.MissingRequiredFields,
+          400
+        )
+      );
+    }
+
+    // Check permissions
+    await UserController.updatePermissionRole(userId, permissionId);
+
+    res.status(204).end();
+  } catch (err) {
+    next(new MiddlewareError(err.message, 500));
+  }
+});
 
 const UserRouter = router;
 export default UserRouter;

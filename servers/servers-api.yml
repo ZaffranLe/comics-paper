@@ -764,6 +764,32 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /users/permissions:
+    post:
+      description: Sets a permission group for user.
+      security:
+        - BearerAuth: [http]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserPermissionRequestInterface"
+      responses:
+        "204":
+          description: "Successfully updated user"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
 # A components schemas
 components:
   securitySchemes:
@@ -1030,3 +1056,17 @@ components:
         name:
           type: string
           description: View type name
+    UserPermissionRequestInterface:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: uuid
+          description: A user uuid
+        permissionId:
+          type: integer
+          format: int32
+          description: A permission group id (not permission).
+      required:
+        - userId
+        - permissionId

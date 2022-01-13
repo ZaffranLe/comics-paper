@@ -41,6 +41,14 @@ describe("v1: Resource", () => {
           expect(error).not.be.null;
         }
       });
+      
     });
+    describe('getResourceMetadata', () => {
+      it(`should return a resource`, async() => {
+        
+      })
+    })
+    
   });
+
 });

@@ -60,6 +60,32 @@ async function createPermissionGroup(
   });
 }
 
+/**
+ * Update permission group properties
+ * @param permissionGroupId a permission group id
+ */
+async function updatePermissionGroup(
+  permissionGroupId: number,
+  name: string,
+  description: string
+) {
+  // Check field
+  if (
+    permissionGroupId === undefined ||
+    name === undefined ||
+    description === undefined
+  ) {
+    throw new Error("id, name or description not found");
+  }
+
+  return DatabaseBuilder(Tables.PermissionGroup)
+    .update({
+      name,
+      description,
+    })
+    .where({ id: permissionGroupId });
+}
+
 async function getPermissionsByGroup(id: number) {
   return DatabaseBuilder()
     .select({
@@ -78,4 +104,5 @@ export const PermissionGroupController = {
   hasPermissionGroup,
   getAllPermissionGroups,
   getPermissionsByGroup,
+  updatePermissionGroup,
 };

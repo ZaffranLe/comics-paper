@@ -11,6 +11,7 @@ import { UserController } from "../../v1/controllers/UserController";
 import DatabaseBuilder from "../../v1/utils/DatabaseBuilder";
 import validator from "validator";
 import PasswordUtils from "../../v1/utils/PasswordUtils";
+import { PermissionGroupEnum } from "../../v1/interfaces/PermissionGroupInterface";
 const expect = chai.expect;
 
 const userFieldData = {
@@ -214,6 +215,24 @@ describe(`v1: User `, () => {
       expect(ru.introduction).to.be.equal("newintroduction");
     });
 
+    it(`should update permission group`, async () => {
+      const { username, password, email, nickname } = userFieldData;
+      const response = await UserController.createUser(
+        username,
+        password,
+        email,
+        nickname
+      );
+      await UserController.updatePermissionRole(
+        response.id,
+        PermissionGroupEnum.MOD
+      );
+      const permissionGroup = await UserController.getPermissionGroupFromUserId(
+        response.id
+      );
+      expect(permissionGroup.id).to.be.equal(PermissionGroupEnum.MOD);
+    });
+
     // missing arguments for all functions above
     it(`should throw error when missing arguments`, async () => {
       try {
@@ -230,6 +249,7 @@ describe(`v1: User `, () => {
         await UserController.hasPermissionByUserId(undefined, undefined);
         await UserController.updateUserPassword(undefined, undefined);
         await UserController.updateUserProfile(undefined, undefined, undefined);
+        await UserController.updatePermissionRole(undefined, undefined);
       } catch (error) {
         expect(error).to.be.a("Error");
         expect(error.message).to.match(/Invalid/);
