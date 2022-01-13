@@ -24,19 +24,24 @@ async function createTag(keyword: string) {
 /**
  * Retrieves a tag from the database.
  *
- * @param tag an object containing tag information to search
+ * @param keyword a keyword of tag to search for.
  * @returns an object bare uuid and keyword
  */
-async function getTag(
-  tag: ComicTagRequestInterface
-): Promise<ComicTagResponseInterface> {
-  return await DatabaseBuilder(Tables.ComicTag)
-    .where({ keyword: tag.keyword })
-    .first();
+async function getTag(keyword: string): Promise<ComicTagResponseInterface> {
+  return await DatabaseBuilder(Tables.ComicTag).where({ keyword }).first();
+}
+/**
+ * Retrieves a specific tag from the database by provided id.
+ * @param tagId a tag identifier to search for tags
+ * @returns a tag object, null if not found.
+ */
+async function getTagById(tagId: string) {
+  return await DatabaseBuilder(Tables.ComicTag).where({ id: tagId }).first();
 }
 
 const ComicTagController = {
   createTag,
   getTag,
+  getTagById,
 };
 export default ComicTagController;

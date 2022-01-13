@@ -861,7 +861,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  /roles/revoke:
+  /permissions/roles/revoke:
     delete:
       description: Revokes a permission group from a role.
       security:
@@ -909,7 +909,7 @@ paths:
             schema:
               $ref: "#/components/schemas/ComicTagRequestInterface"
       responses:
-        "201":
+        "200":
           description: "Successfully created comic tag"
           content:
             application/json:
@@ -933,9 +933,89 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  /comics/tags/{tagId}:
-    post: 
-      # TODO: create this router description please
+  /comics/{comicId}/tags/{tagId}:
+    post:
+      description: Creates reference between comic and tag.
+      security:
+        - BearerAuth: [http]
+      parameters:
+        - in: path
+          name: tagId
+          schema:
+            type: string
+            format: uuid
+          required: true
+        - in: path
+          name: comicId
+          schema:
+            type: string
+            format: uuid
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ComicTagRequestInterface"
+      responses:
+        "204":
+          description: "Successfully updated comic tag"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: "Forbidden"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /comics/{comicId}/tags/:
+    get:
+      description: Retrieves comic tags.
+      security:
+        - BearerAuth: [http]
+      parameters:
+        - in: path
+          name: comicId
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "200":
+          description: "Successfully retrieved comic tags"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ComicTagResponseInterface"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: "Forbidden"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 # A components schemas
 components:
   securitySchemes:

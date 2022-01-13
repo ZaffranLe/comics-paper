@@ -43,4 +43,8 @@ export enum PermissionEnum {
 
   // Comic tag
   COMIC_TAG_CREATE,
+
+
+  // Comic book tag 
+  COMIC_BOOK_TAG_REF_CREATE,
 }

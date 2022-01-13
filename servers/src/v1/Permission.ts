@@ -216,6 +216,12 @@ async function setupPermission() {
     Locale.Permission.ComicTagCreate.Description
   );
 
+  generatePermission(
+    PermissionEnum.COMIC_BOOK_TAG_REF_CREATE,
+    Locale.Permission.ComicBookTagRefCreate.Name,
+    Locale.Permission.ComicBookTagRefCreate.Description
+  );
+
   // console.log("All permissions: ");
   console.table(await PermissionController.getPermissions());
 }
@@ -279,7 +285,10 @@ async function setupDefaultPermissionRelationship() {
 
   // Tags
   generateRelation(PermissionGroupEnum.ADMIN, PermissionEnum.COMIC_TAG_CREATE);
-
+  generateRelation(
+    PermissionGroupEnum.ADMIN,
+    PermissionEnum.COMIC_BOOK_TAG_REF_CREATE
+  );
   // Mod permissions
   // Able to create a new comic
   generateRelation(PermissionGroupEnum.MOD, PermissionEnum.COMIC_CREATE);
@@ -295,7 +304,10 @@ async function setupDefaultPermissionRelationship() {
 
   // tags
   generateRelation(PermissionGroupEnum.MOD, PermissionEnum.COMIC_TAG_CREATE);
-
+  generateRelation(
+    PermissionGroupEnum.MOD,
+    PermissionEnum.COMIC_BOOK_TAG_REF_CREATE
+  );
   // User permissions
   generateRelation(
     PermissionGroupEnum.USER,

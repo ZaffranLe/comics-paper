@@ -130,11 +130,11 @@ export async function setupDatabase() {
     table.integer("index").notNullable();
     table.string("content").notNullable();
   });
-  
+
   await createTable(Tables.ComicTag, (table) => {
     // id, keywords
     table.string("id").primary();
-    table.string("keywords").notNullable();
+    table.string("keyword").notNullable();
   });
 
   await createTable(Tables.ComicBookTag, (table) => {

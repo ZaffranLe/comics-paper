@@ -97,6 +97,10 @@ export const Locale = {
       Name: "comic_tag_create",
       Description: "Create a new comic tag",
     },
+    ComicBookTagRefCreate: {
+      Name: "comic_book_ref_tag",
+      Description: "Create a new comic book reference tag",
+    },
   },
 
   HttpResponseMessage: {
@@ -128,5 +132,6 @@ export const Locale = {
     PermissionNotExists: "Permission not exists.",
     PermissionGroupNotExists: "Permission group not exists.",
     ComicTagAlreadyExists: "Comic tag already exists.",
+    ComicTagNotFound: "Comic tag not found.",
   },
 };

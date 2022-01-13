@@ -12,6 +12,7 @@ import ResourceController from "../controllers/ResourceController";
 import ComicChapterBlockController from "../controllers/ComicChapterBlockController";
 import ComicChapterController from "../controllers/ComicChapterController";
 import ComicTagController from "../controllers/ComicTagController";
+import ComicBookTagController from "../controllers/ComicBookTagController";
 const router = express.Router();
 
 /**
@@ -298,10 +299,8 @@ router.get(`/:id/chapters`, async (req, res, next) => {
         order: order as "asc" | "desc",
       }
     );
-    console.log(chapters);
-    res.json({
-      chapters,
-    });
+    // console.log(chapters);
+    res.json(chapters);
   } catch (err) {
     return next(new MiddlewareError(err.message, 500));
   }
@@ -333,9 +332,7 @@ router.get(`/chapters/chapter/:chapterId/`, async (req, res, next) => {
     const chapter = await ComicChapterController.getChapter(chapterId);
 
     console.log(chapter);
-    res.json({
-      chapter,
-    });
+    res.json(chapter);
   } catch (err) {
     return next(new MiddlewareError(err.message, 500));
   }
@@ -383,15 +380,88 @@ router.post(`/tags/`, getAuth, async (req, res, next) => {
     }
 
     const tag = await ComicTagController.createTag(keyword);
-    res.json({
-      tag,
-    });
+    res.json(tag);
   } catch (err) {
     next(new MiddlewareError(err.message, 500));
   }
 });
 
+/**
+ * Create refs
+ */
+router.post(`/:comicId/tags/:tagId`, getAuth, async (req, res, next) => {
+  try {
+    // Check authorization
+    const user: User = req["UserRequest"];
+    if (!user) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401)
+      );
+    }
 
+    // Check permissions
+    if (!(await user.hasPermission(PermissionEnum.COMIC_BOOK_TAG_REF_CREATE))) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403)
+      );
+    }
+
+    const { tagId, comicId } = req.params;
+    // const { comicId } = req.body;
+
+    // Check field
+    if (!tagId || !comicId) {
+      return next(
+        new MiddlewareError(
+          Locale.HttpResponseMessage.MissingRequiredFields,
+          400
+        )
+      );
+    }
+
+    // Check whether tag exists
+    if ((await ComicTagController.getTagById(tagId)) == null) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.ComicTagNotFound, 404)
+      );
+    }
+
+    // Check whether comic exists
+    if (!(await ComicController.hasComic(comicId))) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.ComicNotFound, 404)
+      );
+    }
+
+    // Check whether comic tag exists
+    if (await ComicBookTagController.hasRef(comicId, tagId)) {
+      return next(
+        new MiddlewareError(
+          Locale.HttpResponseMessage.ComicTagAlreadyExists,
+          400
+        )
+      );
+    }
+
+    await ComicBookTagController.createRefTag(comicId, tagId);
+    res.status(204).end();
+  } catch (err) {
+    next(new MiddlewareError(err.message, 500));
+  }
+});
+
+/**
+ * Get all comic tags
+ */
+router.get(`/:comicId/tags/`, async (req, res, next) => {
+  try {
+    const comicId: string = req.params.comicId;
+    const tags = await ComicBookTagController.getRefsByComicId(comicId);
+    res.json(tags);
+  } catch (err) {
+    next(new MiddlewareError(err.message, 500));
+  }
+});
 
 const ComicRouter = router;
 export default ComicRouter;
