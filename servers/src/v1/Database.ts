@@ -32,8 +32,8 @@ export async function setupDatabase() {
 
   // Permission group
   await createTable(Tables.PermissionGroup, (table) => {
-    table.increments("id").primary();
-    table.string("name").notNullable();
+  table.increments("id").primary();
+    table.string("name").notNullable().unique();
     table.text("description").notNullable();
   });
 

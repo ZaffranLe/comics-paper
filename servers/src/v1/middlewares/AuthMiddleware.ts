@@ -55,7 +55,9 @@ export async function getAuth(
     // Call next middleware function
     next();
   } catch (err) {
-    console.error(err);
-    next(new MiddlewareError(err.message, 401));
+    // Laziness gives me a headache
+    next(
+      new MiddlewareError(Locale.HttpResponseMessage.InvalidTokenOrExpired, 401)
+    );
   }
 }

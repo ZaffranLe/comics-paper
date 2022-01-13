@@ -1,3 +1,4 @@
+import { Locale } from "./../Locale";
 import * as express from "express";
 import { MiddlewareError } from "../errors/MiddlewareError";
 
@@ -16,10 +17,13 @@ export function ErrorHandler(
 
   // log out the middleware errors
   console.error(err);
-
-  res.status(err.status || 500).json({
+  const responseStatus = err.status || 500;
+  res.status(responseStatus).json({
     error: {
-      message: err.message,
+      message:
+        responseStatus === 500
+          ? Locale.HttpResponseMessage.InternalServerError
+          : err.message,
     },
   });
 

@@ -191,7 +191,42 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PermissionGroupInterface"
+    post:
+      description: Creates new permission group.
+      security:
+        - BearerAuth: [http]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PermissionGroupInterface"
 
+      responses:
+        "200":
+          description: "Successfully created new permission group"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PermissionGroupInterface"
+        "400":
+          description: Body is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
   /permissions/:
     get:
       description: Retrieves all current permission in database.
@@ -789,7 +824,80 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-
+  /permissions/roles/grant:
+    post:
+      description: Grants a permission group to a role.
+      security:
+        - BearerAuth: [http]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RolePermissionRequestInterface"
+      responses:
+        "204":
+          description: "Successfully updated role"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: "Forbidden"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: "Role or permission not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /roles/revoke:
+    delete:
+      description: Revokes a permission group from a role.
+      security:
+        - BearerAuth: [http]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RolePermissionRequestInterface"
+      responses:
+        "204":
+          description: "Successfully updated role"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: "Forbidden"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: "Role or permission not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 # A components schemas
 components:
   securitySchemes:
@@ -887,6 +995,9 @@ components:
           type: string
         description:
           type: string
+      required:
+        - name
+        - description
     UserGeneralInterface:
       type: object
       properties:
@@ -1070,3 +1181,15 @@ components:
       required:
         - userId
         - permissionId
+    RolePermissionRequestInterface:
+      type: object
+      properties:
+        permissionId:
+          type: string
+          format: number
+        permissionGroupId:
+          type: string
+          format: number
+      required:
+        - permissionId
+        - permissionGroupId
