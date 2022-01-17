@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .input {
+    @apply ring-1 ring-gray-400 focus:outline-0 focus:ring-2 focus:ring-gray-800 rounded p-1;
+  }
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
