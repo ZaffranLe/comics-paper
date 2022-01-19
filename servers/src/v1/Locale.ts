@@ -83,6 +83,24 @@ export const Locale = {
       Name: "comic_chapter_create",
       Description: "Create a new comic chapter",
     },
+    GrantPermissionToGroup: {
+      Name: "grant_permission_to_group",
+      Description:
+        "Grant permission to group (add new permission into a permission group)",
+    },
+    RevokePermissionFromGroup: {
+      Name: "revoke_permission_from_group",
+      Description:
+        "Revoke permission from group (remove permission from a permission group)",
+    },
+    ComicTagCreate: {
+      Name: "comic_tag_create",
+      Description: "Create a new comic tag",
+    },
+    ComicBookTagRefCreate: {
+      Name: "comic_book_ref_tag",
+      Description: "Create a new comic book reference tag",
+    },
   },
 
   HttpResponseMessage: {
@@ -108,5 +126,12 @@ export const Locale = {
     BadRequest: "Bad request",
     ComicNotFound: "Comic not found.",
     ChapterViewTypeInvalid: "Invalid view type, must be `image` or `text`.",
+    InternalServerError: "Internal server error.",
+    InvalidTokenOrExpired: "Invalid token or expired.",
+    PermissionGroupExists: "Permission group already exists.",
+    PermissionNotExists: "Permission not exists.",
+    PermissionGroupNotExists: "Permission group not exists.",
+    ComicTagAlreadyExists: "Comic tag already exists.",
+    ComicTagNotFound: "Comic tag not found.",
   },
 };

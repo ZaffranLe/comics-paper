@@ -328,6 +328,18 @@ async function updateUserPassword(uuid: string, password: string) {
   );
 }
 
+/**
+ * Updates a permission group to user.
+ * @param userId a user identifier to grant a group
+ * @param permissionRole a permission group identifier to grant
+ */
+async function updatePermissionRole(userId: string, permissionRole: number) {
+  // Update a permission group to user
+  return await DatabaseBuilder(Tables.UserPermission)
+    .update({ permissionGroup: permissionRole })
+    .where({ userId });
+}
+
 export const UserController = {
   createUserPermission,
   createUser,
@@ -340,4 +352,5 @@ export const UserController = {
   hasPermissionByUserId,
   updateUserProfile,
   updateUserPassword,
+  updatePermissionRole,
 };

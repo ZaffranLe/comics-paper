@@ -95,7 +95,6 @@ async function setupPermissionGroup() {
  */
 async function setupPermission() {
   Logger.info(`Setting up permission...`);
-
   // Create user permission
   generatePermission(
     PermissionEnum.ADMIN_CREATE_USER,
@@ -198,7 +197,30 @@ async function setupPermission() {
     PermissionEnum.COMIC_CHAPTER_CREATE,
     Locale.Permission.ComicChapterCreate.Name,
     Locale.Permission.ComicChapterCreate.Description
-  )
+  );
+
+  generatePermission(
+    PermissionEnum.GRANT_PERMISSION_TO_GROUP,
+    Locale.Permission.GrantPermissionToGroup.Name,
+    Locale.Permission.GrantPermissionToGroup.Description
+  );
+  generatePermission(
+    PermissionEnum.REVOKE_PERMISSION_FROM_GROUP,
+    Locale.Permission.RevokePermissionFromGroup.Name,
+    Locale.Permission.RevokePermissionFromGroup.Description
+  );
+
+  generatePermission(
+    PermissionEnum.COMIC_TAG_CREATE,
+    Locale.Permission.ComicTagCreate.Name,
+    Locale.Permission.ComicTagCreate.Description
+  );
+
+  generatePermission(
+    PermissionEnum.COMIC_BOOK_TAG_REF_CREATE,
+    Locale.Permission.ComicBookTagRefCreate.Name,
+    Locale.Permission.ComicBookTagRefCreate.Description
+  );
 
   // console.log("All permissions: ");
   console.table(await PermissionController.getPermissions());
@@ -228,6 +250,7 @@ async function setupDefaultPermissionRelationship() {
   generateRelation(PermissionGroupEnum.ADMIN, PermissionEnum.RESOURCE_DELETE);
 
   // Modify permission
+  //    able to generate new permission, permission group and grant
   generateRelation(
     PermissionGroupEnum.ADMIN,
     PermissionEnum.ADMIN_DELETE_PERMISSION_GROUP
@@ -236,6 +259,15 @@ async function setupDefaultPermissionRelationship() {
   generateRelation(
     PermissionGroupEnum.ADMIN,
     PermissionEnum.ADMIN_UPDATE_PERMISSION_GROUP
+  );
+  generateRelation(
+    PermissionGroupEnum.ADMIN,
+    PermissionEnum.GRANT_PERMISSION_TO_GROUP
+  );
+
+  generateRelation(
+    PermissionGroupEnum.ADMIN,
+    PermissionEnum.REVOKE_PERMISSION_FROM_GROUP
   );
 
   // able to create new comic
@@ -251,6 +283,12 @@ async function setupDefaultPermissionRelationship() {
     PermissionEnum.COMIC_CHAPTER_CREATE
   );
 
+  // Tags
+  generateRelation(PermissionGroupEnum.ADMIN, PermissionEnum.COMIC_TAG_CREATE);
+  generateRelation(
+    PermissionGroupEnum.ADMIN,
+    PermissionEnum.COMIC_BOOK_TAG_REF_CREATE
+  );
   // Mod permissions
   // Able to create a new comic
   generateRelation(PermissionGroupEnum.MOD, PermissionEnum.COMIC_CREATE);
@@ -264,6 +302,12 @@ async function setupDefaultPermissionRelationship() {
     PermissionEnum.COMIC_CHAPTER_CREATE
   );
 
+  // tags
+  generateRelation(PermissionGroupEnum.MOD, PermissionEnum.COMIC_TAG_CREATE);
+  generateRelation(
+    PermissionGroupEnum.MOD,
+    PermissionEnum.COMIC_BOOK_TAG_REF_CREATE
+  );
   // User permissions
   generateRelation(
     PermissionGroupEnum.USER,
