@@ -1,5 +1,5 @@
 import axios from "axios";
-import configs from "../configs/configs.cfg";
+import configs from "../../configs/configs.cfg";
 
 const apiCall = axios.create({});
 
