@@ -37,8 +37,8 @@ async function createUserPermission(userId: string, permissionGroup: number) {
 async function createUser(
   username: string,
   password: string,
-  email: string,
-  nickname: string,
+  email?: string,
+  nickname?: string,
   introduction?: string | "" // optional
 ) {
   // generate uuid
@@ -52,9 +52,9 @@ async function createUser(
     id,
     username,
     password: hashedPassword,
-    email,
-    nickname,
-    introduction,
+    email: email || "",
+    nickname: nickname || "",
+    introduction: introduction || "",
   };
   await DatabaseBuilder.insert(response).into(Tables.User);
   await createUserPermission(id, PermissionGroupEnum.USER);
@@ -328,6 +328,18 @@ async function updateUserPassword(uuid: string, password: string) {
   );
 }
 
+/**
+ * Updates a permission group to user.
+ * @param userId a user identifier to grant a group
+ * @param permissionRole a permission group identifier to grant
+ */
+async function updatePermissionRole(userId: string, permissionRole: number) {
+  // Update a permission group to user
+  return await DatabaseBuilder(Tables.UserPermission)
+    .update({ permissionGroup: permissionRole })
+    .where({ userId });
+}
+
 export const UserController = {
   createUserPermission,
   createUser,
@@ -340,4 +352,5 @@ export const UserController = {
   hasPermissionByUserId,
   updateUserProfile,
   updateUserPassword,
+  updatePermissionRole,
 };

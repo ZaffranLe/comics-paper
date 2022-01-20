@@ -106,8 +106,25 @@ async function getGrantedPermissionsFromGroup(permissionGroup: number) {
   return extractedValue;
 }
 
+/**
+ * Removes a permission from a permission group that linked together.
+ *
+ * @param permissionGroupId a permission group id
+ * @param permissionId a permission id
+ */
+async function removeRelationship(
+  permissionGroupId: number,
+  permissionId: number
+) {
+  await DatabaseBuilder(Tables.PermissionRelationship)
+    .delete()
+    .where({ permissionGroup: permissionGroupId, permissionId });
+}
+
 export const PermissionRelationshipController = {
   addRelation,
   hasRelation,
   getGrantedPermissionsFromGroup,
+
+  removeRelationship,
 };

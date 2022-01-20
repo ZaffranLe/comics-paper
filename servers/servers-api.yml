@@ -191,7 +191,42 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PermissionGroupInterface"
+    post:
+      description: Creates new permission group.
+      security:
+        - BearerAuth: [http]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PermissionGroupInterface"
 
+      responses:
+        "200":
+          description: "Successfully created new permission group"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PermissionGroupInterface"
+        "400":
+          description: Body is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
   /permissions/:
     get:
       description: Retrieves all current permission in database.
@@ -764,6 +799,262 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /users/permissions:
+    post:
+      description: Sets a permission group for user.
+      security:
+        - BearerAuth: [http]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserPermissionRequestInterface"
+      responses:
+        "204":
+          description: "Successfully updated user"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /permissions/roles/grant:
+    post:
+      description: Grants a permission group to a role.
+      security:
+        - BearerAuth: [http]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RolePermissionRequestInterface"
+      responses:
+        "204":
+          description: "Successfully updated role"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: "Forbidden"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: "Role or permission not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /permissions/roles/revoke:
+    delete:
+      description: Revokes a permission group from a role.
+      security:
+        - BearerAuth: [http]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RolePermissionRequestInterface"
+      responses:
+        "204":
+          description: "Successfully updated role"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: "Forbidden"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: "Role or permission not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /comics/tags:
+    post:
+      description: Creates a comic tag.
+      security:
+        - BearerAuth: [http]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ComicTagRequestInterface"
+      responses:
+        "200":
+          description: "Successfully created comic tag"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ComicTagResponseInterface"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: "Forbidden"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /comics/{comicId}/tags/{tagId}:
+    post:
+      description: Creates reference between comic and tag.
+      security:
+        - BearerAuth: [http]
+      parameters:
+        - in: path
+          name: tagId
+          schema:
+            type: string
+            format: uuid
+          required: true
+        - in: path
+          name: comicId
+          schema:
+            type: string
+            format: uuid
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ComicTagRequestInterface"
+      responses:
+        "204":
+          description: "Successfully updated comic tag"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: "Forbidden"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      description: Deletes reference between comic and tag.
+      security:
+        - BearerAuth: [http]
+      parameters:
+        - in: path
+          name: tagId
+          schema:
+            type: string
+            format: uuid
+          required: true
+        - in: path
+          name: comicId
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "204":
+          description: "Successfully deleted comic tag"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: "Forbidden"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /comics/{comicId}/tags/:
+    get:
+      description: Retrieves comic tags.
+      security:
+        - BearerAuth: [http]
+      parameters:
+        - in: path
+          name: comicId
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "200":
+          description: "Successfully retrieved comic tags"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ComicTagResponseInterface"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: "Forbidden"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
 # A components schemas
 components:
   securitySchemes:
@@ -861,6 +1152,9 @@ components:
           type: string
         description:
           type: string
+      required:
+        - name
+        - description
     UserGeneralInterface:
       type: object
       properties:
@@ -1030,3 +1324,49 @@ components:
         name:
           type: string
           description: View type name
+    UserPermissionRequestInterface:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: uuid
+          description: A user uuid
+        permissionId:
+          type: integer
+          format: int32
+          description: A permission group id (not permission).
+      required:
+        - userId
+        - permissionId
+    RolePermissionRequestInterface:
+      type: object
+      properties:
+        permissionId:
+          type: string
+          format: number
+        permissionGroupId:
+          type: string
+          format: number
+      required:
+        - permissionId
+        - permissionGroupId
+    ComicTagRequestInterface:
+      type: object
+      properties:
+        keyword:
+          type: string
+          description: A keyword of the comic
+      required:
+        - keyword
+
+    ComicTagResponseInterface:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        keyword:
+          type: string
+      required:
+        - keyword
+        - id

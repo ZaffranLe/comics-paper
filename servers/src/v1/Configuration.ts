@@ -63,7 +63,7 @@ export default Configuration;
  */
 function hasConfigurationEnvironment(environmentName: string) {
   // Not available
-  if (Configuration[environmentName] === undefined) {
+  if (Configuration[environmentName.trim()] === undefined) {
     throw new Error("Configuration environment is not available.");
   }
 }

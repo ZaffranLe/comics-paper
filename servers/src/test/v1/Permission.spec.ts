@@ -73,6 +73,18 @@ describe("v1: Permission Group", () => {
       expect(response).to.be.true;
     });
 
+    it(`has permission group by name`, async () => {
+      await PermissionGroupController.createPermissionGroup(
+        permissionGroup.id,
+        permissionGroup.name,
+        permissionGroup.description
+      );
+      const response = await PermissionGroupController.hasPermissionGroupByName(
+        permissionGroup.name
+      );
+      expect(response).to.be.true;
+    });
+
     /**
      * Get alls permission groups
      */
