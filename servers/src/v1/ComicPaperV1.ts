@@ -3,14 +3,14 @@ import { MainApplication } from "./MainApplication";
 import express from "express";
 import bodyParser from "body-parser";
 import morgan from "morgan";
-import { readFileSync } from "fs";
 import { ErrorHandler } from "./middlewares/ErrorHandler";
-
+import cors from "cors"
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.text());
+app.use(cors())
 
 // morgan
 app.use(morgan("dev"));

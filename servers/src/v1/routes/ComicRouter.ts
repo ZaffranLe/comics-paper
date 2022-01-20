@@ -463,5 +463,69 @@ router.get(`/:comicId/tags/`, async (req, res, next) => {
   }
 });
 
+/**
+ * Delete ref between tag and comic
+ */
+router.delete(`/:comicId/tags/:tagId`, getAuth, async (req, res, next) => {
+  try {
+    // Check authorization
+    const user: User = req["UserRequest"];
+    if (!user) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401)
+      );
+    }
+
+    // Check permissions
+    if (!(await user.hasPermission(PermissionEnum.COMIC_BOOK_TAG_REF_DELETE))) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403)
+      );
+    }
+
+    const { tagId, comicId } = req.params;
+    // const { comicId } = req.body;
+
+    // Check field
+    if (!tagId || !comicId) {
+      return next(
+        new MiddlewareError(
+          Locale.HttpResponseMessage.MissingRequiredFields,
+          400
+        )
+      );
+    }
+
+    // Check whether tag exists
+    if ((await ComicTagController.getTagById(tagId)) == null) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.ComicTagNotFound, 404)
+      );
+    }
+
+    // Check whether comic exists
+    if (!(await ComicController.hasComic(comicId))) {
+      return next(
+        new MiddlewareError(Locale.HttpResponseMessage.ComicNotFound, 404)
+      );
+    }
+
+    // Check whether comic tag exists
+    if (!(await ComicBookTagController.hasRef(comicId, tagId))) {
+      return next(
+        new MiddlewareError(
+          Locale.HttpResponseMessage.ComicTagNotFound,
+          404
+        )
+      );
+    }
+
+    await ComicBookTagController.deleteRef(comicId, tagId);
+    res.status(204).end();
+  } catch (err) {
+    next(new MiddlewareError(err.message, 500));
+  }
+});
+
 const ComicRouter = router;
 export default ComicRouter;

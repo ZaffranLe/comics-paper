@@ -27,6 +27,11 @@ async function hasRef(comicId: string, tagId: string) {
   return result.length > 0;
 }
 
+/**
+ * Retrieves a list of all references between comic and tag.
+ * @param comicId a comic identifier to
+ * @returns a list of tags associated with this comic
+ */
 async function getRefsByComicId(comicId: string) {
   return await DatabaseBuilder()
     .from({ cbt: Tables.ComicBookTag })
@@ -35,10 +40,20 @@ async function getRefsByComicId(comicId: string) {
     .innerJoin({ ct: Tables.ComicTag }, "ct.id", "cbt.tagId");
 }
 
+/**
+ * Deletes a reference between comic and tag.
+ * @param comicId a comic identifier to delete reference
+ * @param tagId a tag identifier to delete reference
+ */
+async function deleteRef(comicId: string, tagId: string) {
+  await DatabaseBuilder(Tables.ComicBookTag).where({ comicId, tagId }).delete();
+}
+
 const ComicBookTagController = {
   createRefTag,
   hasRef,
   getRefsByComicId,
+  deleteRef,
 };
 
 export default ComicBookTagController;

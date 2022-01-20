@@ -37,8 +37,8 @@ async function createUserPermission(userId: string, permissionGroup: number) {
 async function createUser(
   username: string,
   password: string,
-  email: string,
-  nickname: string,
+  email?: string,
+  nickname?: string,
   introduction?: string | "" // optional
 ) {
   // generate uuid
@@ -52,9 +52,9 @@ async function createUser(
     id,
     username,
     password: hashedPassword,
-    email,
-    nickname,
-    introduction,
+    email: email || "",
+    nickname: nickname || "",
+    introduction: introduction || "",
   };
   await DatabaseBuilder.insert(response).into(Tables.User);
   await createUserPermission(id, PermissionGroupEnum.USER);
