@@ -39,7 +39,7 @@ router.post(
       }
 
       // Validate nickname
-      if (!isValidNickname(nickname)) {
+      if (nickname && !isValidNickname(nickname)) {
         // console.log(nickname);
         return next(
           new MiddlewareError(Locale.HttpResponseMessage.InvalidNickname, 400)
@@ -47,13 +47,13 @@ router.post(
       }
 
       // Validate email
-      if (!isEmail(email)) {
+      if (email && !isEmail(email)) {
         return next(
           new MiddlewareError(Locale.HttpResponseMessage.InvalidEmail, 400)
         );
       }
       // Validate introduction
-      if (!isValidIntroduction(introduction)) {
+      if (introduction && !isValidIntroduction(introduction)) {
         return next(
           new MiddlewareError(
             Locale.HttpResponseMessage.InvalidIntroduction,
