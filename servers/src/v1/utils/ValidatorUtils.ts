@@ -8,7 +8,7 @@ import validator from "validator";
  */
 export function isValidNickname(str: string): boolean {
   // Check whether length > 0 and < 30
-  if (str.length < 1 || str.length > 30) {
+  if (str.length > 30) {
     return false;
   }
 
@@ -29,11 +29,6 @@ export function isValidNickname(str: string): boolean {
  * @returns true whether a string is a valid, false otherwise
  */
 export function isValidIntroduction(str: string): boolean {
-  // Check whether the introduction is not empty
-  if (validator.isEmpty(str)) {
-    return false;
-  }
-
   // Check whether length > 0 and < 200
   if (str.length < 1 || str.length > 200) {
     return false;
