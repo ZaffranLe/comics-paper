@@ -47,7 +47,7 @@ router.post(
       }
 
       // Validate email
-      if (!isEmail(email)) {
+      if (email && !isEmail(email)) {
         return next(
           new MiddlewareError(Locale.HttpResponseMessage.InvalidEmail, 400)
         );
