@@ -101,6 +101,10 @@ export const Locale = {
       Name: "comic_book_ref_tag",
       Description: "Create a new comic book reference tag",
     },
+    ComicBookTagRefDelete: {
+      Name: "comic_book_ref_tag_delete",
+      Description: "Delete a comic book reference tag",
+    },
   },
 
   HttpResponseMessage: {

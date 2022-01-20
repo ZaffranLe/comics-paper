@@ -29,7 +29,7 @@ router.post(
       const { username, password, email, nickname, introduction } = req.body;
 
       // Validate fields
-      if (!username || !password || !email || !nickname) {
+      if (!username || !password) {
         return next(
           new MiddlewareError(
             Locale.HttpResponseMessage.MissingRequiredFields,
