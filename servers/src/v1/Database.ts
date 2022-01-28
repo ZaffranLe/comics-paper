@@ -66,7 +66,7 @@ export async function setupDatabase() {
 
   // User permissions
   await createTable(Tables.UserPermission, (table) => {
-    table.string(`userId`).notNullable();
+    table.string(`userId`).primary().notNullable();
     table
       .integer(`permissionGroup`)
       .notNullable()
