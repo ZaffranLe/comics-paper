@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import * as authActions from "../../../redux/slices/auth";
-import * as authApi from "../../../utils/api/auth";
+import * as authApi from "../../../utils/api/users";
 import { classNames } from "../../../utils/common";
 
 function LoginTab(props) {
