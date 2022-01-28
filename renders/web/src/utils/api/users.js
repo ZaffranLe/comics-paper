@@ -1,5 +1,28 @@
 import api from "./api-call";
 
+function register(user) {
+    return api({
+        url: "/v1/users/signup",
+        method: "POST",
+        data: user,
+    });
+}
+
+function login(user) {
+    return api({
+        url: "/v1/users/signin",
+        method: "POST",
+        data: user,
+    });
+}
+
+function getUserInfo(id) {
+    return api({
+        url: `/v1/users/${id}`,
+        method: "GET",
+    });
+}
+
 function getAllUser() {
     return api({
         url: "/v1/users",
@@ -7,12 +30,12 @@ function getAllUser() {
     });
 }
 
-function createUser(user) {
+function updateUser(user) {
     return api({
-        url: "/v1/users",
-        method: "POST",
+        url: `/v1/users/${user.id}`,
+        method: "PUT",
         data: user,
     });
 }
 
-export { getAllUser, createUser };
+export { register, login, getUserInfo, getAllUser, updateUser };
