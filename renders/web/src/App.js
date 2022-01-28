@@ -9,6 +9,7 @@ import {
     faChevronDown,
     faChevronRight,
     faSlidersH,
+    faSpinner,
     faStar,
     faTimes,
     faTrophy,
@@ -29,7 +30,8 @@ library.add(
     faChevronRight,
     faUser,
     faUnlockAlt,
-    faBook
+    faBook,
+    faSpinner
 );
 
 function App() {
