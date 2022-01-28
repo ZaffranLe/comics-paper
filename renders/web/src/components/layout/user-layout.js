@@ -16,6 +16,10 @@ function UserLayout() {
         dispatch(authActions.setLoginModal("login"));
     };
 
+    const handleLogout = () => {
+        dispatch(authActions.logout());
+    };
+
     const pageMenu = [
         {
             name: "Trang chủ",
@@ -33,6 +37,7 @@ function UserLayout() {
             path: "/advanced-search",
         },
     ];
+
     return (
         <>
             <nav className="bg-gray-800 sticky top-0">
@@ -137,29 +142,25 @@ function UserLayout() {
                                                 role="menu"
                                                 aria-orientation="vertical"
                                                 aria-labelledby="user-menu-button"
-                                                tabIndex="-1"
                                             >
                                                 <div
-                                                    className="block px-4 py-2 text-sm text-gray-700"
+                                                    className="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100"
                                                     role="menuitem"
-                                                    tabIndex="-1"
-                                                    id="user-menu-item-0"
                                                 >
                                                     Thông tin cá nhân
                                                 </div>
+                                                <Link to="/dashboard">
+                                                    <div
+                                                        className="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100"
+                                                        role="menuitem"
+                                                    >
+                                                        Quản lý
+                                                    </div>
+                                                </Link>
                                                 <div
-                                                    className="block px-4 py-2 text-sm text-gray-700"
+                                                    className="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100"
                                                     role="menuitem"
-                                                    tabIndex="-1"
-                                                    id="user-menu-item-1"
-                                                >
-                                                    Cài đặt
-                                                </div>
-                                                <div
-                                                    className="block px-4 py-2 text-sm text-gray-700"
-                                                    role="menuitem"
-                                                    tabIndex="-1"
-                                                    id="user-menu-item-2"
+                                                    onClick={handleLogout}
                                                 >
                                                     Đăng xuất
                                                 </div>

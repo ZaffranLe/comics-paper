@@ -5,8 +5,8 @@ const apiCall = axios.create({});
 
 apiCall.interceptors.request.use(
     async (config) => {
-        // const token = localStorage.getItem("token");
-        // config.headers["x-access-token"] = token;
+        const token = localStorage.getItem("token");
+        config.headers["Authorization"] = `Bearer ${token}`;
         
         config.baseURL = configs.originBackend;
 

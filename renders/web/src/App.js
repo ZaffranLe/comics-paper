@@ -1,5 +1,6 @@
 import React from "react";
 import AppRouter from "./router";
+import * as authActions from "./redux/slices/auth";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
     faAlignJustify,
@@ -14,6 +15,8 @@ import {
     faUnlockAlt,
     faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch } from "react-redux";
+import { checkTokenValid } from "./utils/common";
 
 library.add(
     faBell,
@@ -30,6 +33,13 @@ library.add(
 );
 
 function App() {
+    const dispatch = useDispatch();
+
+    React.useEffect(() => {
+        const tokenValid = checkTokenValid();
+        dispatch(authActions.setAuthenticated(tokenValid));
+    }, [dispatch]);
+
     return (
         <>
             <AppRouter />
