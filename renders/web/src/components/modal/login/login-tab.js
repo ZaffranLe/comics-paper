@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 import * as authActions from "../../../redux/slices/auth";
+import * as authApi from "../../../utils/api/auth";
+import { classNames } from "../../../utils/common";
 
 function LoginTab(props) {
     const [loginInfo, setLoginInfo] = useState({
         username: "",
         password: "",
     });
+    const [loading, setLoading] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -20,9 +24,28 @@ function LoginTab(props) {
         dispatch(authActions.setLoginModal("register"));
     };
 
+    const handleLogin = async () => {
+        try {
+            setLoading(true);
+            const resp = await authApi.login(loginInfo);
+            localStorage.setItem("token", resp.data.token);
+            toast.success("Đăng nhập thành công.");
+            dispatch(authActions.setLoginModal(false));
+            dispatch(authActions.setAuthenticated(true));
+        } catch (e) {
+            toast.error(
+                e.response?.data?.error?.message ||
+                    "Đăng nhập thất bại, vui lòng thử lại sau."
+            );
+            console.error(e);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <>
-            <form className="w-full h-full p-4 flex flex-col gap-4 justify-center">
+            <div className="w-full h-full p-4 flex flex-col gap-4 justify-center">
                 <div className="font-semibold text-xl border-l-8 border-gray-800 pl-8">
                     Đăng nhập
                 </div>
@@ -44,8 +67,14 @@ function LoginTab(props) {
                     />
                 </div>
                 <button
-                    className="bg-gray-800 text-white py-2 rounded focus:bg-gray-600"
-                    type="submit"
+                    className={classNames(
+                        loading
+                            ? "bg-gray-500"
+                            : "bg-gray-800 hover:bg-gray-700",
+                        "text-white py-2 rounded focus:bg-gray-600"
+                    )}
+                    disabled={loading}
+                    onClick={handleLogin}
                 >
                     Đăng nhập
                 </button>
@@ -64,7 +93,7 @@ function LoginTab(props) {
                         </span>
                     </div>
                 </div>
-            </form>
+            </div>
         </>
     );
 }

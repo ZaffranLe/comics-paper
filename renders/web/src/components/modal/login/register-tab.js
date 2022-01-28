@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 import * as authActions from "../../../redux/slices/auth";
+import * as authApi from "../../../utils/api/auth";
+import { classNames } from "../../../utils/common";
 
 function RegisterTab(props) {
     const [registerInfo, setRegisterInfo] = useState({
@@ -8,6 +11,7 @@ function RegisterTab(props) {
         password: "",
         confirmPassword: "",
     });
+    const [loading, setLoading] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -21,9 +25,30 @@ function RegisterTab(props) {
         dispatch(authActions.setLoginModal("login"));
     };
 
+    const handleRegister = async () => {
+        try {
+            if (registerInfo.password !== registerInfo.confirmPassword) {
+                toast.error("Mật khẩu không trùng khớp.");
+            } else {
+                setLoading(true);
+                await authApi.register(registerInfo);
+                toast.success("Đăng ký thành công.");
+                handleSwitchToLogin();
+            }
+        } catch (e) {
+            toast.error(
+                e.response?.data?.error?.message ||
+                    "Đăng ký thất bại, vui lòng thử lại sau."
+            );
+            console.error(e);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <>
-            <form className="w-full h-full p-4 flex flex-col gap-4 justify-center">
+            <div className="w-full h-full p-4 flex flex-col gap-4 justify-center">
                 <div className="font-semibold text-xl border-l-8 border-gray-800 pl-8">
                     Đăng ký
                 </div>
@@ -54,8 +79,14 @@ function RegisterTab(props) {
                     />
                 </div>
                 <button
-                    className="bg-gray-800 text-white py-2 rounded focus:bg-gray-600"
-                    type="submit"
+                    className={classNames(
+                        loading
+                            ? "bg-gray-500"
+                            : "bg-gray-800 hover:bg-gray-700",
+                        "text-white py-2 rounded focus:bg-gray-600"
+                    )}
+                    disabled={loading}
+                    onClick={handleRegister}
                 >
                     Đăng ký
                 </button>
@@ -67,7 +98,7 @@ function RegisterTab(props) {
                         Đã có tài khoản? Đăng nhập ngay
                     </span>
                 </div>
-            </form>
+            </div>
         </>
     );
 }
