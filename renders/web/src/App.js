@@ -18,6 +18,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch } from "react-redux";
 import { checkTokenValid } from "./utils/common";
+import jwtDecode from "jwt-decode";
+import * as userApi from "./utils/api/users";
 
 library.add(
     faBell,
@@ -36,11 +38,15 @@ library.add(
 
 function App() {
     const dispatch = useDispatch();
-
-    React.useEffect(() => {
+    
+    const fetchProfile = async () => {
         const tokenValid = checkTokenValid();
         dispatch(authActions.setAuthenticated(tokenValid));
-    }, [dispatch]);
+    };
+
+    React.useEffect(() => {
+        fetchProfile();
+    }, []);
 
     return (
         <>

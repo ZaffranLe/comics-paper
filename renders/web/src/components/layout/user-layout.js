@@ -3,7 +3,7 @@ import { Link, Outlet } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Banner from "../../assets/img/megumi-bg.jpg";
 import { useDispatch, useSelector } from "react-redux";
-import { LoginModal } from "..";
+import { LoginModal, ProfileModal } from "..";
 import * as authActions from "../../redux/slices/auth";
 
 function UserLayout() {
@@ -18,6 +18,10 @@ function UserLayout() {
 
     const handleLogout = () => {
         dispatch(authActions.logout());
+    };
+
+    const handleOpenProfile = () => {
+        dispatch(authActions.setProfileModal(true));
     };
 
     const pageMenu = [
@@ -146,6 +150,7 @@ function UserLayout() {
                                                 <div
                                                     className="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100"
                                                     role="menuitem"
+                                                    onClick={handleOpenProfile}
                                                 >
                                                     Thông tin cá nhân
                                                 </div>
@@ -219,6 +224,7 @@ function UserLayout() {
                 </div>
             </footer>
             <LoginModal />
+            <ProfileModal />
         </>
     );
 }

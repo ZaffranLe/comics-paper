@@ -4,6 +4,7 @@ import BookThumbnail from "./card/book-thumbnail";
 import BookTrending from "./card/book-trending";
 import Modal from "./modal";
 import LoginModal from "./modal/login";
+import ProfileModal from "./modal/profile";
 
 export {
     UserLayout,
@@ -12,4 +13,5 @@ export {
     BookTrending,
     Modal,
     LoginModal,
+    ProfileModal,
 };

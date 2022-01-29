@@ -5,7 +5,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/home";
 import Series from "./pages/series";
 // -- admin
-import Dashboard from "./pages/admin/dashboard";
+import AdminDashboard from "./pages/admin/dashboard";
+import AdminUsers from "./pages/admin/users";
 // components
 import { AdminLayout, UserLayout } from "./components";
 
@@ -20,7 +21,8 @@ function AppRouter() {
                         <Route path="*" element={<Home />} />
                     </Route>
                     <Route path="/dashboard" element={<AdminLayout />}>
-                        <Route index element={<Dashboard />} />
+                        <Route index element={<AdminDashboard />} />
+                        <Route path="users" element={<AdminUsers />} />
                     </Route>
                 </Routes>
             </BrowserRouter>

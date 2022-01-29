@@ -38,4 +38,27 @@ function updateUser(user) {
     });
 }
 
-export { register, login, getUserInfo, getAllUser, updateUser };
+function getProfile() {
+    return api({
+        url: "/v1/users/profile",
+        method: "GET",
+    });
+}
+
+function updateProfile(user) {
+    return api({
+        url: "/v1/users/profile",
+        method: "PUT",
+        data: user,
+    });
+}
+
+export {
+    register,
+    login,
+    getUserInfo,
+    getAllUser,
+    updateUser,
+    getProfile,
+    updateProfile,
+};
