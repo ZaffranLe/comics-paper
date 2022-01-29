@@ -297,7 +297,8 @@ async function hasPermissionByUserId(
 async function updateUserProfile(
     userId: string,
     nickname: string,
-    introduction: string
+    introduction: string,
+    email: string
 ) {
     // Validate identifier
     if (!userId) {
@@ -314,6 +315,7 @@ async function updateUserProfile(
         .update({
             nickname,
             introduction,
+            email,
         })
         .where({ id: userId });
 }
