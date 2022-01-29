@@ -170,7 +170,7 @@ router.post(
 /**
  * Retrieves all general information of user.
  */
-router.post(
+router.get(
     "/profile",
     getAuth,
     async (
@@ -200,13 +200,14 @@ router.post(
 
         // Extract password from user request
         const userRequest: User = req["UserRequest"];
-        const { username, email, nickname, id } = userRequest;
+        const { username, email, nickname, id, introduction } = userRequest;
         // Response
         res.json({
             id,
             username,
             email,
             nickname,
+            introduction,
             role: await userRequest.getRole(),
             permissions: await userRequest.getPermissions(),
         });
@@ -293,7 +294,7 @@ router.put(
 
         // Extract user from request
         const userRequest: User = req["UserRequest"];
-        const { nickname, introduction } = req.body;
+        const { nickname, introduction, email } = req.body;
 
         // Check for permission
         if (!userRequest.hasPermission(PermissionEnum.USER_UPDATE_PROFILE)) {
@@ -302,10 +303,11 @@ router.put(
             );
         }
 
-        // Whether provide nothing. Not modified
-        if (!nickname && !introduction) {
-            return res.status(304).end();
-        }
+        // remove check modified - tungls
+        // // Whether provide nothing. Not modified
+        // if (!nickname && !introduction) {
+        //     return res.status(304).end();
+        // }
 
         // Validate nickname
         if (nickname && !isValidNickname(nickname)) {
@@ -330,7 +332,8 @@ router.put(
         await UserController.updateUserProfile(
             userRequest.id,
             nickname,
-            introduction
+            introduction,
+            email
         );
 
         // Response
