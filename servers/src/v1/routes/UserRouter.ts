@@ -327,6 +327,15 @@ router.put(
                 )
             );
         }
+        // Validate email
+        if (email && !isEmail(email)) {
+            return next(
+                new MiddlewareError(
+                    Locale.HttpResponseMessage.InvalidEmail,
+                    400
+                )
+            );
+        }
 
         // Update user
         await UserController.updateUserProfile(
