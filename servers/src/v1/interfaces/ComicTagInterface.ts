@@ -3,6 +3,8 @@ export interface ComicTagResponseInterface {
   keyword: string;
 }
 
+export interface ComicTagsResponseInterface extends Array<ComicTagResponseInterface> {}
+
 export interface ComicTagRequestInterface {
   keyword: string;
 }
