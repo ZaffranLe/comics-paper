@@ -40,12 +40,12 @@ export enum PermissionEnum {
   // Comic chapter
   COMIC_CHAPTER_CREATE,
 
-
   // Comic tag
   COMIC_TAG_CREATE,
+  COMIC_TAG_UPDATE,
+  COMIC_TAG_DELETE,
 
-
-  // Comic book tag 
+  // Comic book tag
   COMIC_BOOK_TAG_REF_CREATE,
   COMIC_BOOK_TAG_REF_DELETE,
 }

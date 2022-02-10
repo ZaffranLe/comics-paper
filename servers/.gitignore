@@ -136,3 +136,4 @@ dist
 .env
 # The upload files folder
 uploads
+tmp
