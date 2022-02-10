@@ -207,7 +207,8 @@ describe(`v1: User `, () => {
       await UserController.updateUserProfile(
         response.id,
         "newnickname",
-        "newintroduction"
+        "newintroduction",
+        "email@gmail.com"
       );
       const ru = await UserController.getUserFromUUID(response.id);
 
@@ -248,7 +249,12 @@ describe(`v1: User `, () => {
         await UserController.getAllPermissionsFromUserId(undefined);
         await UserController.hasPermissionByUserId(undefined, undefined);
         await UserController.updateUserPassword(undefined, undefined);
-        await UserController.updateUserProfile(undefined, undefined, undefined);
+        await UserController.updateUserProfile(
+          undefined,
+          undefined,
+          undefined,
+          undefined
+        );
         await UserController.updatePermissionRole(undefined, undefined);
       } catch (error) {
         expect(error).to.be.a("Error");
