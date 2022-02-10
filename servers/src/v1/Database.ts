@@ -58,15 +58,15 @@ export async function setupDatabase() {
   await createTable(Tables.User, (table) => {
     table.string("id").primary().unique().notNullable();
     table.string(`username`).unique().notNullable();
-    table.string(`password`).unique().notNullable();
+    table.string(`password`).notNullable();
     table.string(`email`).unique().nullable();
     table.string(`nickname`).nullable();
-    table.string(`introduction`).notNullable().defaultTo("");
+    table.string(`introduction`).nullable();
   });
 
   // User permissions
   await createTable(Tables.UserPermission, (table) => {
-    table.string(`userId`).notNullable();
+    table.string(`userId`).primary().notNullable();
     table
       .integer(`permissionGroup`)
       .notNullable()
