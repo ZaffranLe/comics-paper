@@ -52,6 +52,23 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
   /users/profile:
+    get:
+      description: "Get user profile"
+      security:
+        - BearerAuth: [http]
+      responses:
+        "200":
+          description: "Successfully get user profile"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponseInterface"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
     put:
       description: Using to update the profile of user. If you want to change password, using /users/change-password. <b>This method request a permission to change profile</b>.
       security:
