@@ -1,16 +1,10 @@
-import { ResourceInterface } from "./../interfaces/ResourceInterface";
-import { PermissionEnum } from "./../interfaces/PermissionInterface";
-import { User } from "./../classes/User";
 import fs from "fs";
 import { Locale } from "./../Locale";
-import { MiddlewareError } from "./../errors/MiddlewareError";
 import express from "express";
 import { getAuth } from "../middlewares/AuthMiddleware";
 import multer from "multer";
 import path from "path";
 import { v4 as uuid } from "uuid";
-import ImageUtils from "../utils/ImageUtils";
-import ResourceController from "../controllers/ResourceController";
 import { ResourceFunction } from "./functions/ResourceFunction";
 const router = express.Router();
 
