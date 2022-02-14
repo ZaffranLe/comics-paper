@@ -1072,6 +1072,35 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /comics/search:
+    get:
+      description: Retrieves an object from either an id of a slug or id.
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: false
+        - in: query
+          name: slug
+          schema:
+            type: string
+            format: slug
+          required: false
+      responses:
+        200:
+          description: "Successfully retrieved comic"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ComicResponseInterface"
+        404:
+          description: "Comic not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 # A components schemas
 components:
   securitySchemes:

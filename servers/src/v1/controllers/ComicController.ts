@@ -121,6 +121,30 @@ async function hasComic(id: string) {
   return !!comic;
 }
 
+/**
+ * Search a comic
+ */
+async function searchComic(query) {
+  let { slug, id } = query;
+
+  // Empty the slug unless is filled
+  if (slug === undefined) {
+    slug = "";
+  }
+
+  // Empty the id unless is filled
+  if (id === undefined) {
+    id = "";
+  }
+  console.log(slug, id);
+  const comic = await DatabaseBuilder(Tables.Comic)
+    .where({ slug })
+    .orWhere({ id })
+    .first();
+  // console.log(comic);
+  return comic;
+}
+
 const ComicController = {
   createComic,
   getComic,
@@ -128,5 +152,6 @@ const ComicController = {
   deleteComic,
   updateViewComic,
   hasComic,
+  searchComic,
 };
 export default ComicController;

@@ -580,4 +580,21 @@ export const ComicFunction = {
       return next(new MiddlewareError(err.message, 500));
     }
   },
+  searchComic: async (req, res, next) => {
+    try {
+      const comic = await ComicController.searchComic(req.query);
+
+      // Not found
+      if (comic) {
+        return next(
+          new MiddlewareError(Locale.HttpResponseMessage.ComicNotFound, 404)
+        );
+      }
+
+      // Response me
+      res.json(comic);
+    } catch (err) {
+      return next(new MiddlewareError(err.message, 500));
+    }
+  },
 };

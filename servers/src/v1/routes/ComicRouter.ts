@@ -19,6 +19,12 @@ router.post(`/:id/viewed`, ComicFunction.increaseComicView);
  */
 router.post(`/:id/chapters`, getAuth, ComicFunction.createChapter);
 
+/**
+ * Search comic via id or slug
+ *
+ */
+router.get(`/search/`, ComicFunction.searchComic);
+
 router.get(`/:id/chapters`, ComicFunction.getChapter);
 
 /**
