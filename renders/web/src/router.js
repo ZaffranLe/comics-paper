@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 // -- user
 import Home from "./pages/home";
 import Series from "./pages/series";
+import SerieDetail from "./pages/series/detail";
 // -- admin
 import AdminDashboard from "./pages/admin/dashboard";
 import AdminUsers from "./pages/admin/users";
@@ -20,6 +21,7 @@ function AppRouter() {
                     <Route path="/" element={<UserLayout />}>
                         <Route index element={<Home />} />
                         <Route path="series" element={<Series />} />
+                        <Route path="series/:url" element={<SerieDetail />} />
                         <Route path="*" element={<Home />} />
                     </Route>
                     <Route path="/dashboard" element={<AdminLayout />}>

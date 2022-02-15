@@ -6,6 +6,8 @@ import Modal from "./modal";
 import LoginModal from "./modal/login";
 import ProfileModal from "./modal/profile";
 import ConfirmModal from "./modal/confirm";
+import NotFound from "./not-found";
+import Loader from "./loader";
 
 export {
     UserLayout,
@@ -16,4 +18,6 @@ export {
     LoginModal,
     ProfileModal,
     ConfirmModal,
+    NotFound,
+    Loader,
 };

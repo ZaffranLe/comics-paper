@@ -12,11 +12,13 @@ import {
     faSpinner,
     faStar,
     faTags,
+    faStarHalfAlt,
     faTimes,
     faTrophy,
     faUnlockAlt,
     faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons";
 import { useDispatch } from "react-redux";
 import { checkTokenValid } from "./utils/common";
 
@@ -33,7 +35,9 @@ library.add(
     faUnlockAlt,
     faBook,
     faSpinner,
-    faTags
+    faTags,
+    faStarHalfAlt,
+    faStarRegular
 );
 
 function App() {
