@@ -5,6 +5,7 @@ import BookTrending from "./card/book-trending";
 import Modal from "./modal";
 import LoginModal from "./modal/login";
 import ProfileModal from "./modal/profile";
+import ConfirmModal from "./modal/confirm";
 
 export {
     UserLayout,
@@ -14,4 +15,5 @@ export {
     Modal,
     LoginModal,
     ProfileModal,
+    ConfirmModal,
 };

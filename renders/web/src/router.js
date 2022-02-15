@@ -7,6 +7,8 @@ import Series from "./pages/series";
 // -- admin
 import AdminDashboard from "./pages/admin/dashboard";
 import AdminUsers from "./pages/admin/users";
+import AdminBookTags from "./pages/admin/book-tags";
+import AdminSeries from "./pages/admin/series";
 // components
 import { AdminLayout, UserLayout } from "./components";
 
@@ -23,6 +25,8 @@ function AppRouter() {
                     <Route path="/dashboard" element={<AdminLayout />}>
                         <Route index element={<AdminDashboard />} />
                         <Route path="users" element={<AdminUsers />} />
+                        <Route path="book-tags" element={<AdminBookTags />} />
+                        <Route path="series" element={<AdminSeries />} />
                     </Route>
                 </Routes>
             </BrowserRouter>
