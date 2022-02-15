@@ -6,7 +6,7 @@ const mangaList = [
         img: "https://reaperscans.com/wp-content/uploads/2021/11/XL.jpg.webp",
         type: "comic",
         category: "Manhwa",
-        rating: 4.5,
+        rating: 3.2,
         reviews: 1999,
     },
     {
@@ -20,13 +20,13 @@ const mangaList = [
         reviews: 1999,
     },
     {
-        id: 3,
+        id: "94-123ad-4123a",
         url: "the-return-of-the-disaster-class-hero",
         title: "The Return of The Disaster-Class Hero",
         img: "https://reaperscans.com/wp-content/uploads/2021/10/RDCH_Cover.jpg.webp",
         type: "comic",
         category: "Manhwa",
-        rating: 4.5,
+        rating: 5,
         reviews: 1999,
     },
     {

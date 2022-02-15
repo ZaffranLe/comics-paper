@@ -11,11 +11,13 @@ import {
     faSlidersH,
     faSpinner,
     faStar,
+    faStarHalfAlt,
     faTimes,
     faTrophy,
     faUnlockAlt,
     faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons";
 import { useDispatch } from "react-redux";
 import { checkTokenValid } from "./utils/common";
 import jwtDecode from "jwt-decode";
@@ -33,12 +35,15 @@ library.add(
     faUser,
     faUnlockAlt,
     faBook,
-    faSpinner
+    faSpinner,
+    faStar,
+    faStarHalfAlt,
+    faStarRegular
 );
 
 function App() {
     const dispatch = useDispatch();
-    
+
     const fetchProfile = async () => {
         const tokenValid = checkTokenValid();
         dispatch(authActions.setAuthenticated(tokenValid));
