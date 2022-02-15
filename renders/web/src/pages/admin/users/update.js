@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { Modal } from "../../../components";
 import { classNames } from "../../../utils/common";
 
-function UpdateUser({ open, onClose, user: updatingUser, onSave }) {
+function UpdateUser({ open, onClose, onSave }) {
     const [user, setUser] = React.useState({
         username: "",
         nickname: "",
@@ -13,12 +13,6 @@ function UpdateUser({ open, onClose, user: updatingUser, onSave }) {
         introduction: "",
     });
     const [loading, setLoading] = React.useState(false);
-
-    React.useEffect(() => {
-        if (updatingUser) {
-            setUser({ ...updatingUser });
-        }
-    }, [updatingUser]);
 
     const handleChangeUserInfo = (field) => (e) => {
         setUser({ ...user, [field]: e.target.value });
@@ -45,9 +39,7 @@ function UpdateUser({ open, onClose, user: updatingUser, onSave }) {
             <Modal dimmer open={open} onClose={onClose}>
                 <div className="w-1/3 bg-white border rounded-xl p-4">
                     <div className="text-xl font-bold">
-                        {updatingUser
-                            ? "Cập nhật tài khoản"
-                            : "Tạo tài khoản mới"}
+                        {"Tạo tài khoản mới"}
                     </div>
                     <div className="grid grid-cols-2 gap-4 mt-4 mb-4">
                         <div>
@@ -56,7 +48,6 @@ function UpdateUser({ open, onClose, user: updatingUser, onSave }) {
                                 className="input w-full"
                                 value={user.username}
                                 onChange={handleChangeUserInfo("username")}
-                                disabled={updatingUser}
                             />
                         </div>
                         <div>
@@ -87,7 +78,7 @@ function UpdateUser({ open, onClose, user: updatingUser, onSave }) {
                         <div className="col-span-2">
                             <label>Giới thiệu</label>
                             <textarea
-                                minRows={3}
+                                rows={3}
                                 className="input w-full"
                                 value={user.introduction}
                                 onChange={handleChangeUserInfo("introduction")}

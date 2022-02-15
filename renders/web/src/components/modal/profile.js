@@ -66,7 +66,7 @@ function Profile() {
                         <div className="col-span-2">
                             <label>Giới thiệu</label>
                             <textarea
-                                minRows={3}
+                                rows={3}
                                 className="input w-full"
                                 value={user.introduction}
                                 onChange={handleChangeUserInfo("introduction")}
