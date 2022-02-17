@@ -26,8 +26,12 @@ const mangaList = [
         img: "https://reaperscans.com/wp-content/uploads/2021/10/RDCH_Cover.jpg.webp",
         type: "comic",
         category: "Manhwa",
-        rating: 5,
+        rating: 3.7,
         reviews: 1999,
+        tags: ["Action", "Adventure", "Fantasy", "Sci-Fi"],
+        description: `Raven Valt, the second son of a lowly nobleman, had been branded as a traitor. With the promise of a pardon, he was sent to fight monsters with the worst unit in the world, the “Rakshasa” Corps.
+
+Raven survived ten years in a place where most only lasted one. One day before his pardon, he was on his final mission on the battlefield alongside Eren Pendragon, heir to the Pendragon Duchy… when everything crumbled before his very eyes.`,
     },
     {
         id: 4,

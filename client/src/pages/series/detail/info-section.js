@@ -1,6 +1,7 @@
 import React from "react";
 import { classNames } from "../../../utils/common";
 import InfoTab from "./info-tab";
+import SummaryTab from "./summary-tab";
 
 function InfoSection({ mangaInfo }) {
     const TABS = {
@@ -34,7 +35,7 @@ function InfoSection({ mangaInfo }) {
             </div>
             <div className="ring-2 ring-gray-800 p-4 my-4 rounded-xl">
                 {activeTab === TABS.INFO && <InfoTab mangaInfo={mangaInfo} />}
-                {activeTab === TABS.SUMMARY && <></>}
+                {activeTab === TABS.SUMMARY && <SummaryTab mangaInfo={mangaInfo} />}
             </div>
         </>
     );
