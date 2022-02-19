@@ -4,15 +4,15 @@ import { toast } from "react-toastify";
 import { Modal } from "../../../components";
 import { classNames } from "../../../utils/common";
 
-function UpdateBookTag({ open, onClose, onSave, updateBookTag }) {
+function UpdateSerie({ open, onClose, onSave, updateSerie }) {
     const [keyword, setKeyword] = React.useState("");
     const [loading, setLoading] = React.useState(false);
 
     React.useEffect(() => {
-        if (updateBookTag) {
-            setKeyword(updateBookTag.keyword);
+        if (updateSerie) {
+            setKeyword(updateSerie.keyword);
         }
-    }, [updateBookTag]);
+    }, [updateSerie]);
 
     const handleChangeKeyword = (e) => {
         setKeyword(e.target.value);
@@ -26,7 +26,7 @@ function UpdateBookTag({ open, onClose, onSave, updateBookTag }) {
         } catch (e) {
             toast.error(
                 e.response?.data?.error?.message ||
-                    "Cập nhật thể loại truyện thất bại, vui lòng thử lại sau."
+                    "Cập nhật truyện thất bại, vui lòng thử lại sau."
             );
             console.error(e);
         } finally {
@@ -35,14 +35,14 @@ function UpdateBookTag({ open, onClose, onSave, updateBookTag }) {
     };
 
     const disableSaveBtn =
-        loading || (updateBookTag && keyword === updateBookTag.keyword);
+        loading || (updateSerie && keyword === updateSerie.keyword);
 
     return (
         <>
             <Modal dimmer open={open} onClose={onClose}>
                 <div className="w-1/3 bg-white border rounded-xl p-4">
                     <div className="text-xl font-bold">
-                        {updateBookTag
+                        {updateSerie
                             ? "Cập nhật thể loại truyện"
                             : "Tạo thể loại truyện mới"}
                     </div>
@@ -87,4 +87,4 @@ function UpdateBookTag({ open, onClose, onSave, updateBookTag }) {
     );
 }
 
-export default UpdateBookTag;
+export default UpdateSerie;
