@@ -34,45 +34,44 @@ function UpdateSerie({ open, onClose, onSave, updateSerie }) {
         }
     };
 
-    const disableSaveBtn =
-        loading || (updateSerie && keyword === updateSerie.keyword);
+    const disableSaveBtn = loading || (updateSerie && keyword === updateSerie.keyword);
 
     return (
         <>
             <Modal dimmer open={open} onClose={onClose}>
                 <div className="w-1/3 bg-white border rounded-xl p-4">
                     <div className="text-xl font-bold">
-                        {updateSerie
-                            ? "Cập nhật thể loại truyện"
-                            : "Tạo thể loại truyện mới"}
+                        {updateSerie ? "Cập nhật truyện" : "Tạo truyện mới"}
                     </div>
-                    <div className="mt-4 mb-4">
-                        <label>Từ khóa</label>
-                        <input
-                            className="input w-full"
-                            value={keyword}
-                            onChange={handleChangeKeyword}
-                        />
+                    <div className="grid grid-cols-3 my-4">
+                        <div>
+                            Thumb nail
+                        </div>
+                        <div className="col-span-2">
+                            <div>
+                                <label>Tên truyện</label>
+                                <input className="input w-full" />
+                            </div>
+                            <div>
+                                <label>Tóm tắt</label>
+                                <textarea className="input w-full" />
+                            </div>
+                            <div>
+                                <label>Tác giả</label>
+                                <input className="input w-full" />
+                            </div>
+                        </div>
                     </div>
                     <div className="text-right">
                         <button
                             onClick={handleSave}
                             className={classNames(
-                                !disableSaveBtn &&
-                                    "hover:bg-indigo-400 hover:text-white",
+                                !disableSaveBtn && "hover:bg-indigo-400 hover:text-white",
                                 "ring-2 ring-indigo-400 text-indigo-400 font-semibold py-2 px-4 rounded-full mr-2"
                             )}
                             disabled={disableSaveBtn}
                         >
-                            {loading ? (
-                                <FontAwesomeIcon
-                                    icon="spinner"
-                                    spin
-                                    fixedWidth
-                                />
-                            ) : (
-                                "Lưu"
-                            )}
+                            {loading ? <FontAwesomeIcon icon="spinner" spin fixedWidth /> : "Lưu"}
                         </button>
                         <button
                             onClick={onClose}
