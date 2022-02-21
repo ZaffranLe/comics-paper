@@ -43,10 +43,13 @@ function UpdateSerie({ open, onClose, onSave, updateSerie }) {
                     <div className="text-xl font-bold">
                         {updateSerie ? "Cập nhật truyện" : "Tạo truyện mới"}
                     </div>
-                    <div className="grid grid-cols-3 my-4">
-                        <div>
-                            Thumb nail
-                        </div>
+                    <div className="grid grid-cols-3 my-4 gap-8">
+                        <label className="border border-gray-800 rounded-lg flex items-center">
+                            <div className="text-center w-full">
+                                <FontAwesomeIcon icon="plus" />
+                                <div>Thumbnail</div>
+                            </div>
+                        </label>
                         <div className="col-span-2">
                             <div>
                                 <label>Tên truyện</label>
