@@ -1,5 +1,4 @@
 import axios from "axios";
-import configs from "../../configs/configs.cfg";
 
 const apiCall = axios.create({});
 
@@ -7,8 +6,8 @@ apiCall.interceptors.request.use(
     async (config) => {
         const token = localStorage.getItem("token");
         config.headers["Authorization"] = `Bearer ${token}`;
-        
-        config.baseURL = configs.originBackend;
+
+        config.baseURL = process.env.REACT_APP_ORIGIN_BACKEND;
 
         return config;
     },

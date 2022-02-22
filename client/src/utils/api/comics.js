@@ -1,12 +1,10 @@
 import api from "./api-call";
 
-function createBookTag(keyword) {
+function createComic(comic) {
     return api({
-        url: "/v1/comics/tags",
+        url: "/v1/comics",
         method: "POST",
-        data: {
-            keyword,
-        },
+        data: comic,
     });
 }
 
@@ -34,4 +32,4 @@ function deleteBookTag(id) {
     });
 }
 
-export { createBookTag, getAllComic, updateBookTag, deleteBookTag };
+export { createComic, getAllComic, updateBookTag, deleteBookTag };
