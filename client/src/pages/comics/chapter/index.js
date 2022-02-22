@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { Loader, NotFound } from "../../../components";
 import { mangaList } from "../../../utils/mock-data";
 
-function SerieChapter() {
+function ComicChapter() {
     const [mangaInfo, setMangaInfo] = React.useState(null);
     const [chapterInfo, setChapterInfo] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
@@ -40,13 +40,13 @@ function SerieChapter() {
                                     Trang chủ
                                 </Link>{" "}
                                 /{" "}
-                                <Link className="font-semibold" to="/series">
+                                <Link className="font-semibold" to="/comics">
                                     Danh sách truyện
                                 </Link>{" "}
                                 /{" "}
                                 <Link
                                     className="font-semibold"
-                                    to={`/series/${mangaInfo.url}&${mangaInfo.id}`}
+                                    to={`/comics/${mangaInfo.url}&${mangaInfo.id}`}
                                 >
                                     {mangaInfo.title}
                                 </Link>{" "}
@@ -77,13 +77,13 @@ function SerieChapter() {
                                     Trang chủ
                                 </Link>{" "}
                                 /{" "}
-                                <Link className="font-semibold" to="/series">
+                                <Link className="font-semibold" to="/comics">
                                     Danh sách truyện
                                 </Link>{" "}
                                 /{" "}
                                 <Link
                                     className="font-semibold"
-                                    to={`/series/${mangaInfo.url}&${mangaInfo.id}`}
+                                    to={`/comics/${mangaInfo.url}&${mangaInfo.id}`}
                                 >
                                     {mangaInfo.title}
                                 </Link>{" "}
@@ -116,4 +116,4 @@ function SerieChapter() {
     );
 }
 
-export default SerieChapter;
+export default ComicChapter;

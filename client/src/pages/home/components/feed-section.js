@@ -38,14 +38,14 @@ function FeedSection() {
                                     </td>
                                     <td className="p-3">
                                         <Link
-                                            to={`/series/${_chapter.url}`}
+                                            to={`/comics/${_chapter.url}`}
                                         >
                                             {_chapter.title}
                                         </Link>
                                     </td>
                                     <td className="p-3">
                                         <Link
-                                            to={`/series/${_chapter.url}/chapter/${_chapter.chapter}`}
+                                            to={`/comics/${_chapter.url}/chapter/${_chapter.chapter}`}
                                         >
                                             <span className="block md:hidden">
                                                 Ch.{_chapter.chapter}

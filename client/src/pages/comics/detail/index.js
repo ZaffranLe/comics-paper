@@ -4,7 +4,7 @@ import { Loader, NotFound } from "../../../components";
 import { mangaList } from "../../../utils/mock-data";
 import InfoSection from "./info-section";
 
-function SerieDetail() {
+function ComicDetail() {
     const [mangaInfo, setMangaInfo] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
     const params = useParams();
@@ -17,7 +17,7 @@ function SerieDetail() {
     }, [params]);
 
     const handleViewChapter = (chapter) => {
-        navigate(`/series/${params.url}/chapter/${chapter.name}&${chapter.id}`);
+        navigate(`/comics/${params.url}/chapter/${chapter.name}&${chapter.id}`);
     }
 
     return (
@@ -67,4 +67,4 @@ function SerieDetail() {
     );
 }
 
-export default SerieDetail;
+export default ComicDetail;

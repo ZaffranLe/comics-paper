@@ -3,25 +3,27 @@ import React from "react";
 import { toast } from "react-toastify";
 import { Modal } from "../../../components";
 import { classNames } from "../../../utils/common";
+import * as resourceApi from "../../../utils/api/resources";
 
-function UpdateSerie({ open, onClose, onSave, updateSerie }) {
-    const [keyword, setKeyword] = React.useState("");
+function UpdateComic({ open, onClose, onSave, updateComic }) {
+    const [comic, setComic] = React.useState({
+        thumbnail: null,
+        name: "",
+        description: "",
+        postedBy: "",
+    });
     const [loading, setLoading] = React.useState(false);
 
     React.useEffect(() => {
-        if (updateSerie) {
-            setKeyword(updateSerie.keyword);
+        if (updateComic) {
+            setComic({ ...comic, ...updateComic });
         }
-    }, [updateSerie]);
-
-    const handleChangeKeyword = (e) => {
-        setKeyword(e.target.value);
-    };
+    }, [updateComic]);
 
     const handleSave = async () => {
         try {
             setLoading(true);
-            await onSave(keyword);
+            await onSave(comic);
             onClose();
         } catch (e) {
             toast.error(
@@ -34,22 +36,60 @@ function UpdateSerie({ open, onClose, onSave, updateSerie }) {
         }
     };
 
-    const disableSaveBtn = loading || (updateSerie && keyword === updateSerie.keyword);
+    const handleChangeThumbnail = async (e) => {
+        try {
+            if (e.target.files.length > 0) {
+                const resp = await resourceApi.uploadImages(e.target.files);
+                const imgInfo = resp.data[0];
+                setComic({
+                    ...comic,
+                    thumbnailImg: `${process.env.REACT_APP_ORIGIN_BACKEND}/public/${imgInfo.fileName}`,
+                    thumbnail: imgInfo.id,
+                });
+            }
+        } catch (e) {
+            if (e.response.data) {
+                toast.error(
+                    e.response?.data?.error?.message || "Upload ảnh thất bại, vui lòng thử lại sau."
+                );
+            }
+        }
+    };
+
+    const disableSaveBtn = loading;
 
     return (
         <>
             <Modal dimmer open={open} onClose={onClose}>
                 <div className="w-1/3 bg-white border rounded-xl p-4">
                     <div className="text-xl font-bold">
-                        {updateSerie ? "Cập nhật truyện" : "Tạo truyện mới"}
+                        {updateComic ? "Cập nhật truyện" : "Tạo truyện mới"}
                     </div>
                     <div className="grid grid-cols-3 my-4 gap-8">
-                        <label className="border border-gray-800 rounded-lg flex items-center">
-                            <div className="text-center w-full">
-                                <FontAwesomeIcon icon="plus" />
-                                <div>Thumbnail</div>
-                            </div>
+                        <label
+                            htmlFor="comic-thumbnail-upload"
+                            className={classNames(
+                                comic.thumbnail ? "border-gray-800" : "border-green-700",
+                                "border rounded-lg flex items-center cursor-pointer select-none"
+                            )}
+                        >
+                            {comic.thumbnail ? (
+                                <img src={comic.thumbnailImg} className="w-full" alt="thumbnail" />
+                            ) : (
+                                <div className="text-center w-full text-green-700">
+                                    <FontAwesomeIcon icon="plus" />
+                                    <div>Thumbnail</div>
+                                </div>
+                            )}
                         </label>
+                        <input
+                            id="comic-thumbnail-upload"
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            multiple
+                            onChange={handleChangeThumbnail}
+                        />
                         <div className="col-span-2">
                             <div>
                                 <label>Tên truyện</label>
@@ -57,11 +97,7 @@ function UpdateSerie({ open, onClose, onSave, updateSerie }) {
                             </div>
                             <div>
                                 <label>Tóm tắt</label>
-                                <textarea className="input w-full" />
-                            </div>
-                            <div>
-                                <label>Tác giả</label>
-                                <input className="input w-full" />
+                                <textarea className="input w-full" rows={6} />
                             </div>
                         </div>
                     </div>
@@ -89,4 +125,4 @@ function UpdateSerie({ open, onClose, onSave, updateSerie }) {
     );
 }
 
-export default UpdateSerie;
+export default UpdateComic;

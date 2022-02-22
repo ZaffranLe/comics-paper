@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 function BookThumbnail({ info }) {
     return (
         <>
-            <Link to={`/series/${info.url}&${info.id}`}>
+            <Link to={`/comics/${info.url}&${info.id}`}>
                 <div>
                     <div
                         style={{

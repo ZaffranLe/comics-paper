@@ -61,7 +61,7 @@ function AdminLayout() {
         },
         {
             name: "Truyện",
-            path: "/dashboard/series",
+            path: "/dashboard/comics",
             icon: "book",
         },
     ];

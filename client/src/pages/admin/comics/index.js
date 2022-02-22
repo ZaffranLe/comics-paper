@@ -3,12 +3,12 @@ import * as comicApi from "../../../utils/api/comics";
 import { BookThumbnail, ConfirmModal } from "../../../components";
 import { toast } from "react-toastify";
 import { v1 as uuidv1 } from "uuid";
-import UpdateSerie from "./update";
+import UpdateComic from "./update";
 
-function Series() {
-    const [series, setSeries] = React.useState([]);
+function Comics() {
+    const [comics, setComics] = React.useState([]);
     const [updateModal, setUpdateModal] = React.useState(false);
-    const [updateSerie, setUpdateSerie] = React.useState(null);
+    const [updateComic, setUpdateComic] = React.useState(null);
     const [randomKey, setRandomKey] = React.useState(0);
     const [confirmModal, setConfirmModal] = React.useState({
         content: "",
@@ -18,49 +18,49 @@ function Series() {
         loading: false,
     });
 
-    const fetchSeries = async () => {
+    const fetchComics = async () => {
         try {
             const resp = await comicApi.getAllComic();
-            setSeries(resp.data);
+            setComics(resp.data);
         } catch (e) {
             console.error(e);
         }
     };
 
     React.useEffect(() => {
-        fetchSeries();
+        fetchComics();
     }, []);
 
     const handleOpenUpdateModal = (selectedBookTag = null) => {
         setRandomKey(uuidv1());
         setUpdateModal(true);
         if (selectedBookTag) {
-            setUpdateSerie(selectedBookTag);
+            setUpdateComic(selectedBookTag);
         }
     };
 
     const handleCloseUpdateModal = () => {
         setUpdateModal(false);
-        if (updateSerie) {
-            setUpdateSerie(null);
+        if (updateComic) {
+            setUpdateComic(null);
         }
     };
 
-    const handleSave = async (keyword) => {
-        // try catch is in UpdateSerie
-        if (updateSerie) {
-            // await bookTagApi.updateSerie(updateSerie.id, keyword);
+    const handleSave = async (comic) => {
+        // try catch is in UpdateComic
+        if (updateComic) {
+            // await bookTagApi.updateComic(updateComic.id, keyword);
             toast.success("Cập nhật truyện thành công");
         } else {
-            // await bookTagApi.createBookTag(keyword);
+            await comicApi.createComic(comic);
             toast.success("Tạo truyện thành công");
         }
-        await fetchSeries();
+        await fetchComics();
     };
 
-    const handleDeleteSerie = (serie) => {
+    const handleDeleteComic = (comic) => {
         setConfirmModal({
-            content: `Bạn có chắc chắn muốn xóa truyện '${serie.name}' không?`,
+            content: `Bạn có chắc chắn muốn xóa truyện '${comic.name}' không?`,
             open: true,
             loading: false,
             onClose: () => {
@@ -96,22 +96,22 @@ function Series() {
                 Tạo mới
             </button>
             <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
-                {series.map((_serie) => (
-                    <div key={_serie.id}>
-                        <BookThumbnail info={_serie} />
+                {comics.map((_comic) => (
+                    <div key={_comic.id}>
+                        <BookThumbnail info={_comic} />
                     </div>
                 ))}
             </div>
-            <UpdateSerie
+            <UpdateComic
                 key={randomKey}
                 open={updateModal}
                 onClose={handleCloseUpdateModal}
                 onSave={handleSave}
-                updateSerie={updateSerie}
+                updateComic={updateComic}
             />
             <ConfirmModal {...confirmModal} />
         </>
     );
 }
 
-export default Series;
+export default Comics;

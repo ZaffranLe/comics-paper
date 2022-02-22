@@ -33,7 +33,7 @@ function UserLayout() {
         {
             name: "Danh sách truyện",
             key: "comic",
-            path: "/series",
+            path: "/comics",
         },
         {
             name: "Tìm kiếm",

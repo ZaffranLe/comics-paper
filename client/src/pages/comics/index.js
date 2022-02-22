@@ -6,7 +6,7 @@ import { mangaList, tags } from "../../utils/mock-data";
 import Select from "react-select";
 import { classNames } from "../../utils/common";
 
-function Series() {
+function Comics() {
     const [searchParams, setSearchParams] = useSearchParams();
     const [serializedSearchParams, setSerializedSearchParams] = useState({
         type: null,
@@ -207,4 +207,4 @@ function Series() {
     );
 }
 
-export default Series;
+export default Comics;
