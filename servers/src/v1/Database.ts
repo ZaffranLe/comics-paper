@@ -75,7 +75,8 @@ export async function setupDatabase() {
 
   await createTable(Tables.Resource, (table) => {
     table.string("id").primary();
-    table.string("name").notNullable();
+    table.string("originalName").notNullable();
+    table.string("fileName").notNullable();
     table.string(`path`).notNullable();
     table.integer(`size`).notNullable();
     table.string(`uploader`).notNullable();

@@ -78,22 +78,23 @@ async function handleUploadResource(
             fs.writeFileSync(file.path, outBuffer);
 
             // Then start to create resource and put it into database
-            const { originalname, path } = file;
+            const { originalname, filename, path } = file;
             const size = outBuffer.length;
 
             // Retrieves a response
             console.log(`[resources] generate file ${file.originalname} into database`);
             const resource: ResourceInterface = await ResourceController.createResourceMetadata(
                 originalname,
+                filename,
                 path,
                 size,
                 user.id
             );
 
             // Hide path
-            const { id, name, uploadedAt, uploader } = resource;
+            const { id, originalName, fileName, uploadedAt, uploader } = resource;
             // Return to all promises
-            return { id, name, uploadedAt, uploader, size };
+            return { id, originalName, fileName, uploadedAt, uploader, size };
         })
     )
         .then((metadataList) => {
@@ -136,10 +137,10 @@ async function getMetadataResource(
         return next(new MiddlewareError(Locale.HttpResponseMessage.ResourceNotFound, 404));
     }
     // Hide path
-    const { id, name, uploadedAt, uploader, size, path } = resource;
+    const { id, originalName, fileName, uploadedAt, uploader, size, path } = resource;
 
     // Return to all promises
-    res.status(200).json({ id, name, uploadedAt, uploader, size, path });
+    res.status(200).json({ id, originalName, fileName, uploadedAt, uploader, size, path });
 }
 
 async function updateResource(

@@ -1,11 +1,10 @@
-import { UserResponseInterface } from "./UserInterface";
-
 /**
  * Represents resources prototype.
  */
 export interface ResourceInterface {
   id: string;
-  name: string;
+  originalName: string;
+  fileName: string;
   path: string;
   size: number;
   uploadedAt: Date;

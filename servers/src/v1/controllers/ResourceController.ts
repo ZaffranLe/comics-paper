@@ -7,19 +7,20 @@ import { v4 as uuid } from "uuid";
 /**
  * Create new resource metadata into database.
  *
- * @param name a name of the resource, real name.
+ * @param originalName a name of the resource, real name.
  * @param path a path of the resource
  * @param size a size of the resource
  * @param uploader who upload this resource
  */
 async function createResourceMetadata(
-  name: string,
+  originalName: string,
+  fileName: string,
   path: string,
   size: number,
   uploader: string
 ): Promise<ResourceInterface> {
   // Check all parameters
-  if (!name || !path || !size || !uploader) {
+  if (!originalName || !fileName || !path || !size || !uploader) {
     throw new Error("Missing parameters");
   }
 
@@ -31,7 +32,8 @@ async function createResourceMetadata(
   // Resource metadata
   const metadata = {
     id: uuid(), // Custom unique id
-    name,
+    originalName,
+    fileName,
     path,
     size,
     uploader,
