@@ -4,6 +4,8 @@ import ComicPaperV1 from "./v1/ComicPaperV1";
 
 app.use("/v1", ComicPaperV1);
 
+app.use("/public", express.static(process.env.UPLOAD_DIR));
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.group("ComicPaper initialization:");
