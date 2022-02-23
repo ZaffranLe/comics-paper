@@ -8,7 +8,7 @@ function BookThumbnail({ info }) {
                 <div>
                     <div
                         style={{
-                            backgroundImage: `url(${info.img})`,
+                            backgroundImage: `url(${process.env.REACT_APP_ORIGIN_BACKEND}/public/${info.thumbnail})`,
                             backgroundSize: "cover",
                             backgroundPositionX: "center",
                         }}

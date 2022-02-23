@@ -10,7 +10,7 @@ function UpdateComic({ open, onClose, onSave, updateComic }) {
         thumbnail: null,
         name: "",
         description: "",
-        postedBy: "",
+        author: "",
     });
     const [loading, setLoading] = React.useState(false);
 
@@ -36,6 +36,11 @@ function UpdateComic({ open, onClose, onSave, updateComic }) {
         }
     };
 
+    const handleChangeComicInfo = (name) => (e) => {
+        const value = e.target.value;
+        setComic({ ...comic, [name]: value });
+    };
+
     const handleChangeThumbnail = async (e) => {
         try {
             if (e.target.files.length > 0) {
@@ -55,8 +60,6 @@ function UpdateComic({ open, onClose, onSave, updateComic }) {
             }
         }
     };
-
-    const disableSaveBtn = loading;
 
     return (
         <>
@@ -93,11 +96,25 @@ function UpdateComic({ open, onClose, onSave, updateComic }) {
                         <div className="col-span-2">
                             <div>
                                 <label>Tên truyện</label>
-                                <input className="input w-full" />
+                                <input
+                                    className="input w-full"
+                                    onChange={handleChangeComicInfo("name")}
+                                />
                             </div>
                             <div>
                                 <label>Tóm tắt</label>
-                                <textarea className="input w-full" rows={6} />
+                                <textarea
+                                    className="input w-full"
+                                    rows={4}
+                                    onChange={handleChangeComicInfo("description")}
+                                />
+                            </div>
+                            <div>
+                                <label>Tác giả</label>
+                                <input
+                                    className="input w-full"
+                                    onChange={handleChangeComicInfo("author")}
+                                />
                             </div>
                         </div>
                     </div>
@@ -105,10 +122,10 @@ function UpdateComic({ open, onClose, onSave, updateComic }) {
                         <button
                             onClick={handleSave}
                             className={classNames(
-                                !disableSaveBtn && "hover:bg-indigo-400 hover:text-white",
+                                !loading && "hover:bg-indigo-400 hover:text-white",
                                 "ring-2 ring-indigo-400 text-indigo-400 font-semibold py-2 px-4 rounded-full mr-2"
                             )}
-                            disabled={disableSaveBtn}
+                            disabled={loading}
                         >
                             {loading ? <FontAwesomeIcon icon="spinner" spin fixedWidth /> : "Lưu"}
                         </button>

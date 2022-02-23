@@ -14,7 +14,7 @@ function BookTrending({ info, idx }) {
                     </div>
                     <div className="col-span-2">
                         <img
-                            src={info.img}
+                            src={`${process.env.REACT_APP_ORIGIN_BACKEND}/public/${info.thumbnail}`}
                             alt={info.title}
                             className="h-24 ring-1 ring-gray-800 rounded"
                         />
