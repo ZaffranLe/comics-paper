@@ -92,6 +92,7 @@ export async function setupDatabase() {
     table.text(`description`).notNullable();
     table.string(`postedBy`).notNullable();
     table.string(`author`).notNullable();
+    table.string(`category`).notNullable();
     table
       .dateTime(`createdAt`)
       .notNullable()

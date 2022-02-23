@@ -13,6 +13,7 @@ export interface ComicInterface {
   likes: number;
   views: number;
   author: string;
+  category: string;
 }
 
 /**

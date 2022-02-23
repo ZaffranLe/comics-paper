@@ -18,6 +18,7 @@ async function createComic(
     description: string,
     postedBy: string,
     author: string,
+    category: string,
     thumbnail?: string
 ): Promise<ComicInterface> {
     const comic: ComicInterface = {
@@ -32,6 +33,7 @@ async function createComic(
         likes: 0,
         views: 0,
         author,
+        category
     };
 
     await DatabaseBuilder(Tables.Comic).insert(comic);
@@ -54,6 +56,7 @@ async function getAllComics(): Promise<ComicInterface[]> {
         likes: "t1.likes",
         views: "t1.views",
         slug: "t1.slug",
+        category: "t1.category",
         updatedAt: "t1.updatedAt",
         createdAt: "t1.createdAt",
         postedBy: "t1.postedBy",
