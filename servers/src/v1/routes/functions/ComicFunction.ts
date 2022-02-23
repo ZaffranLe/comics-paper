@@ -56,7 +56,7 @@ export const ComicFunction = {
     }
 
     // Extract content from body
-    const { name, description, thumbnail, author, category } = req.body;
+    const { name, description, thumbnail, author, category, tags } = req.body;
 
     if (!name || !description) {
       return next(
@@ -84,6 +84,7 @@ export const ComicFunction = {
         user.id,
         author,
         category,
+        tags,
         thumbnail,
       );
 

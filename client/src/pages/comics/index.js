@@ -5,6 +5,7 @@ import { BookThumbnail } from "../../components";
 import { mangaList, tags } from "../../utils/mock-data";
 import Select from "react-select";
 import { classNames } from "../../utils/common";
+import { categoryOptions } from "../../utils/constants";
 
 function Comics() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -14,6 +15,11 @@ function Comics() {
         notTags: [],
     });
     const [filterSectionOpen, setFilterSectionOpen] = useState(false);
+
+    useEffect(() => {
+
+    }, [])
+    
     useEffect(() => {
         setSerializedSearchParams(Object.fromEntries([...searchParams]));
     }, [searchParams]);
@@ -31,17 +37,6 @@ function Comics() {
             [name]: selectedTags.map((_tag) => _tag.value).join(","),
         });
     };
-
-    const typeOptions = [
-        {
-            key: "comic",
-            label: "Truyện tranh",
-        },
-        {
-            key: "novel",
-            label: "Novel",
-        },
-    ];
 
     return (
         <>
@@ -78,19 +73,19 @@ function Comics() {
                                     Danh mục
                                 </div>
                                 <div className="grid grid-flow-col auto-cols-auto">
-                                    {typeOptions.map((_option) => (
-                                        <div key={_option.key}>
+                                    {categoryOptions.map((_option) => (
+                                        <div key={_option.value}>
                                             <span
                                                 className={classNames(
                                                     serializedSearchParams.type ===
-                                                        _option.key
+                                                        _option.value
                                                         ? "font-bold bg-gray-200"
                                                         : "font-medium",
                                                     "cursor-pointer hover:underline hover:bg-gray-100 rounded px-2 py-1"
                                                 )}
                                                 onClick={() =>
                                                     handleSelectType(
-                                                        _option.key
+                                                        _option.value
                                                     )
                                                 }
                                             >
@@ -151,7 +146,7 @@ function Comics() {
                                 Danh mục
                             </div>
                             <div className="grid grid-flow-col auto-cols-auto">
-                                {typeOptions.map((_option) => (
+                                {categoryOptions.map((_option) => (
                                     <div key={_option.key}>
                                         <span
                                             className={classNames(

@@ -1,5 +1,6 @@
 import React from "react";
 import * as comicApi from "../../../utils/api/comics";
+import * as bookTagApi from "../../../utils/api/book-tags";
 import { BookThumbnail, ConfirmModal } from "../../../components";
 import { toast } from "react-toastify";
 import { v1 as uuidv1 } from "uuid";
@@ -17,6 +18,7 @@ function Comics() {
         open: false,
         loading: false,
     });
+    const [bookTagOptions, setBookTagOptions] = React.useState([]);
 
     const fetchComics = async () => {
         try {
@@ -27,8 +29,20 @@ function Comics() {
         }
     };
 
+    const fetchBookTags = async () => {
+        try {
+            const resp = await bookTagApi.getAllBookTag();
+            setBookTagOptions(
+                resp.data.map((_tag) => ({ label: _tag.keyword, value: _tag.id }))
+            );
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
     React.useEffect(() => {
         fetchComics();
+        fetchBookTags();
     }, []);
 
     const handleOpenUpdateModal = (selectedBookTag = null) => {
@@ -95,7 +109,7 @@ function Comics() {
             >
                 Tạo mới
             </button>
-            <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
+            <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-8">
                 {comics.map((_comic) => (
                     <div key={_comic.id}>
                         <BookThumbnail info={_comic} />
@@ -108,6 +122,7 @@ function Comics() {
                 onClose={handleCloseUpdateModal}
                 onSave={handleSave}
                 updateComic={updateComic}
+                tagOptions={bookTagOptions}
             />
             <ConfirmModal {...confirmModal} />
         </>

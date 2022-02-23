@@ -4,13 +4,19 @@ import { toast } from "react-toastify";
 import { Modal } from "../../../components";
 import { classNames } from "../../../utils/common";
 import * as resourceApi from "../../../utils/api/resources";
+import Select from "react-select";
+import { categoryOptions } from "../../../utils/constants";
 
-function UpdateComic({ open, onClose, onSave, updateComic }) {
+function UpdateComic({ open, onClose, onSave, updateComic, tagOptions }) {
     const [comic, setComic] = React.useState({
         thumbnail: null,
         name: "",
         description: "",
         author: "",
+        tags: [],
+        tagOptions: [],
+        category: "",
+        categoryOption: null,
     });
     const [loading, setLoading] = React.useState(false);
 
@@ -61,6 +67,18 @@ function UpdateComic({ open, onClose, onSave, updateComic }) {
         }
     };
 
+    const handleChangeCategory = (selectedOption) => {
+        setComic({ ...comic, category: selectedOption.value, categoryOption: selectedOption });
+    };
+
+    const handleChangeTags = (selectedOptions) => {
+        setComic({
+            ...comic,
+            tags: selectedOptions.map((_option) => _option.value),
+            tagOptions: selectedOptions,
+        });
+    };
+
     return (
         <>
             <Modal dimmer open={open} onClose={onClose}>
@@ -99,14 +117,16 @@ function UpdateComic({ open, onClose, onSave, updateComic }) {
                                 <input
                                     className="input w-full"
                                     onChange={handleChangeComicInfo("name")}
+                                    value={comic.name}
                                 />
                             </div>
                             <div>
-                                <label>Tóm tắt</label>
-                                <textarea
-                                    className="input w-full"
-                                    rows={4}
-                                    onChange={handleChangeComicInfo("description")}
+                                <label>Phân loại</label>
+                                <Select
+                                    className="w-full"
+                                    value={comic.categoryOption}
+                                    options={categoryOptions}
+                                    onChange={handleChangeCategory}
                                 />
                             </div>
                             <div>
@@ -114,8 +134,30 @@ function UpdateComic({ open, onClose, onSave, updateComic }) {
                                 <input
                                     className="input w-full"
                                     onChange={handleChangeComicInfo("author")}
+                                    value={comic.author}
                                 />
                             </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                            <label>Thể loại</label>
+                            <Select
+                                className="w-full"
+                                value={comic.tagOptions}
+                                isMulti
+                                options={tagOptions}
+                                onChange={handleChangeTags}
+                            />
+                        </div>
+                        <div>
+                            <label>Tóm tắt</label>
+                            <textarea
+                                className="input w-full"
+                                rows={4}
+                                onChange={handleChangeComicInfo("description")}
+                                value={comic.description}
+                            />
                         </div>
                     </div>
                     <div className="text-right">

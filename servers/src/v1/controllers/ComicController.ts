@@ -19,10 +19,12 @@ async function createComic(
     postedBy: string,
     author: string,
     category: string,
+    tags,
     thumbnail?: string
 ): Promise<ComicInterface> {
+    const id = uuid();
     const comic: ComicInterface = {
-        id: uuid(),
+        id,
         name,
         description,
         postedBy,
@@ -33,10 +35,18 @@ async function createComic(
         likes: 0,
         views: 0,
         author,
-        category
+        category,
     };
-
-    await DatabaseBuilder(Tables.Comic).insert(comic);
+    const transaction = await DatabaseBuilder.transaction();
+    try {
+        await transaction(Tables.Comic).insert(comic);
+        const insertTags = tags.map((_tag) => ({ comicId: id, tagId: _tag }));
+        await transaction(Tables.ComicBookTag).insert(insertTags);
+        await transaction.commit();
+    } catch (e) {
+        await transaction.rollback();
+        throw e;
+    }
     return comic;
 }
 
