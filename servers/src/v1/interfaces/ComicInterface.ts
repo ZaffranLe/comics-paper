@@ -12,6 +12,7 @@ export interface ComicInterface {
   slug: string;
   likes: number;
   views: number;
+  author: string;
 }
 
 /**

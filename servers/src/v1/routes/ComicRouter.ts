@@ -3,10 +3,8 @@ import express from "express";
 import { getAuth } from "../middlewares/AuthMiddleware";
 const router = express.Router();
 
-/**
- * Create a new comic.
- */
 router.post("/", getAuth, ComicFunction.createNewComic);
+router.get("/", ComicFunction.getAllComics);
 
 /**
  *

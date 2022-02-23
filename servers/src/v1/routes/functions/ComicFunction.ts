@@ -29,7 +29,15 @@ export const ComicFunction = {
       return next(new MiddlewareError(err.message, 500));
     }
   },
-
+  getAllComics: async (req, res, next) => {
+    try {
+      const comics: ComicInterface[] = await ComicController.getAllComics();
+      // Response
+      res.json(comics);
+    } catch (err) {
+      return next(new MiddlewareError(err.message, 500));
+    }
+  },
   createNewComic: async (req, res, next) => {
     const user: User = req["UserRequest"];
 
@@ -48,7 +56,7 @@ export const ComicFunction = {
     }
 
     // Extract content from body
-    const { name, description, thumbnail } = req.body;
+    const { name, description, thumbnail, author } = req.body;
 
     if (!name || !description) {
       return next(
@@ -74,7 +82,8 @@ export const ComicFunction = {
         name,
         description,
         user.id,
-        thumbnail
+        thumbnail,
+        author
       );
 
       // Send response

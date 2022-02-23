@@ -14,26 +14,54 @@ import slugify from "slugify";
  * @returns
  */
 async function createComic(
-  name: string,
-  description: string,
-  postedBy: string,
-  thumbnail?: string
+    name: string,
+    description: string,
+    postedBy: string,
+    author: string,
+    thumbnail?: string
 ): Promise<ComicInterface> {
-  const comic: ComicInterface = {
-    id: uuid(),
-    name,
-    description,
-    postedBy,
-    thumbnail,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    slug: slugify(name, { lower: true, remove: /[*+~.()'"!:@]/g }),
-    likes: 0,
-    views: 0,
-  };
+    const comic: ComicInterface = {
+        id: uuid(),
+        name,
+        description,
+        postedBy,
+        thumbnail,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        slug: slugify(name, { lower: true, remove: /[*+~.()'"!:@]/g }),
+        likes: 0,
+        views: 0,
+        author,
+    };
 
-  await DatabaseBuilder(Tables.Comic).insert(comic);
-  return comic;
+    await DatabaseBuilder(Tables.Comic).insert(comic);
+    return comic;
+}
+
+/**
+ *  Retrieves a comic by using it id
+ * @param id a comic id
+ * @returns the comic.
+ *
+ */
+async function getAllComics(): Promise<ComicInterface[]> {
+    const fields = {
+        id: "t1.id",
+        thumbnail: "t2.fileName",
+        name: "t1.name",
+        description: "t1.description",
+        author: "t1.author",
+        likes: "t1.likes",
+        views: "t1.views",
+        slug: "t1.slug",
+        updatedAt: "t1.updatedAt",
+        createdAt: "t1.createdAt",
+        postedBy: "t1.postedBy",
+    };
+    const comics: ComicInterface[] = await DatabaseBuilder(`${Tables.Comic} AS t1`)
+        .join(`${Tables.Resource} AS t2`, "t1.thumbnail", "t2.id")
+        .columns(fields);
+    return comics;
 }
 
 /**
@@ -43,13 +71,13 @@ async function createComic(
  *
  */
 async function getComic(id: string): Promise<ComicInterface> {
-  // check parameters
-  if (!id || !validator.isUUID(id)) {
-    throw new Error("id is required");
-  }
-  // Retrieve comic
-  const comic = await DatabaseBuilder(Tables.Comic).where({ id }).first();
-  return comic;
+    // check parameters
+    if (!id || !validator.isUUID(id)) {
+        throw new Error("id is required");
+    }
+    // Retrieve comic
+    const comic = await DatabaseBuilder(Tables.Comic).where({ id }).first();
+    return comic;
 }
 
 /**
@@ -60,19 +88,19 @@ async function getComic(id: string): Promise<ComicInterface> {
  * @param description a description of comic
  */
 async function updateComic(id: string, name: string, description: string) {
-  // check parameters
-  if (!id || !validator.isUUID(id)) {
-    throw new Error("id is required");
-  }
-  // Retrieve comic
-  await DatabaseBuilder(Tables.Comic)
-    .where({ id })
-    .update({
-      name,
-      description,
-      updatedAt: new Date(),
-      slug: slugify(name, { lower: true, remove: /[*+~.()'"!:@]/g }),
-    });
+    // check parameters
+    if (!id || !validator.isUUID(id)) {
+        throw new Error("id is required");
+    }
+    // Retrieve comic
+    await DatabaseBuilder(Tables.Comic)
+        .where({ id })
+        .update({
+            name,
+            description,
+            updatedAt: new Date(),
+            slug: slugify(name, { lower: true, remove: /[*+~.()'"!:@]/g }),
+        });
 }
 
 /**
@@ -80,13 +108,13 @@ async function updateComic(id: string, name: string, description: string) {
  * @param id a comic id to delete
  */
 async function deleteComic(id: string) {
-  // check parameters
-  if (!id || !validator.isUUID(id)) {
-    throw new Error("id is required");
-  }
+    // check parameters
+    if (!id || !validator.isUUID(id)) {
+        throw new Error("id is required");
+    }
 
-  // Retrieve comic
-  await DatabaseBuilder(Tables.Comic).where({ id }).del();
+    // Retrieve comic
+    await DatabaseBuilder(Tables.Comic).where({ id }).del();
 }
 
 /**
@@ -94,16 +122,16 @@ async function deleteComic(id: string) {
  * @param id identify of the comic
  */
 async function updateViewComic(id: string) {
-  // check parameters
-  if (!id || !validator.isUUID(id)) {
-    throw new Error("id is required");
-  }
-  // Retrieve comic
-  await DatabaseBuilder(Tables.Comic)
-    .where({ id })
-    .update({
-      views: DatabaseBuilder.raw("views + 1"),
-    });
+    // check parameters
+    if (!id || !validator.isUUID(id)) {
+        throw new Error("id is required");
+    }
+    // Retrieve comic
+    await DatabaseBuilder(Tables.Comic)
+        .where({ id })
+        .update({
+            views: DatabaseBuilder.raw("views + 1"),
+        });
 }
 
 /**
@@ -112,46 +140,44 @@ async function updateViewComic(id: string) {
  * @returns true if the comic exists, false otherwise.
  */
 async function hasComic(id: string) {
-  // check parameters
-  if (!id || !validator.isUUID(id)) {
-    throw new Error("id is required");
-  }
-  // Retrieve comic
-  const comic = await DatabaseBuilder(Tables.Comic).where({ id }).first();
-  return !!comic;
+    // check parameters
+    if (!id || !validator.isUUID(id)) {
+        throw new Error("id is required");
+    }
+    // Retrieve comic
+    const comic = await DatabaseBuilder(Tables.Comic).where({ id }).first();
+    return !!comic;
 }
 
 /**
  * Search a comic
  */
 async function searchComic(query) {
-  let { slug, id } = query;
+    let { slug, id } = query;
 
-  // Empty the slug unless is filled
-  if (slug === undefined) {
-    slug = "";
-  }
+    // Empty the slug unless is filled
+    if (slug === undefined) {
+        slug = "";
+    }
 
-  // Empty the id unless is filled
-  if (id === undefined) {
-    id = "";
-  }
-  console.log(slug, id);
-  const comic = await DatabaseBuilder(Tables.Comic)
-    .where({ slug })
-    .orWhere({ id })
-    .first();
-  // console.log(comic);
-  return comic;
+    // Empty the id unless is filled
+    if (id === undefined) {
+        id = "";
+    }
+    console.log(slug, id);
+    const comic = await DatabaseBuilder(Tables.Comic).where({ slug }).orWhere({ id }).first();
+    // console.log(comic);
+    return comic;
 }
 
 const ComicController = {
-  createComic,
-  getComic,
-  updateComic,
-  deleteComic,
-  updateViewComic,
-  hasComic,
-  searchComic,
+    createComic,
+    getAllComics,
+    getComic,
+    updateComic,
+    deleteComic,
+    updateViewComic,
+    hasComic,
+    searchComic,
 };
 export default ComicController;

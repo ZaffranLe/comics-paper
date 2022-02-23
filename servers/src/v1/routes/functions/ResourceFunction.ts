@@ -60,11 +60,10 @@ async function handleUploadResource(
         return next(new MiddlewareError(Locale.HttpResponseMessage.MissingRequiredFields, 400));
     }
 
-    // temporary disable check permission - tungls
-    // // Check permission
-    // if (!(await user.hasPermission(PermissionEnum.RESOURCE_CREATE))) {
-    //   return next(new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403));
-    // }
+    // Check permission
+    if (!(await user.hasPermission(PermissionEnum.RESOURCE_CREATE))) {
+      return next(new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403));
+    }
 
     // Process image
     Promise.all(
