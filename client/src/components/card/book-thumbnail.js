@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 function BookThumbnail({ info }) {
     return (
         <>
-            <Link to={`/comics/${info.url}&${info.id}`}>
+            <Link to={`/comics/${info.slug}&${info.id}`}>
                 <div>
                     <div
                         style={{
@@ -33,7 +33,7 @@ function BookThumbnail({ info }) {
                         </div>
                     </div>
                     <div className="text-center font-bold cursor-pointer hover:underline peer-hover:underline">
-                        {info.title}
+                        {info.name}
                     </div>
                 </div>
             </Link>

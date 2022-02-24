@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { mangaList } from "../../../utils/mock-data";
 import { classNames } from "../../../utils/common";
 import { BookTrending } from "../../../components";
 
-function ComicTrendingSection() {
+function ComicTrendingSection({ comics }) {
     const filters = [
         {
             key: "today",
@@ -31,11 +30,7 @@ function ComicTrendingSection() {
                 <div className="gap-4 text-base font-bold tracking-tight text-gray-900 sm:text-lg lg:text-xl">
                     <div>
                         <span className="bg-gray-900 text-white px-2 py-1 rounded">
-                            <FontAwesomeIcon
-                                icon="trophy"
-                                className="text-orange-400"
-                            />{" "}
-                            Nổi bật
+                            <FontAwesomeIcon icon="trophy" className="text-orange-400" /> Nổi bật
                         </span>
                     </div>
                 </div>
@@ -54,12 +49,8 @@ function ComicTrendingSection() {
                     ))}
                 </div>
                 <div className="grid grid-rows-1 divide-y">
-                    {mangaList.slice(0, 6).map((_manga, _idx) => (
-                        <BookTrending
-                            key={_manga.id}
-                            info={_manga}
-                            idx={_idx}
-                        />
+                    {comics.slice(0, 6).map((_comic, _idx) => (
+                        <BookTrending key={_comic.id} info={_comic} idx={_idx} />
                     ))}
                 </div>
             </div>

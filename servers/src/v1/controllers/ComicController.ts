@@ -90,7 +90,14 @@ async function getComic(id: string): Promise<ComicInterface> {
     }
     // Retrieve comic
     const comic = await DatabaseBuilder(Tables.Comic).where({ id }).first();
-    return comic;
+    const thumbnailInfo = await DatabaseBuilder(Tables.Resource)
+        .where({ id: comic.thumbnail })
+        .first();
+    const tags = await DatabaseBuilder(`${Tables.ComicBookTag} AS t1`)
+        .join(`${Tables.ComicTag} AS t2`, "t1.tagId", "t2.id")
+        .where({ "t1.comicId": id })
+        .columns({ id: "t1.tagId", keyword: "t2.keyword" });
+    return { ...comic, thumbnail: thumbnailInfo.fileName, tags };
 }
 
 /**

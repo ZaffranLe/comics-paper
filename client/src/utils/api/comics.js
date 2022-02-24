@@ -15,6 +15,13 @@ function getAllComic() {
     });
 }
 
+function getComicByUrl(url) {
+    return api({
+        url: `/v1/comics/${url}`,
+        method: "GET",
+    });
+}
+
 function updateBookTag(id, keyword) {
     return api({
         url: `/v1/comics/tags/${id}`,
@@ -32,4 +39,4 @@ function deleteBookTag(id) {
     });
 }
 
-export { createComic, getAllComic, updateBookTag, deleteBookTag };
+export { createComic, getAllComic, getComicByUrl, updateBookTag, deleteBookTag };

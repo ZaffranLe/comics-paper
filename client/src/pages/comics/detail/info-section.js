@@ -3,7 +3,7 @@ import { classNames } from "../../../utils/common";
 import InfoTab from "./info-tab";
 import SummaryTab from "./summary-tab";
 
-function InfoSection({ mangaInfo }) {
+function InfoSection({ comic }) {
     const TABS = {
         INFO: "info",
         SUMMARY: "summary",
@@ -34,8 +34,8 @@ function InfoSection({ mangaInfo }) {
                 </button>
             </div>
             <div className="ring-2 ring-gray-800 p-4 my-4 rounded-xl">
-                {activeTab === TABS.INFO && <InfoTab mangaInfo={mangaInfo} />}
-                {activeTab === TABS.SUMMARY && <SummaryTab mangaInfo={mangaInfo} />}
+                {activeTab === TABS.INFO && <InfoTab comic={comic} />}
+                {activeTab === TABS.SUMMARY && <SummaryTab comic={comic} />}
             </div>
         </>
     );

@@ -4,7 +4,7 @@ import { Loader, NotFound } from "../../../components";
 import { mangaList } from "../../../utils/mock-data";
 
 function ComicChapter() {
-    const [mangaInfo, setMangaInfo] = React.useState(null);
+    const [comic, setComic] = React.useState(null);
     const [chapterInfo, setChapterInfo] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
     const params = useParams();
@@ -13,10 +13,10 @@ function ComicChapter() {
     React.useEffect(() => {
         const [mangaSlug, mangaId] = params.url.split("&");
         const [chapterName, chapterId] = params.chapterUrl.split("&");
-        const _mangaInfo = mangaList.find(
+        const _comic = mangaList.find(
             (_manga) => _manga.id === mangaId && _manga.url === mangaSlug
         );
-        setMangaInfo(_mangaInfo);
+        setComic(_comic);
         setChapterInfo({ name: chapterName });
     }, [params]);
 
@@ -26,11 +26,11 @@ function ComicChapter() {
                 <Loader />
             ) : (
                 <>
-                    {mangaInfo ? (
+                    {comic ? (
                         <div className="mb-8">
                             {/* Header section */}
                             <div className="w-full text-center text-4xl font-bold my-4">
-                                {mangaInfo.title}
+                                {comic.name}
                             </div>
                             <div className="w-full text-center text-2xl font-semibold my-4">
                                 {chapterInfo.name}
@@ -46,9 +46,9 @@ function ComicChapter() {
                                 /{" "}
                                 <Link
                                     className="font-semibold"
-                                    to={`/comics/${mangaInfo.url}&${mangaInfo.id}`}
+                                    to={`/comics/${comic.url}&${comic.id}`}
                                 >
-                                    {mangaInfo.title}
+                                    {comic.name}
                                 </Link>{" "}
                                 / {chapterInfo.name}
                             </div>
@@ -83,9 +83,9 @@ function ComicChapter() {
                                 /{" "}
                                 <Link
                                     className="font-semibold"
-                                    to={`/comics/${mangaInfo.url}&${mangaInfo.id}`}
+                                    to={`/comics/${comic.url}&${comic.id}`}
                                 >
-                                    {mangaInfo.title}
+                                    {comic.name}
                                 </Link>{" "}
                                 / {chapterInfo.name}
                             </div>

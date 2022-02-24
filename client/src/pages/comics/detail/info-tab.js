@@ -1,11 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 
-function InfoTab({ mangaInfo }) {
+function InfoTab({ comic }) {
     const MAX_RATING = 5;
     const [ratingIcons, setRatingIcons] = React.useState([]);
     React.useEffect(() => {
-        let _mangaRating = mangaInfo.rating;
+        let _mangaRating = comic.likes;
         const _ratingIcons = [];
         while (_mangaRating >= 1) {
             _mangaRating -= 1;
@@ -15,11 +15,11 @@ function InfoTab({ mangaInfo }) {
             _mangaRating -= 0.5;
             _ratingIcons.push("fa-star-half-alt");
         }
-        for (let i = 0; i < MAX_RATING - Math.round(mangaInfo.rating); i++) {
+        for (let i = 0; i < MAX_RATING - Math.round(comic.likes); i++) {
             _ratingIcons.push("far fa-star");
         }
         setRatingIcons(_ratingIcons);
-    }, [mangaInfo]);
+    }, [comic]);
 
     return (
         <>
@@ -27,7 +27,7 @@ function InfoTab({ mangaInfo }) {
                 {ratingIcons.map((_icon, _idx) => (
                     <FontAwesomeIcon className="text-yellow-400" icon={_icon} key={_idx} />
                 ))}{" "}
-                {mangaInfo.rating}
+                {comic.likes}
             </div>
             <div>
                 <table className="w-full">
@@ -35,23 +35,23 @@ function InfoTab({ mangaInfo }) {
                         <tr>
                             <td className="font-bold">Đánh giá</td>
                             <td>
-                                Trung bình {mangaInfo.rating}/5 trên tổng số {mangaInfo.reviews}{" "}
+                                Trung bình {comic.likes}/5 trên tổng số {comic.likes}{" "}
                                 đánh giá
                             </td>
                         </tr>
                         <tr>
                             <td className="font-bold">Tác giả</td>
-                            <td>{mangaInfo.postedBy}</td>
+                            <td>{comic.postedBy}</td>
                         </tr>
                         <tr>
                             <td className="font-bold">Danh mục</td>
-                            <td>{mangaInfo.category}</td>
+                            <td>{comic.category}</td>
                         </tr>
                         <tr>
                             <td className="font-bold">Thể loại</td>
                             <td>
-                                {mangaInfo.tags.map((_tag, _idx) => (
-                                    <span key={_idx} className="mx-2 first:ml-0 last:mr-0">{_tag}</span>
+                                {comic.tags.map((_tag) => (
+                                    <span key={_tag.id} className="mx-2 first:ml-0 last:mr-0">{_tag.keyword}</span>
                                 ))}
                             </td>
                         </tr>

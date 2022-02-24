@@ -40,7 +40,7 @@ function FeedSection() {
                                         <Link
                                             to={`/comics/${_chapter.url}`}
                                         >
-                                            {_chapter.title}
+                                            {_chapter.name}
                                         </Link>
                                     </td>
                                     <td className="p-3">

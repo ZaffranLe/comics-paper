@@ -2,8 +2,24 @@ import React from "react";
 import { mangaList } from "../../../utils/mock-data";
 import { BookThumbnail } from "../../../components";
 import ComicTrendingSection from "./comic-trending-section";
+import * as comicApi from "../../../utils/api/comics";
 
 function ComicSection() {
+    const [comics, setComics] = React.useState([]);
+
+    const fetchComics = async () => {
+        try {
+            const resp = await comicApi.getAllComic();
+            setComics(resp.data);
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    React.useEffect(() => {
+        fetchComics();
+    }, []);
+
     return (
         <>
             <div className="lg:grid lg:grid-cols-3 lg:gap-8">
@@ -21,12 +37,12 @@ function ComicSection() {
                         </div>
                     </div>
                     <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
-                        {mangaList.map((_manga) => (
-                            <BookThumbnail key={_manga.id} info={_manga} />
+                        {comics.map((_comic) => (
+                            <BookThumbnail key={_comic.id} info={_comic} />
                         ))}
                     </div>
                 </div>
-                <ComicTrendingSection />
+                <ComicTrendingSection comics={comics} />
             </div>
         </>
     );

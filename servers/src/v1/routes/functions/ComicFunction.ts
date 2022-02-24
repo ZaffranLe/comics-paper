@@ -498,11 +498,12 @@ export const ComicFunction = {
   },
 
   getComicById: async (req, res, next) => {
-    const comicId: string = req.params.id;
+    const url: string = req.params.id;
+    const [slug, id] = url.split("&");
     try {
-      const comic: ComicInterface = await ComicController.getComic(comicId);
+      const comic: ComicInterface = await ComicController.getComic(id);
       // not found
-      if (!comic) {
+      if (!comic || comic.slug !== slug) {
         return next(
           new MiddlewareError(Locale.HttpResponseMessage.ComicNotFound, 404)
         );

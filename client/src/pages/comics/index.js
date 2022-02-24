@@ -2,41 +2,65 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { BookThumbnail } from "../../components";
-import { mangaList, tags } from "../../utils/mock-data";
 import Select from "react-select";
 import { classNames } from "../../utils/common";
 import { categoryOptions } from "../../utils/constants";
+import * as comicApi from "../../utils/api/comics";
+import * as bookTagApi from "../../utils/api/book-tags";
 
 function Comics() {
-    const [searchParams, setSearchParams] = useSearchParams();
-    const [serializedSearchParams, setSerializedSearchParams] = useState({
+    const [comics, setComics] = useState([]);
+    const [tags, setTags] = useState([]);
+    const [searchInfo, setSearchInfo] = useState({
         type: null,
         tags: [],
         notTags: [],
+        tagsValue: [],
+        notTagsValue: [],
     });
     const [filterSectionOpen, setFilterSectionOpen] = useState(false);
 
-    useEffect(() => {
+    const fetchComics = async () => {
+        try {
+            const resp = await comicApi.getAllComic();
+            setComics(resp.data);
+        } catch (e) {
+            console.error(e);
+        }
+    };
 
-    }, [])
-    
+    const fetchBookTags = async () => {
+        try {
+            const resp = await bookTagApi.getAllBookTag();
+            const _tags = resp.data.map((_tag) => ({ label: _tag.keyword, value: _tag.id }));
+            setTags(_tags);
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
     useEffect(() => {
-        setSerializedSearchParams(Object.fromEntries([...searchParams]));
-    }, [searchParams]);
+        fetchComics();
+        fetchBookTags();
+    }, []);
 
     const handleSelectType = (selectedType) => {
-        setSearchParams({
-            ...serializedSearchParams,
+        setSearchInfo({
+            ...searchInfo,
             type: selectedType,
         });
     };
 
     const handleFilterTags = (name) => (selectedTags) => {
-        setSearchParams({
-            ...serializedSearchParams,
-            [name]: selectedTags.map((_tag) => _tag.value).join(","),
+        setSearchInfo({
+            ...searchInfo,
+            [name]: selectedTags.map((_tag) => _tag.value),
+            [`${name}Value`]: selectedTags,
         });
     };
+
+    const includedTagOptions = tags.filter((_tag) => !searchInfo.notTags.includes(_tag.value));
+    const notIncludedTagOptions = tags.filter((_tag) => !searchInfo.tags.includes(_tag.value));
 
     return (
         <>
@@ -57,11 +81,7 @@ function Comics() {
                             </div>
                             <div>
                                 <FontAwesomeIcon
-                                    icon={
-                                        filterSectionOpen
-                                            ? "chevron-down"
-                                            : "chevron-right"
-                                    }
+                                    icon={filterSectionOpen ? "chevron-down" : "chevron-right"}
                                 />
                             </div>
                         </div>
@@ -69,25 +89,18 @@ function Comics() {
                     {filterSectionOpen && (
                         <div className="grid grid-rows-1 divide-y bg-white rounded-b-xl p-3">
                             <div className="p-4">
-                                <div className="font-bold text-xl mb-4">
-                                    Danh mục
-                                </div>
+                                <div className="font-bold text-xl mb-4">Danh mục</div>
                                 <div className="grid grid-flow-col auto-cols-auto">
                                     {categoryOptions.map((_option) => (
                                         <div key={_option.value}>
                                             <span
                                                 className={classNames(
-                                                    serializedSearchParams.type ===
-                                                        _option.value
+                                                    searchInfo.type === _option.value
                                                         ? "font-bold bg-gray-200"
                                                         : "font-medium",
                                                     "cursor-pointer hover:underline hover:bg-gray-100 rounded px-2 py-1"
                                                 )}
-                                                onClick={() =>
-                                                    handleSelectType(
-                                                        _option.value
-                                                    )
-                                                }
+                                                onClick={() => handleSelectType(_option.value)}
                                             >
                                                 {_option.label}
                                             </span>
@@ -96,33 +109,27 @@ function Comics() {
                                 </div>
                             </div>
                             <div className="p-4 grid grid-rows-1 gap-4">
-                                <div className="font-bold text-xl">
-                                    Thể loại
-                                </div>
+                                <div className="font-bold text-xl">Thể loại</div>
                                 <div>
-                                    <div className="font-semibold text-lg">
-                                        Tìm trong
-                                    </div>
+                                    <div className="font-semibold text-lg">Tìm trong</div>
                                     <Select
-                                        options={tags}
+                                        options={includedTagOptions}
                                         className="hover:ring-1 hover:ring-gray-400 rounded"
                                         styles={{ cursor: "pointer" }}
                                         isMulti
                                         onChange={handleFilterTags("tags")}
-                                        // value={serializedSearchParams.tags}
+                                        value={searchInfo.tagsValue}
                                     />
                                 </div>
                                 <div>
-                                    <div className="font-semibold text-lg">
-                                        Không tìm trong
-                                    </div>
+                                    <div className="font-semibold text-lg">Không tìm trong</div>
                                     <Select
-                                        options={tags}
+                                        options={notIncludedTagOptions}
                                         className="hover:ring-1 hover:ring-gray-400 rounded"
                                         styles={{ cursor: "pointer" }}
                                         isMulti
                                         onChange={handleFilterTags("notTags")}
-                                        // value={serializedSearchParams.notTags}
+                                        value={searchInfo.notTagsValue}
                                     />
                                 </div>
                             </div>
@@ -131,8 +138,8 @@ function Comics() {
                 </div>
                 <div className="md:col-span-2">
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
-                        {mangaList.map((_manga) => (
-                            <BookThumbnail info={_manga} key={_manga.id} />
+                        {comics.map((_comic) => (
+                            <BookThumbnail info={_comic} key={_comic.id} />
                         ))}
                     </div>
                 </div>
@@ -142,23 +149,18 @@ function Comics() {
                     </div>
                     <div className="grid grid-rows-1 divide-y">
                         <div className="p-4">
-                            <div className="font-bold text-xl mb-4">
-                                Danh mục
-                            </div>
+                            <div className="font-bold text-xl mb-4">Danh mục</div>
                             <div className="grid grid-flow-col auto-cols-auto">
                                 {categoryOptions.map((_option) => (
-                                    <div key={_option.key}>
+                                    <div key={_option.value}>
                                         <span
                                             className={classNames(
-                                                serializedSearchParams.type ===
-                                                    _option.key
+                                                searchInfo.type === _option.value
                                                     ? "font-bold bg-gray-200"
                                                     : "font-medium",
                                                 "cursor-pointer hover:underline hover:bg-gray-100 rounded px-2 py-1"
                                             )}
-                                            onClick={() =>
-                                                handleSelectType(_option.key)
-                                            }
+                                            onClick={() => handleSelectType(_option.value)}
                                         >
                                             {_option.label}
                                         </span>
@@ -169,29 +171,25 @@ function Comics() {
                         <div className="p-4 grid grid-rows-1 gap-4">
                             <div className="font-bold text-xl">Thể loại</div>
                             <div>
-                                <div className="font-semibold text-lg">
-                                    Tìm trong
-                                </div>
+                                <div className="font-semibold text-lg">Tìm trong</div>
                                 <Select
-                                    options={tags}
+                                    options={includedTagOptions}
                                     className="hover:ring-1 hover:ring-gray-400 rounded"
                                     styles={{ cursor: "pointer" }}
                                     isMulti
                                     onChange={handleFilterTags("tags")}
-                                    // value={serializedSearchParams.tags}
+                                    value={searchInfo.tagsValue}
                                 />
                             </div>
                             <div>
-                                <div className="font-semibold text-lg">
-                                    Không tìm trong
-                                </div>
+                                <div className="font-semibold text-lg">Không tìm trong</div>
                                 <Select
-                                    options={tags}
+                                    options={notIncludedTagOptions}
                                     className="hover:ring-1 hover:ring-gray-400 rounded"
                                     styles={{ cursor: "pointer" }}
                                     isMulti
                                     onChange={handleFilterTags("notTags")}
-                                    // value={serializedSearchParams.notTags}
+                                    value={searchInfo.notTagsValue}
                                 />
                             </div>
                         </div>

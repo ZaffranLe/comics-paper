@@ -8,13 +8,13 @@ function Home() {
     return (
         <>
             <div>
-                <div>
+                <div className="my-4">
                     <ComicSection />
                 </div>
-                <div>
+                <div className="my-4">
                     <NovelSection />
                 </div>
-                <div>
+                <div className="my-4">
                     <FeedSection />
                 </div>
             </div>

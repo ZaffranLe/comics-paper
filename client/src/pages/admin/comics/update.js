@@ -121,7 +121,7 @@ function UpdateComic({ open, onClose, onSave, updateComic, tagOptions }) {
                                 />
                             </div>
                             <div>
-                                <label>Phân loại</label>
+                                <label>Danh mục</label>
                                 <Select
                                     className="w-full"
                                     value={comic.categoryOption}
