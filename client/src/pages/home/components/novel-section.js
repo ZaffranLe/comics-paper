@@ -1,6 +1,6 @@
 import React from "react";
 import { mangaList } from "../../../utils/mock-data";
-import { BookThumbnail } from "../../../components";
+import { ComicThumbnail } from "../../../components";
 
 function ComicSection() {
     return (
@@ -19,8 +19,8 @@ function ComicSection() {
                     </div>
                 </div>
                 <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-8">
-                    {mangaList.map((_manga) => (
-                        <BookThumbnail key={_manga.id} info={_manga} />
+                    {mangaList.map((_comic) => (
+                        <ComicThumbnail key={_comic.id} info={_comic} url={`/comics/${_comic.slug}&${_comic.id}`} />
                     ))}
                 </div>
             </div>

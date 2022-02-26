@@ -2,11 +2,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Link } from "react-router-dom";
 
-function BookTrending({ info, idx }) {
+function ComicTrending({ info, idx }) {
     return (
         <>
             <Link to={`/comics/${info.slug}&${info.id}`}>
-                <div className="group cursor:pointer p-4 grid grid-cols-8">
+                <div className="group cursor:pointer p-4 grid grid-cols-8 gap-4">
                     <div className="col-span-1 text-center flex items-center">
                         <button className="ring ring-gray-800 rounded-xl w-6 h-6">
                             {idx + 1}
@@ -16,7 +16,7 @@ function BookTrending({ info, idx }) {
                         <img
                             src={`${process.env.REACT_APP_ORIGIN_BACKEND}/public/${info.thumbnail}`}
                             alt={info.name}
-                            className="h-24 ring-1 ring-gray-800 rounded"
+                            className="h-24 w-full ring-1 ring-gray-800 rounded"
                         />
                     </div>
                     <div className="col-span-5">
@@ -37,4 +37,4 @@ function BookTrending({ info, idx }) {
     );
 }
 
-export default BookTrending;
+export default ComicTrending;

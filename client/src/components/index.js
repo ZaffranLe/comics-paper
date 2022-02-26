@@ -1,7 +1,7 @@
 import UserLayout from "./layout/user-layout";
 import AdminLayout from "./layout/admin-layout";
-import BookThumbnail from "./card/book-thumbnail";
-import BookTrending from "./card/book-trending";
+import ComicThumbnail from "./card/comic-thumbnail";
+import ComicTrending from "./card/comic-trending";
 import Modal from "./modal";
 import LoginModal from "./modal/login";
 import ProfileModal from "./modal/profile";
@@ -12,8 +12,8 @@ import Loader from "./loader";
 export {
     UserLayout,
     AdminLayout,
-    BookThumbnail,
-    BookTrending,
+    ComicThumbnail,
+    ComicTrending,
     Modal,
     LoginModal,
     ProfileModal,

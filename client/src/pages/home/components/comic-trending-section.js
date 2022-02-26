@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { classNames } from "../../../utils/common";
-import { BookTrending } from "../../../components";
+import { ComicTrending } from "../../../components";
 
 function ComicTrendingSection({ comics }) {
     const filters = [
@@ -50,7 +50,7 @@ function ComicTrendingSection({ comics }) {
                 </div>
                 <div className="grid grid-rows-1 divide-y">
                     {comics.slice(0, 6).map((_comic, _idx) => (
-                        <BookTrending key={_comic.id} info={_comic} idx={_idx} />
+                        <ComicTrending key={_comic.id} info={_comic} idx={_idx} />
                     ))}
                 </div>
             </div>

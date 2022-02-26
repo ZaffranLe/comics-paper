@@ -1,6 +1,6 @@
 import React from "react";
 import { mangaList } from "../../../utils/mock-data";
-import { BookThumbnail } from "../../../components";
+import { ComicThumbnail } from "../../../components";
 import ComicTrendingSection from "./comic-trending-section";
 import * as comicApi from "../../../utils/api/comics";
 
@@ -38,7 +38,7 @@ function ComicSection() {
                     </div>
                     <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
                         {comics.map((_comic) => (
-                            <BookThumbnail key={_comic.id} info={_comic} />
+                            <ComicThumbnail key={_comic.id} info={_comic} url={`/comics/${_comic.slug}&${_comic.id}`} />
                         ))}
                     </div>
                 </div>

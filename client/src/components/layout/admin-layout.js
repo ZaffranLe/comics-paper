@@ -69,7 +69,7 @@ function AdminLayout() {
         <>
             <div className="min-h-screen flex flex-col">
                 <div className="flex grow">
-                    <div className="bg-gray-900 p-4 text-white w-1/6">
+                    <div className="bg-gray-900 p-4 text-white w-1/6 flex-none">
                         <div className="text-center my-2">
                             <Link to="/dashboard">
                                 <span className="hidden lg:block font-mono text-2xl text-purple-50">

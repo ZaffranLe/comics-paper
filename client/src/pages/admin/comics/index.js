@@ -1,10 +1,11 @@
 import React from "react";
 import * as comicApi from "../../../utils/api/comics";
 import * as bookTagApi from "../../../utils/api/book-tags";
-import { BookThumbnail, ConfirmModal } from "../../../components";
+import { ComicThumbnail, ConfirmModal } from "../../../components";
 import { toast } from "react-toastify";
 import { v1 as uuidv1 } from "uuid";
 import UpdateComic from "./update";
+import ContextMenu from "./context-menu";
 
 function Comics() {
     const [comics, setComics] = React.useState([]);
@@ -19,6 +20,7 @@ function Comics() {
         loading: false,
     });
     const [bookTagOptions, setBookTagOptions] = React.useState([]);
+    const [contextMenuModal, setContextMenuModal] = React.useState(false);
 
     const fetchComics = async () => {
         try {
@@ -32,9 +34,7 @@ function Comics() {
     const fetchBookTags = async () => {
         try {
             const resp = await bookTagApi.getAllBookTag();
-            setBookTagOptions(
-                resp.data.map((_tag) => ({ label: _tag.keyword, value: _tag.id }))
-            );
+            setBookTagOptions(resp.data.map((_tag) => ({ label: _tag.keyword, value: _tag.id })));
         } catch (e) {
             console.error(e);
         }
@@ -45,11 +45,14 @@ function Comics() {
         fetchBookTags();
     }, []);
 
-    const handleOpenUpdateModal = (selectedBookTag = null) => {
+    const handleOpenUpdateModal = (selectedComic = null) => {
         setRandomKey(uuidv1());
         setUpdateModal(true);
-        if (selectedBookTag) {
-            setUpdateComic(selectedBookTag);
+        if (contextMenuModal) {
+            setContextMenuModal(false);
+        }
+        if (selectedComic) {
+            setUpdateComic(selectedComic);
         }
     };
 
@@ -100,6 +103,17 @@ function Comics() {
         });
     };
 
+    const handleOpenContextMenu = (e, _comic) => {
+        e.preventDefault();
+        setUpdateComic(_comic);
+        setContextMenuModal(true);
+    };
+
+    const handleCloseContextMenu = () => {
+        setUpdateComic(null);
+        setContextMenuModal(false);
+    };
+
     return (
         <>
             <div className="text-2xl font-bold">Danh sách truyện</div>
@@ -111,8 +125,11 @@ function Comics() {
             </button>
             <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-8">
                 {comics.map((_comic) => (
-                    <div key={_comic.id}>
-                        <BookThumbnail info={_comic} />
+                    <div key={_comic.id} onContextMenu={(e) => handleOpenContextMenu(e, _comic)}>
+                        <ComicThumbnail
+                            info={_comic}
+                            url={`/dashboard/comics/${_comic.slug}&${_comic.id}`}
+                        />
                     </div>
                 ))}
             </div>
@@ -125,6 +142,12 @@ function Comics() {
                 tagOptions={bookTagOptions}
             />
             <ConfirmModal {...confirmModal} />
+            <ContextMenu
+                open={contextMenuModal}
+                onClose={handleCloseContextMenu}
+                updateComic={updateComic}
+                onClickUpdate={handleOpenUpdateModal}
+            />
         </>
     );
 }

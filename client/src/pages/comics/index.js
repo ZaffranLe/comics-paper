@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { BookThumbnail } from "../../components";
+import { ComicThumbnail } from "../../components";
 import Select from "react-select";
 import { classNames } from "../../utils/common";
 import { categoryOptions } from "../../utils/constants";
@@ -139,7 +139,7 @@ function Comics() {
                 <div className="md:col-span-2">
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
                         {comics.map((_comic) => (
-                            <BookThumbnail info={_comic} key={_comic.id} />
+                            <ComicThumbnail info={_comic} key={_comic.id} url={`/comics/${_comic.slug}&${_comic.id}`} />
                         ))}
                     </div>
                 </div>

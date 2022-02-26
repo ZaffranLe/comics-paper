@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function BookThumbnail({ info }) {
+function ComicThumbnail({ info, url }) {
     return (
         <>
-            <Link to={`/comics/${info.slug}&${info.id}`}>
+            <Link to={url}>
                 <div>
                     <div
                         style={{
@@ -41,4 +41,4 @@ function BookThumbnail({ info }) {
     );
 }
 
-export default BookThumbnail;
+export default ComicThumbnail;
