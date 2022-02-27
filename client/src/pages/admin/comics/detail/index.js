@@ -41,7 +41,7 @@ function ComicDetail() {
                             <div className="grid grid-cols-4 gap-12">
                                 <div>
                                     <img
-                                        src={`${process.env.REACT_APP_ORIGIN_BACKEND}/public/${comic.thumbnail}`}
+                                        src={`${process.env.REACT_APP_ORIGIN_BACKEND}/public/${comic.thumbnailImg}`}
                                         alt={comic.name}
                                         className="border border-gray-800 rounded-lg"
                                     />

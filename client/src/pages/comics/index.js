@@ -139,7 +139,7 @@ function Comics() {
                 <div className="md:col-span-2">
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
                         {comics.map((_comic) => (
-                            <ComicThumbnail info={_comic} key={_comic.id} url={`/comics/${_comic.slug}&${_comic.id}`} />
+                            <ComicThumbnail comic={_comic} key={_comic.id} url={`/comics/${_comic.slug}&${_comic.id}`} />
                         ))}
                     </div>
                 </div>

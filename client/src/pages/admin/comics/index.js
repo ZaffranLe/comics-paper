@@ -66,7 +66,7 @@ function Comics() {
     const handleSave = async (comic) => {
         // try catch is in UpdateComic
         if (updateComic) {
-            // await bookTagApi.updateComic(updateComic.id, keyword);
+            await comicApi.updateComic(updateComic.id, comic);
             toast.success("Cập nhật truyện thành công");
         } else {
             await comicApi.createComic(comic);
@@ -125,10 +125,10 @@ function Comics() {
             </button>
             <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-8">
                 {comics.map((_comic) => (
-                    <div key={_comic.id} onContextMenu={(e) => handleOpenContextMenu(e, _comic)}>
+                    <div key={_comic.id} onClick={(e) => handleOpenContextMenu(e, _comic)}>
                         <ComicThumbnail
-                            info={_comic}
-                            url={`/dashboard/comics/${_comic.slug}&${_comic.id}`}
+                            comic={_comic}
+                            url={`#`}
                         />
                     </div>
                 ))}

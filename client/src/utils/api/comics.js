@@ -22,21 +22,19 @@ function getComicByUrl(url) {
     });
 }
 
-function updateBookTag(id, keyword) {
+function updateComic(id, comic) {
     return api({
-        url: `/v1/comics/tags/${id}`,
+        url: `/v1/comics/${id}`,
         method: "PUT",
-        data: {
-            keyword,
-        },
+        data: comic,
     });
 }
 
-function deleteBookTag(id) {
+function deleteComic(id) {
     return api({
-        url: `/v1/comics/tags/${id}`,
+        url: `/v1/comics/${id}`,
         method: "DELETE",
     });
 }
 
-export { createComic, getAllComic, getComicByUrl, updateBookTag, deleteBookTag };
+export { createComic, getAllComic, getComicByUrl, updateComic, deleteComic };

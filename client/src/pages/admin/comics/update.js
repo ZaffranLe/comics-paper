@@ -22,7 +22,18 @@ function UpdateComic({ open, onClose, onSave, updateComic, tagOptions }) {
 
     React.useEffect(() => {
         if (updateComic) {
-            setComic({ ...comic, ...updateComic });
+            const _categoryOption = categoryOptions.find(
+                (_category) => _category.value === updateComic.category
+            );
+            const _tags = updateComic.tags?.split(",") || [];
+            const _tagOptions = tagOptions.filter((_tag) => _tags.includes(_tag.value));
+            setComic({
+                ...comic,
+                ...updateComic,
+                categoryOption: _categoryOption,
+                tags: _tags,
+                tagOptions: _tagOptions,
+            });
         }
     }, [updateComic]);
 
@@ -54,7 +65,7 @@ function UpdateComic({ open, onClose, onSave, updateComic, tagOptions }) {
                 const imgInfo = resp.data[0];
                 setComic({
                     ...comic,
-                    thumbnailImg: `${process.env.REACT_APP_ORIGIN_BACKEND}/public/${imgInfo.fileName}`,
+                    thumbnailImg: imgInfo.fileName,
                     thumbnail: imgInfo.id,
                 });
             }
@@ -95,7 +106,11 @@ function UpdateComic({ open, onClose, onSave, updateComic, tagOptions }) {
                             )}
                         >
                             {comic.thumbnail ? (
-                                <img src={comic.thumbnailImg} className="w-full" alt="thumbnail" />
+                                <img
+                                    src={`${process.env.REACT_APP_ORIGIN_BACKEND}/public/${comic.thumbnailImg}`}
+                                    className="w-full"
+                                    alt="thumbnail"
+                                />
                             ) : (
                                 <div className="text-center w-full text-green-700">
                                     <FontAwesomeIcon icon="plus" />

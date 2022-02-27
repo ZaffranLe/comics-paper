@@ -1,14 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function ComicThumbnail({ info, url }) {
+function ComicThumbnail({ comic, url }) {
     return (
         <>
             <Link to={url}>
                 <div>
                     <div
                         style={{
-                            backgroundImage: `url(${process.env.REACT_APP_ORIGIN_BACKEND}/public/${info.thumbnail})`,
+                            backgroundImage: `url(${process.env.REACT_APP_ORIGIN_BACKEND}/public/${comic.thumbnailImg})`,
                             backgroundSize: "cover",
                             backgroundPositionX: "center",
                         }}
@@ -17,7 +17,7 @@ function ComicThumbnail({ info, url }) {
                         <div className="h-full bg-gradient-to-t from-black via-transparent p-2">
                             <div className="flex h-1/2 items-start justify-end">
                                 <span className="float-right bg-gray-800 text-white px-2 py-1 rounded">
-                                    {info.category}
+                                    {comic.category}
                                 </span>
                             </div>
                             <div className="flex h-1/2 items-end">
@@ -33,7 +33,7 @@ function ComicThumbnail({ info, url }) {
                         </div>
                     </div>
                     <div className="text-center font-bold cursor-pointer hover:underline peer-hover:underline">
-                        {info.name}
+                        {comic.name}
                     </div>
                 </div>
             </Link>

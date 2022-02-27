@@ -20,7 +20,7 @@ function ComicSection() {
                 </div>
                 <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-8">
                     {mangaList.map((_comic) => (
-                        <ComicThumbnail key={_comic.id} info={_comic} url={`/comics/${_comic.slug}&${_comic.id}`} />
+                        <ComicThumbnail key={_comic.id} comic={_comic} url={`/comics/${_comic.slug}&${_comic.id}`} />
                     ))}
                 </div>
             </div>

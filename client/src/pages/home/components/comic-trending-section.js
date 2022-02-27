@@ -50,7 +50,7 @@ function ComicTrendingSection({ comics }) {
                 </div>
                 <div className="grid grid-rows-1 divide-y">
                     {comics.slice(0, 6).map((_comic, _idx) => (
-                        <ComicTrending key={_comic.id} info={_comic} idx={_idx} />
+                        <ComicTrending key={_comic.id} comic={_comic} idx={_idx} />
                     ))}
                 </div>
             </div>

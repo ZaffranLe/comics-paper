@@ -12,601 +12,500 @@ import ComicTagController from "../../controllers/ComicTagController";
 import ComicBookTagController from "../../controllers/ComicBookTagController";
 
 export const ComicFunction = {
-  increaseComicView: async (req, res, next) => {
-    const comicId: string = req.params.id;
-    try {
-      // Check the id
-      if (!(await ComicController.hasComic(comicId))) {
-        return next(
-          new MiddlewareError(Locale.HttpResponseMessage.ComicNotFound, 404)
-        );
-      }
-      // Increase 1 unit of view count
-      await ComicController.updateViewComic(req.params.id);
-      // Response
-      res.status(204).end();
-    } catch (err) {
-      return next(new MiddlewareError(err.message, 500));
-    }
-  },
-  getAllComics: async (req, res, next) => {
-    try {
-      const comics: ComicInterface[] = await ComicController.getAllComics();
-      // Response
-      res.json(comics);
-    } catch (err) {
-      return next(new MiddlewareError(err.message, 500));
-    }
-  },
-  createNewComic: async (req, res, next) => {
-    const user: User = req["UserRequest"];
-
-    // Authorization required
-    if (!user) {
-      return next(
-        new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401)
-      );
-    }
-
-    // Check permissions
-    if (!(await user.hasPermission(PermissionEnum.COMIC_CREATE))) {
-      return next(
-        new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403)
-      );
-    }
-
-    // Extract content from body
-    const { name, description, thumbnail, author, category, tags } = req.body;
-
-    if (!name || !description) {
-      return next(
-        new MiddlewareError(
-          Locale.HttpResponseMessage.MissingRequiredFields,
-          400
-        )
-      );
-    }
-
-    try {
-      // Check thumbnail
-      if (thumbnail && !(await ResourceController.hasResource(thumbnail))) {
-        return next(
-          new MiddlewareError(
-            `${Locale.HttpResponseMessage.ResourceNotFound} (thumbnail)`,
-            404
-          )
-        );
-      }
-      // Try to create comic
-      const comic: ComicInterface = await ComicController.createComic(
-        name,
-        description,
-        user.id,
-        author,
-        category,
-        tags,
-        thumbnail,
-      );
-
-      // Send response
-      res.status(201).json({
-        comic,
-      });
-    } catch (err) {
-      return next(new MiddlewareError(err.message, 500));
-    }
-  },
-
-  createChapter: async (req, res, next) => {
-    try {
-      const user: User = req["UserRequest"];
-      const comicId: string = req.params.id;
-      // Check field
-      if (!comicId) {
-        return next(
-          new MiddlewareError(
-            Locale.HttpResponseMessage.MissingRequiredFields,
-            400
-          )
-        );
-      }
-
-      // Check authorization
-      if (!user) {
-        return next(
-          new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401)
-        );
-      }
-
-      // Check permissions
-      if (!(await user.hasPermission(PermissionEnum.COMIC_CHAPTER_CREATE))) {
-        return next(
-          new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403)
-        );
-      }
-
-      // Extract content from body
-      const { name, viewType, blocks } = req.body;
-
-      if (!name) {
-        return next(
-          new MiddlewareError(
-            Locale.HttpResponseMessage.MissingRequiredFields,
-            400
-          )
-        );
-      }
-      console.log(comicId);
-
-      if (viewType !== "image" && viewType !== "text") {
-        return next(
-          new MiddlewareError(
-            Locale.HttpResponseMessage.ChapterViewTypeInvalid,
-            400
-          )
-        );
-      }
-
-      const generatedChapter = await ComicChapterController.createChapter(
-        name,
-        comicId,
-        user.id,
-        viewType === "image"
-          ? ComicChapterViewTypeEnum.COMIC_CHAPTER_VIEW_TYPE_IMAGE
-          : ComicChapterViewTypeEnum.COMIC_CHAPTER_VIEW_TYPE_TEXT
-      );
-
-      const { id: chapterId, length: chapterLength } = generatedChapter;
-      // Create blocks from block list
-      if (blocks) {
-        Promise.all(
-          blocks.map(async (block, index) => {
-            // Create block
-            await ComicChapterBlockController.createChapterBlock(
-              chapterId,
-              chapterLength + index,
-              block.content
-            );
-            return block;
-          })
-        ).then(async (blockList) => {
-          await ComicChapterController.updateChapterLength(
-            chapterId,
-            blockList.length
-          );
-
-          res.status(201).json({
-            chapter: generatedChapter,
-            blocks: blockList,
-          });
-        });
-      }
-    } catch (err) {
-      return next(new MiddlewareError(err.message, 500));
-    }
-  },
-
-  getChapter: async (req, res, next) => {
-    try {
-      const comicId: string = req.params.id;
-      const { limit, page, sortedBy, order } = req.query;
-
-      // Check this comic
-      if (!(await ComicController.hasComic(comicId))) {
-        return next(
-          new MiddlewareError(Locale.HttpResponseMessage.ComicNotFound, 404)
-        );
-      }
-
-      const chapters = await ComicChapterController.getChaptersFromComic(
-        comicId,
-        {
-          limit: parseInt(limit as string),
-          page: parseInt(page as string),
-          sortedBy: sortedBy as string,
-          order: order as "asc" | "desc",
+    increaseComicView: async (req, res, next) => {
+        const comicId: string = req.params.id;
+        try {
+            // Check the id
+            if (!(await ComicController.hasComic(comicId))) {
+                return next(new MiddlewareError(Locale.HttpResponseMessage.ComicNotFound, 404));
+            }
+            // Increase 1 unit of view count
+            await ComicController.updateViewComic(req.params.id);
+            // Response
+            res.status(204).end();
+        } catch (err) {
+            return next(new MiddlewareError(err.message, 500));
         }
-      );
-      // console.log(chapters);
-      res.json(chapters);
-    } catch (err) {
-      return next(new MiddlewareError(err.message, 500));
-    }
-  },
+    },
+    getAllComics: async (req, res, next) => {
+        try {
+            const comics: ComicInterface[] = await ComicController.getAllComics();
+            // Response
+            res.json(comics);
+        } catch (err) {
+            return next(new MiddlewareError(err.message, 500));
+        }
+    },
+    createNewComic: async (req, res, next) => {
+        const user: User = req["UserRequest"];
 
-  getAllViewTypes: (req, res, next) => {
-    res.json([
-      {
-        id: 1,
-        name: "image",
-      },
-      {
-        id: 2,
-        name: "text",
-      },
-    ]);
-  },
+        // Authorization required
+        if (!user) {
+            return next(new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401));
+        }
 
-  getComicAndChapterById: async (req, res, next) => {
-    try {
-      const chapterId: string = req.params.chapterId;
-      const chapter = await ComicChapterController.getChapter(chapterId);
+        // Check permissions
+        if (!(await user.hasPermission(PermissionEnum.COMIC_CREATE))) {
+            return next(new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403));
+        }
 
-      console.log(chapter);
-      res.json(chapter);
-    } catch (err) {
-      return next(new MiddlewareError(err.message, 500));
-    }
-  },
+        // Extract content from body
+        const { name, description, thumbnail, author, category, tags } = req.body;
 
-  createNewTag: async (req, res, next) => {
-    try {
-      // Check authorization
-      const user: User = req["UserRequest"];
-      if (!user) {
-        return next(
-          new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401)
-        );
-      }
+        if (!name || !description) {
+            return next(new MiddlewareError(Locale.HttpResponseMessage.MissingRequiredFields, 400));
+        }
 
-      // Check permissions
-      if (!(await user.hasPermission(PermissionEnum.COMIC_TAG_CREATE))) {
-        return next(
-          new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403)
-        );
-      }
-      const { keyword } = req.body;
+        try {
+            // Check thumbnail
+            if (thumbnail && !(await ResourceController.hasResource(thumbnail))) {
+                return next(
+                    new MiddlewareError(
+                        `${Locale.HttpResponseMessage.ResourceNotFound} (thumbnail)`,
+                        404
+                    )
+                );
+            }
+            // Try to create comic
+            const comic: ComicInterface = await ComicController.createComic(
+                name,
+                description,
+                user.id,
+                author,
+                category,
+                tags,
+                thumbnail
+            );
 
-      // Check field
-      if (!keyword) {
-        return next(
-          new MiddlewareError(
-            Locale.HttpResponseMessage.MissingRequiredFields,
-            400
-          )
-        );
-      }
+            // Send response
+            res.status(201).json({
+                comic,
+            });
+        } catch (err) {
+            return next(new MiddlewareError(err.message, 500));
+        }
+    },
 
-      // Check whether tag exists
-      if ((await ComicTagController.getTag(keyword)) != null) {
-        return next(
-          new MiddlewareError(
-            Locale.HttpResponseMessage.ComicTagAlreadyExists,
-            400
-          )
-        );
-      }
+    createChapter: async (req, res, next) => {
+        try {
+            const user: User = req["UserRequest"];
+            const comicId: string = req.params.id;
+            // Check field
+            if (!comicId) {
+                return next(
+                    new MiddlewareError(Locale.HttpResponseMessage.MissingRequiredFields, 400)
+                );
+            }
 
-      const tag = await ComicTagController.createTag(keyword);
-      res.json(tag);
-    } catch (err) {
-      next(new MiddlewareError(err.message, 500));
-    }
-  },
+            // Check authorization
+            if (!user) {
+                return next(new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401));
+            }
 
-  updateTag: async (req, res, next) => {
-    try {
-      // Check authorization
-      const user: User = req["UserRequest"];
-      if (!user) {
-        return next(
-          new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401)
-        );
-      }
+            // Check permissions
+            if (!(await user.hasPermission(PermissionEnum.COMIC_CHAPTER_CREATE))) {
+                return next(new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403));
+            }
 
-      // Check permissions
-      if (!(await user.hasPermission(PermissionEnum.COMIC_TAG_UPDATE))) {
-        return next(
-          new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403)
-        );
-      }
-      const { id } = req.params;
-      const { keyword } = req.body;
+            // Extract content from body
+            const { name, viewType, blocks } = req.body;
 
-      // Check field
-      if (!keyword) {
-        return next(
-          new MiddlewareError(
-            Locale.HttpResponseMessage.MissingRequiredFields,
-            400
-          )
-        );
-      }
+            if (!name) {
+                return next(
+                    new MiddlewareError(Locale.HttpResponseMessage.MissingRequiredFields, 400)
+                );
+            }
+            console.log(comicId);
 
-      // Check whether tag exists
-      if ((await ComicTagController.getTag(keyword)) != null) {
-        return next(
-          new MiddlewareError(
-            Locale.HttpResponseMessage.ComicTagAlreadyExists,
-            400
-          )
-        );
-      }
+            if (viewType !== "image" && viewType !== "text") {
+                return next(
+                    new MiddlewareError(Locale.HttpResponseMessage.ChapterViewTypeInvalid, 400)
+                );
+            }
 
-      const tag = await ComicTagController.updateTag(id, keyword);
-      res.json(tag);
-    } catch (err) {
-      next(new MiddlewareError(err.message, 500));
-    }
-  },
+            const generatedChapter = await ComicChapterController.createChapter(
+                name,
+                comicId,
+                user.id,
+                viewType === "image"
+                    ? ComicChapterViewTypeEnum.COMIC_CHAPTER_VIEW_TYPE_IMAGE
+                    : ComicChapterViewTypeEnum.COMIC_CHAPTER_VIEW_TYPE_TEXT
+            );
 
-  deleteTag: async (req, res, next) => {
-    try {
-      // Check authorization
-      const user: User = req["UserRequest"];
-      if (!user) {
-        return next(
-          new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401)
-        );
-      }
+            const { id: chapterId, length: chapterLength } = generatedChapter;
+            // Create blocks from block list
+            if (blocks) {
+                Promise.all(
+                    blocks.map(async (block, index) => {
+                        // Create block
+                        await ComicChapterBlockController.createChapterBlock(
+                            chapterId,
+                            chapterLength + index,
+                            block.content
+                        );
+                        return block;
+                    })
+                ).then(async (blockList) => {
+                    await ComicChapterController.updateChapterLength(chapterId, blockList.length);
 
-      // Check permissions
-      if (!(await user.hasPermission(PermissionEnum.COMIC_TAG_DELETE))) {
-        return next(
-          new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403)
-        );
-      }
-      const { id } = req.params;
+                    res.status(201).json({
+                        chapter: generatedChapter,
+                        blocks: blockList,
+                    });
+                });
+            }
+        } catch (err) {
+            return next(new MiddlewareError(err.message, 500));
+        }
+    },
 
-      await ComicTagController.deleteTag(id);
-      res.json(id);
-    } catch (err) {
-      next(new MiddlewareError(err.message, 500));
-    }
-  },
+    getChapter: async (req, res, next) => {
+        try {
+            const comicId: string = req.params.id;
+            const { limit, page, sortedBy, order } = req.query;
 
-  getAllTags: async (req, res, next) => {
-    try {
-      const tags = await ComicTagController.getTags();
-      res.json(tags);
-    } catch (err) {
-      next(new MiddlewareError(err.message, 500));
-    }
-  },
+            // Check this comic
+            if (!(await ComicController.hasComic(comicId))) {
+                return next(new MiddlewareError(Locale.HttpResponseMessage.ComicNotFound, 404));
+            }
 
-  createRefTag: async (req, res, next) => {
-    try {
-      // Check authorization
-      const user: User = req["UserRequest"];
-      if (!user) {
-        return next(
-          new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401)
-        );
-      }
+            const chapters = await ComicChapterController.getChaptersFromComic(comicId, {
+                limit: parseInt(limit as string),
+                page: parseInt(page as string),
+                sortedBy: sortedBy as string,
+                order: order as "asc" | "desc",
+            });
+            // console.log(chapters);
+            res.json(chapters);
+        } catch (err) {
+            return next(new MiddlewareError(err.message, 500));
+        }
+    },
 
-      // Check permissions
-      if (
-        !(await user.hasPermission(PermissionEnum.COMIC_BOOK_TAG_REF_CREATE))
-      ) {
-        return next(
-          new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403)
-        );
-      }
+    getAllViewTypes: (req, res, next) => {
+        res.json([
+            {
+                id: 1,
+                name: "image",
+            },
+            {
+                id: 2,
+                name: "text",
+            },
+        ]);
+    },
 
-      const { tagId, comicId } = req.params;
-      // const { comicId } = req.body;
+    getComicAndChapterById: async (req, res, next) => {
+        try {
+            const chapterId: string = req.params.chapterId;
+            const chapter = await ComicChapterController.getChapter(chapterId);
 
-      // Check field
-      if (!tagId || !comicId) {
-        return next(
-          new MiddlewareError(
-            Locale.HttpResponseMessage.MissingRequiredFields,
-            400
-          )
-        );
-      }
+            console.log(chapter);
+            res.json(chapter);
+        } catch (err) {
+            return next(new MiddlewareError(err.message, 500));
+        }
+    },
 
-      // Check whether tag exists
-      if ((await ComicTagController.getTagById(tagId)) == null) {
-        return next(
-          new MiddlewareError(Locale.HttpResponseMessage.ComicTagNotFound, 404)
-        );
-      }
+    createNewTag: async (req, res, next) => {
+        try {
+            // Check authorization
+            const user: User = req["UserRequest"];
+            if (!user) {
+                return next(new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401));
+            }
 
-      // Check whether comic exists
-      if (!(await ComicController.hasComic(comicId))) {
-        return next(
-          new MiddlewareError(Locale.HttpResponseMessage.ComicNotFound, 404)
-        );
-      }
+            // Check permissions
+            if (!(await user.hasPermission(PermissionEnum.COMIC_TAG_CREATE))) {
+                return next(new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403));
+            }
+            const { keyword } = req.body;
 
-      // Check whether comic tag exists
-      if (await ComicBookTagController.hasRef(comicId, tagId)) {
-        return next(
-          new MiddlewareError(
-            Locale.HttpResponseMessage.ComicTagAlreadyExists,
-            400
-          )
-        );
-      }
+            // Check field
+            if (!keyword) {
+                return next(
+                    new MiddlewareError(Locale.HttpResponseMessage.MissingRequiredFields, 400)
+                );
+            }
 
-      await ComicBookTagController.createRefTag(comicId, tagId);
-      res.status(204).end();
-    } catch (err) {
-      next(new MiddlewareError(err.message, 500));
-    }
-  },
+            // Check whether tag exists
+            if ((await ComicTagController.getTag(keyword)) != null) {
+                return next(
+                    new MiddlewareError(Locale.HttpResponseMessage.ComicTagAlreadyExists, 400)
+                );
+            }
 
-  getAllComicTags: async (req, res, next) => {
-    try {
-      const comicId: string = req.params.comicId;
-      const tags = await ComicBookTagController.getRefsByComicId(comicId);
-      res.json(tags);
-    } catch (err) {
-      next(new MiddlewareError(err.message, 500));
-    }
-  },
+            const tag = await ComicTagController.createTag(keyword);
+            res.json(tag);
+        } catch (err) {
+            next(new MiddlewareError(err.message, 500));
+        }
+    },
 
-  deleteRefBetweenTagAndComic: async (req, res, next) => {
-    try {
-      // Check authorization
-      const user: User = req["UserRequest"];
-      if (!user) {
-        return next(
-          new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401)
-        );
-      }
+    updateTag: async (req, res, next) => {
+        try {
+            // Check authorization
+            const user: User = req["UserRequest"];
+            if (!user) {
+                return next(new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401));
+            }
 
-      // Check permissions
-      if (
-        !(await user.hasPermission(PermissionEnum.COMIC_BOOK_TAG_REF_DELETE))
-      ) {
-        return next(
-          new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403)
-        );
-      }
+            // Check permissions
+            if (!(await user.hasPermission(PermissionEnum.COMIC_TAG_UPDATE))) {
+                return next(new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403));
+            }
+            const { id } = req.params;
+            const { keyword } = req.body;
 
-      const { tagId, comicId } = req.params;
-      // const { comicId } = req.body;
+            // Check field
+            if (!keyword) {
+                return next(
+                    new MiddlewareError(Locale.HttpResponseMessage.MissingRequiredFields, 400)
+                );
+            }
 
-      // Check field
-      if (!tagId || !comicId) {
-        return next(
-          new MiddlewareError(
-            Locale.HttpResponseMessage.MissingRequiredFields,
-            400
-          )
-        );
-      }
+            // Check whether tag exists
+            if ((await ComicTagController.getTag(keyword)) != null) {
+                return next(
+                    new MiddlewareError(Locale.HttpResponseMessage.ComicTagAlreadyExists, 400)
+                );
+            }
 
-      // Check whether tag exists
-      if ((await ComicTagController.getTagById(tagId)) == null) {
-        return next(
-          new MiddlewareError(Locale.HttpResponseMessage.ComicTagNotFound, 404)
-        );
-      }
+            const tag = await ComicTagController.updateTag(id, keyword);
+            res.json(tag);
+        } catch (err) {
+            next(new MiddlewareError(err.message, 500));
+        }
+    },
 
-      // Check whether comic exists
-      if (!(await ComicController.hasComic(comicId))) {
-        return next(
-          new MiddlewareError(Locale.HttpResponseMessage.ComicNotFound, 404)
-        );
-      }
+    deleteTag: async (req, res, next) => {
+        try {
+            // Check authorization
+            const user: User = req["UserRequest"];
+            if (!user) {
+                return next(new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401));
+            }
 
-      // Check whether comic tag exists
-      if (!(await ComicBookTagController.hasRef(comicId, tagId))) {
-        return next(
-          new MiddlewareError(Locale.HttpResponseMessage.ComicTagNotFound, 404)
-        );
-      }
+            // Check permissions
+            if (!(await user.hasPermission(PermissionEnum.COMIC_TAG_DELETE))) {
+                return next(new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403));
+            }
+            const { id } = req.params;
 
-      await ComicBookTagController.deleteRef(comicId, tagId);
-      res.status(204).end();
-    } catch (err) {
-      next(new MiddlewareError(err.message, 500));
-    }
-  },
+            await ComicTagController.deleteTag(id);
+            res.json(id);
+        } catch (err) {
+            next(new MiddlewareError(err.message, 500));
+        }
+    },
 
-  getComicById: async (req, res, next) => {
-    const url: string = req.params.id;
-    const [slug, id] = url.split("&");
-    try {
-      const comic: ComicInterface = await ComicController.getComic(id);
-      // not found
-      if (!comic || comic.slug !== slug) {
-        return next(
-          new MiddlewareError(Locale.HttpResponseMessage.ComicNotFound, 404)
-        );
-      }
+    getAllTags: async (req, res, next) => {
+        try {
+            const tags = await ComicTagController.getTags();
+            res.json(tags);
+        } catch (err) {
+            next(new MiddlewareError(err.message, 500));
+        }
+    },
 
-      res.json({
-        comic,
-      });
-    } catch (err) {
-      return next(new MiddlewareError(err.message, 500));
-    }
-  },
+    createRefTag: async (req, res, next) => {
+        try {
+            // Check authorization
+            const user: User = req["UserRequest"];
+            if (!user) {
+                return next(new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401));
+            }
 
-  updateComicById: async (req, res, next) => {
-    const user: User = req["UserRequest"];
-    const comicId: string = req.params.id;
-    // Check field
-    if (!comicId) {
-      return next(
-        new MiddlewareError(
-          Locale.HttpResponseMessage.MissingRequiredFields,
-          400
-        )
-      );
-    }
-    // Check authorization
-    if (!user) {
-      return next(
-        new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401)
-      );
-    }
+            // Check permissions
+            if (!(await user.hasPermission(PermissionEnum.COMIC_BOOK_TAG_REF_CREATE))) {
+                return next(new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403));
+            }
 
-    // Check permissions
-    if (!(await user.hasPermission(PermissionEnum.COMIC_UPDATE))) {
-      return next(
-        new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403)
-      );
-    }
+            const { tagId, comicId } = req.params;
+            // const { comicId } = req.body;
 
-    // Extract content from body
-    const { name, description } = req.body;
+            // Check field
+            if (!tagId || !comicId) {
+                return next(
+                    new MiddlewareError(Locale.HttpResponseMessage.MissingRequiredFields, 400)
+                );
+            }
 
-    try {
-      // Try to update comic
-      await ComicController.updateComic(comicId, name, description);
-      // Response
-      res.status(204).end();
-    } catch (err) {
-      return next(new MiddlewareError(err.message, 500));
-    }
-  },
+            // Check whether tag exists
+            if ((await ComicTagController.getTagById(tagId)) == null) {
+                return next(new MiddlewareError(Locale.HttpResponseMessage.ComicTagNotFound, 404));
+            }
 
-  deleteComicById: async (req, res, next) => {
-    const user: User = req["UserRequest"];
-    const comicId: string = req.params.id;
-    // Check field
-    if (!comicId) {
-      return next(
-        new MiddlewareError(
-          Locale.HttpResponseMessage.MissingRequiredFields,
-          400
-        )
-      );
-    }
+            // Check whether comic exists
+            if (!(await ComicController.hasComic(comicId))) {
+                return next(new MiddlewareError(Locale.HttpResponseMessage.ComicNotFound, 404));
+            }
 
-    // Check authorization
-    if (!user) {
-      return next(
-        new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401)
-      );
-    }
+            // Check whether comic tag exists
+            if (await ComicBookTagController.hasRef(comicId, tagId)) {
+                return next(
+                    new MiddlewareError(Locale.HttpResponseMessage.ComicTagAlreadyExists, 400)
+                );
+            }
 
-    // Check permissions
-    if (!(await user.hasPermission(PermissionEnum.COMIC_DELETE))) {
-      return next(
-        new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403)
-      );
-    }
+            await ComicBookTagController.createRefTag(comicId, tagId);
+            res.status(204).end();
+        } catch (err) {
+            next(new MiddlewareError(err.message, 500));
+        }
+    },
 
-    try {
-      // Try to delete comic
-      await ComicController.deleteComic(comicId);
-      // Response
-      res.status(204).end();
-    } catch (err) {
-      return next(new MiddlewareError(err.message, 500));
-    }
-  },
-  searchComic: async (req, res, next) => {
-    try {
-      const comic = await ComicController.searchComic(req.query);
+    getAllComicTags: async (req, res, next) => {
+        try {
+            const comicId: string = req.params.comicId;
+            const tags = await ComicBookTagController.getRefsByComicId(comicId);
+            res.json(tags);
+        } catch (err) {
+            next(new MiddlewareError(err.message, 500));
+        }
+    },
 
-      // Not found
-      if (comic) {
-        return next(
-          new MiddlewareError(Locale.HttpResponseMessage.ComicNotFound, 404)
-        );
-      }
+    deleteRefBetweenTagAndComic: async (req, res, next) => {
+        try {
+            // Check authorization
+            const user: User = req["UserRequest"];
+            if (!user) {
+                return next(new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401));
+            }
 
-      // Response me
-      res.json(comic);
-    } catch (err) {
-      return next(new MiddlewareError(err.message, 500));
-    }
-  },
+            // Check permissions
+            if (!(await user.hasPermission(PermissionEnum.COMIC_BOOK_TAG_REF_DELETE))) {
+                return next(new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403));
+            }
+
+            const { tagId, comicId } = req.params;
+            // const { comicId } = req.body;
+
+            // Check field
+            if (!tagId || !comicId) {
+                return next(
+                    new MiddlewareError(Locale.HttpResponseMessage.MissingRequiredFields, 400)
+                );
+            }
+
+            // Check whether tag exists
+            if ((await ComicTagController.getTagById(tagId)) == null) {
+                return next(new MiddlewareError(Locale.HttpResponseMessage.ComicTagNotFound, 404));
+            }
+
+            // Check whether comic exists
+            if (!(await ComicController.hasComic(comicId))) {
+                return next(new MiddlewareError(Locale.HttpResponseMessage.ComicNotFound, 404));
+            }
+
+            // Check whether comic tag exists
+            if (!(await ComicBookTagController.hasRef(comicId, tagId))) {
+                return next(new MiddlewareError(Locale.HttpResponseMessage.ComicTagNotFound, 404));
+            }
+
+            await ComicBookTagController.deleteRef(comicId, tagId);
+            res.status(204).end();
+        } catch (err) {
+            next(new MiddlewareError(err.message, 500));
+        }
+    },
+
+    getComicById: async (req, res, next) => {
+        const url: string = req.params.id;
+        const [slug, id] = url.split("&");
+        try {
+            const comic: ComicInterface = await ComicController.getComic(id);
+            // not found
+            if (!comic || comic.slug !== slug) {
+                return next(new MiddlewareError(Locale.HttpResponseMessage.ComicNotFound, 404));
+            }
+
+            res.json({
+                comic,
+            });
+        } catch (err) {
+            return next(new MiddlewareError(err.message, 500));
+        }
+    },
+
+    updateComicById: async (req, res, next) => {
+        const user: User = req["UserRequest"];
+        const comicId: string = req.params.id;
+        // Check field
+        if (!comicId) {
+            return next(new MiddlewareError(Locale.HttpResponseMessage.MissingRequiredFields, 400));
+        }
+        // Check authorization
+        if (!user) {
+            return next(new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401));
+        }
+
+        // Check permissions
+        if (!(await user.hasPermission(PermissionEnum.COMIC_UPDATE))) {
+            return next(new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403));
+        }
+
+        // Extract content from body
+        const { name, description, thumbnail, author, category, tags } = req.body;
+
+        try {
+            // Try to update comic
+            await ComicController.updateComic(
+                comicId,
+                name,
+                description,
+                author,
+                category,
+                tags,
+                thumbnail
+            );
+            // Response
+            res.status(204).end();
+        } catch (err) {
+            return next(new MiddlewareError(err.message, 500));
+        }
+    },
+
+    deleteComicById: async (req, res, next) => {
+        const user: User = req["UserRequest"];
+        const comicId: string = req.params.id;
+        // Check field
+        if (!comicId) {
+            return next(new MiddlewareError(Locale.HttpResponseMessage.MissingRequiredFields, 400));
+        }
+
+        // Check authorization
+        if (!user) {
+            return next(new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401));
+        }
+
+        // Check permissions
+        if (!(await user.hasPermission(PermissionEnum.COMIC_DELETE))) {
+            return next(new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403));
+        }
+
+        try {
+            // Try to delete comic
+            await ComicController.deleteComic(comicId);
+            // Response
+            res.status(204).end();
+        } catch (err) {
+            return next(new MiddlewareError(err.message, 500));
+        }
+    },
+    searchComic: async (req, res, next) => {
+        try {
+            const comic = await ComicController.searchComic(req.query);
+
+            // Not found
+            if (comic) {
+                return next(new MiddlewareError(Locale.HttpResponseMessage.ComicNotFound, 404));
+            }
+
+            // Response me
+            res.json(comic);
+        } catch (err) {
+            return next(new MiddlewareError(err.message, 500));
+        }
+    },
 };

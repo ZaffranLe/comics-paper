@@ -59,7 +59,8 @@ async function createComic(
 async function getAllComics(): Promise<ComicInterface[]> {
     const fields = {
         id: "t1.id",
-        thumbnail: "t2.fileName",
+        thumbnail: "t2.id",
+        thumbnailImg: "t2.fileName",
         name: "t1.name",
         description: "t1.description",
         author: "t1.author",
@@ -70,6 +71,9 @@ async function getAllComics(): Promise<ComicInterface[]> {
         updatedAt: "t1.updatedAt",
         createdAt: "t1.createdAt",
         postedBy: "t1.postedBy",
+        tags: DatabaseBuilder.raw(
+            "(SELECT GROUP_CONCAT(t3.tagId SEPARATOR ',') FROM comic_book_tags t3 WHERE t3.comicId = t1.id)"
+        ),
     };
     const comics: ComicInterface[] = await DatabaseBuilder(`${Tables.Comic} AS t1`)
         .join(`${Tables.Resource} AS t2`, "t1.thumbnail", "t2.id")
@@ -97,7 +101,7 @@ async function getComic(id: string): Promise<ComicInterface> {
         .join(`${Tables.ComicTag} AS t2`, "t1.tagId", "t2.id")
         .where({ "t1.comicId": id })
         .columns({ id: "t1.tagId", keyword: "t2.keyword" });
-    return { ...comic, thumbnail: thumbnailInfo.fileName, tags };
+    return { ...comic, thumbnailImg: thumbnailInfo.fileName, tags };
 }
 
 /**
@@ -107,20 +111,40 @@ async function getComic(id: string): Promise<ComicInterface> {
  * @param name a name of a comic
  * @param description a description of comic
  */
-async function updateComic(id: string, name: string, description: string) {
+async function updateComic(
+    id: string,
+    name: string,
+    description: string,
+    author: string,
+    category: string,
+    tags,
+    thumbnail?: string
+) {
     // check parameters
     if (!id || !validator.isUUID(id)) {
         throw new Error("id is required");
     }
+    const transaction = await DatabaseBuilder.transaction();
+    try {
+        await transaction(Tables.Comic)
+            .where({ id })
+            .update({
+                name,
+                description,
+                updatedAt: new Date(),
+                slug: slugify(name, { lower: true, remove: /[*+~.()'"!:@]/g }),
+                author,
+                category,
+                thumbnail,
+            });
+        const insertTags = tags.map((_tag) => ({ comicId: id, tagId: _tag }));
+        await transaction(Tables.ComicBookTag).insert(insertTags);
+        await transaction.commit();
+    } catch (e) {
+        await transaction.rollback();
+        throw e;
+    }
     // Retrieve comic
-    await DatabaseBuilder(Tables.Comic)
-        .where({ id })
-        .update({
-            name,
-            description,
-            updatedAt: new Date(),
-            slug: slugify(name, { lower: true, remove: /[*+~.()'"!:@]/g }),
-        });
 }
 
 /**
