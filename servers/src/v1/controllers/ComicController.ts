@@ -156,9 +156,21 @@ async function deleteComic(id: string) {
     if (!id || !validator.isUUID(id)) {
         throw new Error("id is required");
     }
-
-    // Retrieve comic
-    await DatabaseBuilder(Tables.Comic).where({ id }).del();
+    const transaction = await DatabaseBuilder.transaction();
+    try {
+        await transaction(Tables.ComicBookTag).where({ comicId: id }).del();
+        const comicChapters = await DatabaseBuilder(Tables.ComicChapter)
+            .where({ comicId: id })
+            .columns(["id"]);
+        const chapterIdList = comicChapters.map((chapter) => chapter.id);
+        await transaction(Tables.ComicChapterBlock).whereIn("chapterId", chapterIdList).del();
+        await transaction(Tables.ComicChapter).where({ comicId: id }).del();
+        await transaction(Tables.Comic).where({ id }).del();
+        await transaction.commit();
+    } catch (e) {
+        await transaction.rollback();
+        throw e;
+    }
 }
 
 /**

@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { v1 as uuidv1 } from "uuid";
 import UpdateComic from "./update";
 import ContextMenu from "./context-menu";
+import ChapterList from "./chapter-list";
 
 function Comics() {
     const [comics, setComics] = React.useState([]);
@@ -21,6 +22,7 @@ function Comics() {
     });
     const [bookTagOptions, setBookTagOptions] = React.useState([]);
     const [contextMenuModal, setContextMenuModal] = React.useState(false);
+    const [chapterListModal, setChapterListModal] = React.useState(false);
 
     const fetchComics = async () => {
         try {
@@ -76,6 +78,8 @@ function Comics() {
     };
 
     const handleDeleteComic = (comic) => {
+        setContextMenuModal(false);
+        setUpdateComic(null);
         setConfirmModal({
             content: `Bạn có chắc chắn muốn xóa truyện '${comic.name}' không?`,
             open: true,
@@ -86,9 +90,9 @@ function Comics() {
             onConfirm: async () => {
                 setConfirmModal({ ...confirmModal, loading: true });
                 try {
-                    // await bookTagApi.deleteBookTag(tag.id);
+                    await comicApi.deleteComic(comic.id);
                     toast.success("Xóa truyện thành công");
-                    // await fetchBookTags();
+                    await fetchComics();
                 } catch (e) {
                     console.error(e);
                     toast.error("Xóa truyện thất bại, vui lòng thử lại sau.");
@@ -114,6 +118,15 @@ function Comics() {
         setContextMenuModal(false);
     };
 
+    const handleOpenChapterList = () => {
+        setContextMenuModal(false);
+        setChapterListModal(true);
+    };
+
+    const handleCloseChapterList = () => {
+        setChapterListModal(false);
+    };
+
     return (
         <>
             <div className="text-2xl font-bold">Danh sách truyện</div>
@@ -126,10 +139,7 @@ function Comics() {
             <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-8">
                 {comics.map((_comic) => (
                     <div key={_comic.id} onClick={(e) => handleOpenContextMenu(e, _comic)}>
-                        <ComicThumbnail
-                            comic={_comic}
-                            url={`#`}
-                        />
+                        <ComicThumbnail comic={_comic} url={`#`} />
                     </div>
                 ))}
             </div>
@@ -147,6 +157,13 @@ function Comics() {
                 onClose={handleCloseContextMenu}
                 updateComic={updateComic}
                 onClickUpdate={handleOpenUpdateModal}
+                onShowChapterList={handleOpenChapterList}
+                onClickDelete={handleDeleteComic}
+            />
+            <ChapterList
+                open={chapterListModal}
+                onClose={handleCloseChapterList}
+                updateComic={updateComic}
             />
         </>
     );

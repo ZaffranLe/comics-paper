@@ -1,7 +1,14 @@
 import React from "react";
 import { Modal } from "../../../components";
 
-function ContextMenu({ open, onClose, updateComic, onClickUpdate }) {
+function ContextMenu({
+    open,
+    onClose,
+    updateComic,
+    onClickUpdate,
+    onShowChapterList,
+    onClickDelete,
+}) {
     return (
         <>
             {updateComic && (
@@ -14,10 +21,18 @@ function ContextMenu({ open, onClose, updateComic, onClickUpdate }) {
                         >
                             Chỉnh sửa thông tin
                         </button>
-                        <button className="w-full rounded-lg bg-gray-200 py-2 my-2 hover:bg-gray-300">
-                            Thêm chương mới
+                        <button
+                            className="w-full rounded-lg bg-gray-200 py-2 my-2 hover:bg-gray-300"
+                            onClick={onShowChapterList}
+                        >
+                            Danh sách chương
                         </button>
-                        <button className="w-full rounded-lg bg-gray-200 py-2 my-2 hover:bg-gray-300">Xóa</button>
+                        <button
+                            className="w-full rounded-lg bg-gray-200 py-2 my-2 hover:bg-gray-300"
+                            onClick={() => onClickDelete(updateComic)}
+                        >
+                            Xóa
+                        </button>
                     </div>
                 </Modal>
             )}
