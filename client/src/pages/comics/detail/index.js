@@ -4,6 +4,7 @@ import { Loader, NotFound } from "../../../components";
 import InfoSection from "./info-section";
 import * as comicApi from "../../../utils/api/comics";
 import { toast } from "react-toastify";
+import moment from "moment";
 
 function ComicDetail() {
     const [comic, setComic] = React.useState(null);
@@ -13,14 +14,20 @@ function ComicDetail() {
 
     const fetchComic = async (url) => {
         try {
-            const resp = await comicApi.getComicByUrl(url);
-            setComic(resp.data.comic);
+            setLoading(true);
+            const comicResp = await comicApi.getComicByUrl(url);
+            const _comic = comicResp.data.comic;
+            const chaptersResp = await comicApi.getAllComicChapters(_comic.id);
+            _comic.chapters = chaptersResp.data;
+            setComic(_comic);
         } catch (e) {
             toast.error(
                 e.response?.data?.error?.message ||
                     "Lấy thông tin truyện thất bại! Vui lòng thử lại sau."
             );
             console.error(e);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -58,99 +65,18 @@ function ComicDetail() {
                                 Danh sách chương
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                                <div
-                                    onClick={() =>
-                                        handleViewChapter({ name: "test", id: "abcdefu" })
-                                    }
-                                    className="border-2 border-gray-800 p-2 rounded-lg hover:font-semibold cursor-pointer"
-                                >
-                                    <div>Chương 1 - Khởi đầu mới</div>
-                                    <span className="font-light">01-01-2022</span>
-                                </div>
-                                <div
-                                    onClick={() => handleViewChapter()}
-                                    className="border-2 border-gray-800 p-2 rounded-lg hover:font-semibold cursor-pointer"
-                                >
-                                    <div>Chương 1 - Khởi đầu mới</div>
-                                    <span className="font-light">01-01-2022</span>
-                                </div>
-                                <div
-                                    onClick={() => handleViewChapter()}
-                                    className="border-2 border-gray-800 p-2 rounded-lg hover:font-semibold cursor-pointer"
-                                >
-                                    <div>Chương 1 - Khởi đầu mới</div>
-                                    <span className="font-light">01-01-2022</span>
-                                </div>
-                                <div
-                                    onClick={() => handleViewChapter()}
-                                    className="border-2 border-gray-800 p-2 rounded-lg hover:font-semibold cursor-pointer"
-                                >
-                                    <div>Chương 1 - Khởi đầu mới</div>
-                                    <span className="font-light">01-01-2022</span>
-                                </div>
-                                <div
-                                    onClick={() => handleViewChapter()}
-                                    className="border-2 border-gray-800 p-2 rounded-lg hover:font-semibold cursor-pointer"
-                                >
-                                    <div>Chương 1 - Khởi đầu mới</div>
-                                    <span className="font-light">01-01-2022</span>
-                                </div>
-                                <div
-                                    onClick={() => handleViewChapter()}
-                                    className="border-2 border-gray-800 p-2 rounded-lg hover:font-semibold cursor-pointer"
-                                >
-                                    <div>Chương 1 - Khởi đầu mới</div>
-                                    <span className="font-light">01-01-2022</span>
-                                </div>
-                                <div
-                                    onClick={() => handleViewChapter()}
-                                    className="border-2 border-gray-800 p-2 rounded-lg hover:font-semibold cursor-pointer"
-                                >
-                                    <div>Chương 1 - Khởi đầu mới</div>
-                                    <span className="font-light">01-01-2022</span>
-                                </div>
-                                <div
-                                    onClick={() => handleViewChapter()}
-                                    className="border-2 border-gray-800 p-2 rounded-lg hover:font-semibold cursor-pointer"
-                                >
-                                    <div>Chương 1 - Khởi đầu mới</div>
-                                    <span className="font-light">01-01-2022</span>
-                                </div>
-                                <div
-                                    onClick={() => handleViewChapter()}
-                                    className="border-2 border-gray-800 p-2 rounded-lg hover:font-semibold cursor-pointer"
-                                >
-                                    <div>Chương 1 - Khởi đầu mới</div>
-                                    <span className="font-light">01-01-2022</span>
-                                </div>
-                                <div
-                                    onClick={() => handleViewChapter()}
-                                    className="border-2 border-gray-800 p-2 rounded-lg hover:font-semibold cursor-pointer"
-                                >
-                                    <div>Chương 1 - Khởi đầu mới</div>
-                                    <span className="font-light">01-01-2022</span>
-                                </div>
-                                <div
-                                    onClick={() => handleViewChapter()}
-                                    className="border-2 border-gray-800 p-2 rounded-lg hover:font-semibold cursor-pointer"
-                                >
-                                    <div>Chương 1 - Khởi đầu mới</div>
-                                    <span className="font-light">01-01-2022</span>
-                                </div>
-                                <div
-                                    onClick={() => handleViewChapter()}
-                                    className="border-2 border-gray-800 p-2 rounded-lg hover:font-semibold cursor-pointer"
-                                >
-                                    <div>Chương 1 - Khởi đầu mới</div>
-                                    <span className="font-light">01-01-2022</span>
-                                </div>
-                                <div
-                                    onClick={() => handleViewChapter()}
-                                    className="border-2 border-gray-800 p-2 rounded-lg hover:font-semibold cursor-pointer"
-                                >
-                                    <div>Chương 1 - Khởi đầu mới</div>
-                                    <span className="font-light">01-01-2022</span>
-                                </div>
+                                {comic.chapters.map((_chapter) => (
+                                    <div
+                                        key={_chapter.id}
+                                        onClick={() => handleViewChapter(_chapter)}
+                                        className="border-2 border-gray-800 p-2 rounded-lg hover:font-semibold cursor-pointer"
+                                    >
+                                        <div>{_chapter.name}</div>
+                                        <span className="font-light">
+                                            {moment(_chapter.createdAt).format("HH:mm DD/MM/YYYY")}
+                                        </span>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     ) : (

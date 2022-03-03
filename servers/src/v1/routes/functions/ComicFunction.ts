@@ -115,8 +115,6 @@ export const ComicFunction = {
                     new MiddlewareError(Locale.HttpResponseMessage.MissingRequiredFields, 400)
                 );
             }
-            console.log(comicId);
-
             if (viewType !== "image" && viewType !== "text") {
                 return next(
                     new MiddlewareError(Locale.HttpResponseMessage.ChapterViewTypeInvalid, 400)
@@ -129,31 +127,69 @@ export const ComicFunction = {
                 user.id,
                 viewType === "image"
                     ? ComicChapterViewTypeEnum.COMIC_CHAPTER_VIEW_TYPE_IMAGE
-                    : ComicChapterViewTypeEnum.COMIC_CHAPTER_VIEW_TYPE_TEXT
+                    : ComicChapterViewTypeEnum.COMIC_CHAPTER_VIEW_TYPE_TEXT,
+                blocks
             );
 
-            const { id: chapterId, length: chapterLength } = generatedChapter;
-            // Create blocks from block list
-            if (blocks) {
-                Promise.all(
-                    blocks.map(async (block, index) => {
-                        // Create block
-                        await ComicChapterBlockController.createChapterBlock(
-                            chapterId,
-                            chapterLength + index,
-                            block.content
-                        );
-                        return block;
-                    })
-                ).then(async (blockList) => {
-                    await ComicChapterController.updateChapterLength(chapterId, blockList.length);
+            res.status(201).json({
+                chapter: generatedChapter,
+            });
+        } catch (err) {
+            return next(new MiddlewareError(err.message, 500));
+        }
+    },
 
-                    res.status(201).json({
-                        chapter: generatedChapter,
-                        blocks: blockList,
-                    });
-                });
+    updateChapter: async (req, res, next) => {
+        try {
+            const user: User = req["UserRequest"];
+            const comicId: string = req.params.id;
+            const chapterId: string = req.params.chapterId;
+            // Check field
+            if (!comicId) {
+                return next(
+                    new MiddlewareError(Locale.HttpResponseMessage.MissingRequiredFields, 400)
+                );
             }
+
+            // Check authorization
+            if (!user) {
+                return next(new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401));
+            }
+
+            // Check permissions
+            if (!(await user.hasPermission(PermissionEnum.COMIC_CHAPTER_CREATE))) {
+                return next(new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403));
+            }
+
+            // Extract content from body
+            const { name, viewType, blocks } = req.body;
+
+            if (!name) {
+                return next(
+                    new MiddlewareError(Locale.HttpResponseMessage.MissingRequiredFields, 400)
+                );
+            }
+            if (viewType !== "image" && viewType !== "text") {
+                return next(
+                    new MiddlewareError(Locale.HttpResponseMessage.ChapterViewTypeInvalid, 400)
+                );
+            }
+
+            const generatedChapter = await ComicChapterController.updateChapter(
+                chapterId,
+                name,
+                comicId,
+                user.id,
+                viewType === "image"
+                    ? ComicChapterViewTypeEnum.COMIC_CHAPTER_VIEW_TYPE_IMAGE
+                    : ComicChapterViewTypeEnum.COMIC_CHAPTER_VIEW_TYPE_TEXT,
+                blocks
+            );
+
+            res.status(201).json({
+                chapter: generatedChapter,
+                blocks,
+            });
         } catch (err) {
             return next(new MiddlewareError(err.message, 500));
         }
@@ -177,6 +213,23 @@ export const ComicFunction = {
             });
             // console.log(chapters);
             res.json(chapters);
+        } catch (err) {
+            return next(new MiddlewareError(err.message, 500));
+        }
+    },
+
+    getChapterById: async (req, res, next) => {
+        try {
+            const comicId: string = req.params.id;
+            const chapterId: string = req.params.chapterId;
+
+            // Check this comic
+            if (!(await ComicController.hasComic(comicId))) {
+                return next(new MiddlewareError(Locale.HttpResponseMessage.ComicNotFound, 404));
+            }
+
+            const chapter = await ComicChapterController.getChapter(chapterId);
+            res.json(chapter);
         } catch (err) {
             return next(new MiddlewareError(err.message, 500));
         }

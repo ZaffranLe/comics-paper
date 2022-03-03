@@ -35,13 +35,12 @@ function InfoTab({ comic }) {
                         <tr>
                             <td className="font-bold">Đánh giá</td>
                             <td>
-                                Trung bình {comic.likes}/5 trên tổng số {comic.likes}{" "}
-                                đánh giá
+                                Trung bình {comic.likes}/5 trên tổng số {comic.likes} đánh giá
                             </td>
                         </tr>
                         <tr>
                             <td className="font-bold">Tác giả</td>
-                            <td>{comic.postedBy}</td>
+                            <td>{comic.author}</td>
                         </tr>
                         <tr>
                             <td className="font-bold">Danh mục</td>
@@ -51,7 +50,9 @@ function InfoTab({ comic }) {
                             <td className="font-bold">Thể loại</td>
                             <td>
                                 {comic.tags.map((_tag) => (
-                                    <span key={_tag.id} className="mx-2 first:ml-0 last:mr-0">{_tag.keyword}</span>
+                                    <span key={_tag.id} className="mx-2 first:ml-0 last:mr-0">
+                                        {_tag.keyword}
+                                    </span>
                                 ))}
                             </td>
                         </tr>

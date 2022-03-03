@@ -1,7 +1,8 @@
 import React from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import { Loader, NotFound } from "../../../components";
-import { mangaList } from "../../../utils/mock-data";
+import * as comicApi from "../../../utils/api/comics";
 
 function ComicChapter() {
     const [comic, setComic] = React.useState(null);
@@ -11,14 +12,27 @@ function ComicChapter() {
     const navigate = useNavigate();
 
     React.useEffect(() => {
-        const [mangaSlug, mangaId] = params.url.split("&");
-        const [chapterName, chapterId] = params.chapterUrl.split("&");
-        const _comic = mangaList.find(
-            (_manga) => _manga.id === mangaId && _manga.url === mangaSlug
-        );
-        setComic(_comic);
-        setChapterInfo({ name: chapterName });
+        const [, comicId] = params.url.split("&");
+        const [, chapterId] = params.chapterUrl.split("&");
+        fetchChapter(comicId, chapterId);
     }, [params]);
+
+    const fetchChapter = async (comicId, chapterId) => {
+        try {
+            setLoading(true);
+            const chapterResp = await comicApi.getComicChapter(comicId, chapterId);
+            const chapter = chapterResp.data;
+            setChapterInfo(chapter);
+        } catch (e) {
+            toast.error(
+                e.response?.data?.error?.message ||
+                    "Lấy thông tin truyện thất bại! Vui lòng thử lại sau."
+            );
+            console.error(e);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <>

@@ -11,7 +11,7 @@ export enum ComicChapterViewTypeEnum {
  * Comic chapter interface
  */
 export interface ComicChapterInterface {
-  id: string;
+  id?: string;
   name: string;
   comicId: string;
   viewType: ComicChapterViewTypeEnum;

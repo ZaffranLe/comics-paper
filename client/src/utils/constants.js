@@ -11,18 +11,26 @@ const categoryOptions = [
 
 const chapterViewTypeOptions = [
     {
-        value: 1,
+        value: "image",
         label: "Ảnh",
     },
     {
-        value: 2,
+        value: "text",
         label: "Văn bản",
     },
 ];
 
 const chapterViewTypes = {
-    IMAGE: 1,
-    TEXT: 2,
+    IMAGE: {
+        TEXT: "image",
+        VALUE: 1,
+        LABEL: "Ảnh"
+    },
+    TEXT: {
+        TEXT: "text",
+        VALUE: 2,
+        LABEL: "Văn bản"
+    },
 };
 
 export { categoryOptions, chapterViewTypeOptions, chapterViewTypes };

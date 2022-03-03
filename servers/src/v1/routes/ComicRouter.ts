@@ -17,6 +17,8 @@ router.post(`/:id/viewed`, ComicFunction.increaseComicView);
  */
 router.post(`/:id/chapters`, getAuth, ComicFunction.createChapter);
 
+router.put(`/:id/chapters/:chapterId`, getAuth, ComicFunction.updateChapter);
+
 /**
  * Search comic via id or slug
  *
@@ -24,6 +26,8 @@ router.post(`/:id/chapters`, getAuth, ComicFunction.createChapter);
 router.get(`/search/`, ComicFunction.searchComic);
 
 router.get(`/:id/chapters`, ComicFunction.getChapter);
+
+router.get(`/:id/chapters/:chapterId`, ComicFunction.getChapterById);
 
 /**
  * Retrieves all view type enum object.

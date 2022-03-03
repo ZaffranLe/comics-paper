@@ -121,6 +121,7 @@ function Comics() {
     const handleOpenChapterList = () => {
         setContextMenuModal(false);
         setChapterListModal(true);
+        setRandomKey(uuidv1());
     };
 
     const handleCloseChapterList = () => {
@@ -164,6 +165,7 @@ function Comics() {
                 open={chapterListModal}
                 onClose={handleCloseChapterList}
                 updateComic={updateComic}
+                key={`chapter-list-${randomKey}`}
             />
         </>
     );

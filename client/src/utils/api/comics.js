@@ -8,6 +8,29 @@ function createComic(comic) {
     });
 }
 
+function createComicChapter(comicId, chapter) {
+    return api({
+        url: `/v1/comics/${comicId}/chapters`,
+        method: "POST",
+        data: chapter,
+    });
+}
+
+function updateComicChapter(comicId, chapter) {
+    return api({
+        url: `/v1/comics/${comicId}/chapters/${chapter.id}`,
+        method: "PUT",
+        data: chapter,
+    });
+}
+
+function getComicChapter(comicId, chapterId) {
+    return api({
+        url: `/v1/comics/${comicId}/chapters/${chapterId}`,
+        method: "GET",
+    });
+}
+
 function getAllComic() {
     return api({
         url: "/v1/comics",
@@ -44,4 +67,14 @@ function deleteComic(id) {
     });
 }
 
-export { createComic, getAllComic, getComicByUrl, getAllComicChapters, updateComic, deleteComic };
+export {
+    createComic,
+    getAllComic,
+    getComicByUrl,
+    getAllComicChapters,
+    getComicChapter,
+    updateComic,
+    deleteComic,
+    createComicChapter,
+    updateComicChapter,
+};
