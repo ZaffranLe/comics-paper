@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Loader, NotFound } from "../../../components";
 import * as comicApi from "../../../utils/api/comics";
@@ -9,13 +9,27 @@ function ComicChapter() {
     const [chapterInfo, setChapterInfo] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
     const params = useParams();
-    const navigate = useNavigate();
 
     React.useEffect(() => {
         const [, comicId] = params.url.split("&");
         const [, chapterId] = params.chapterUrl.split("&");
+        fetchComic(params.url);
         fetchChapter(comicId, chapterId);
     }, [params]);
+
+    const fetchComic = async (url) => {
+        try {
+            const resp = await comicApi.getComicByUrl(url);
+            const _comic = resp.data.comic;
+            setComic(_comic);
+        } catch (e) {
+            toast.error(
+                e.response?.data?.error?.message ||
+                    "Lấy thông tin truyện thất bại! Vui lòng thử lại sau."
+            );
+            console.error(e);
+        }
+    };
 
     const fetchChapter = async (comicId, chapterId) => {
         try {
@@ -26,13 +40,16 @@ function ComicChapter() {
         } catch (e) {
             toast.error(
                 e.response?.data?.error?.message ||
-                    "Lấy thông tin truyện thất bại! Vui lòng thử lại sau."
+                    "Lấy thông tin chương truyện thất bại! Vui lòng thử lại sau."
             );
             console.error(e);
         } finally {
             setLoading(false);
         }
     };
+
+    console.log(comic);
+    console.log(chapterInfo);
 
     return (
         <>
@@ -43,11 +60,8 @@ function ComicChapter() {
                     {comic ? (
                         <div className="mb-8">
                             {/* Header section */}
-                            <div className="w-full text-center text-4xl font-bold my-4">
-                                {comic.name}
-                            </div>
-                            <div className="w-full text-center text-2xl font-semibold my-4">
-                                {chapterInfo.name}
+                            <div className="w-full text-center text-3xl font-bold my-4">
+                                {comic.name} - {chapterInfo.name}
                             </div>
                             <div className="text-sm my-4">
                                 <Link className="font-semibold" to="/">
@@ -60,7 +74,7 @@ function ComicChapter() {
                                 /{" "}
                                 <Link
                                     className="font-semibold"
-                                    to={`/comics/${comic.url}&${comic.id}`}
+                                    to={`/comics/${comic.slug}&${comic.id}`}
                                 >
                                     {comic.name}
                                 </Link>{" "}

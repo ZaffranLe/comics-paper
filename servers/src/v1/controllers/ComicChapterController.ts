@@ -159,7 +159,9 @@ async function getChapter(id: string): Promise<ComicChapterInterface> {
     }
     // Retrieve comic
     const chapter = await DatabaseBuilder(Tables.ComicChapter).where({ id }).first();
-    const blocks = await DatabaseBuilder(Tables.ComicChapterBlock).where({ chapterId: id });
+    const blocks = await DatabaseBuilder(Tables.ComicChapterBlock)
+        .where({ chapterId: id })
+        .orderBy("index", "asc");
     chapter.blocks = blocks;
     return chapter;
 }
