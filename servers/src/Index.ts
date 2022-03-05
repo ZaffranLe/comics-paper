@@ -2,8 +2,6 @@ import ComicPaperV1 from "./v1/ComicPaperV1";
 const express = require("express");
 const app = express();
 
-require("dotenv").config();
-
 app.use("/v1", ComicPaperV1);
 
 app.use("/public", express.static(process.env.UPLOAD_DIR));
