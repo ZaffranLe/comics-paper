@@ -5,6 +5,10 @@ import NovelSection from "./components/novel-section";
 import FeedSection from "./components/feed-section";
 
 function Home() {
+    React.useEffect(() => {
+        document.title = "Trang chủ - Virtuoso Translation";
+    }, [])
+
     return (
         <>
             <div>

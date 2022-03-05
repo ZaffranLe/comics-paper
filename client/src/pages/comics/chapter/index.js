@@ -23,6 +23,12 @@ function ComicChapter() {
             fetchChapter(comicId, chapterId);
     }, [params]);
 
+    React.useEffect(() => {
+        if (comic && chapter) {
+            document.title = `${comic.name} - ${chapter.name}`;
+        }
+    }, [comic, chapter]);
+
     const fetchComic = async (url) => {
         try {
             const resp = await comicApi.getComicByUrl(url);

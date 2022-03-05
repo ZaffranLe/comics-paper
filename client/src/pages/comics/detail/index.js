@@ -35,6 +35,12 @@ function ComicDetail() {
         fetchComic(params.url);
     }, [params]);
 
+    React.useEffect(() => {
+        if (comic) {
+            document.title = `${comic.name} - Virtuoso Translation`;
+        }
+    }, [comic]);
+
     const handleViewChapter = (chapter) => {
         navigate(`/comics/${params.url}/chapter/${chapter.name}&${chapter.id}`);
     };
