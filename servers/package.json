@@ -5,7 +5,7 @@
         "start": "nodemon -r dotenv/config src/Index.ts",
         "dev": "NODE_ENV=development nodemon -r dotenv/config src/Index.ts",
         "test": "NODE_ENV=test mocha -r dotenv/config src/test/**/*.spec.ts",
-        "build": "ts-node -T -P ./tsconfig.json ./src/Index.ts"
+        "build": "ts-node -T -P ./tsconfig.json -r dotenv/config ./src/Index.ts"
     },
     "devDependencies": {
         "@types/chai": "^4.3.0",
