@@ -4,7 +4,7 @@ module.exports = {
             name: "comics_paper",
             script: "npm",
             args: "run build",
-            env_production: {
+            env: {
                 NODE_ENV: "production",
             },
         },
