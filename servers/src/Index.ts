@@ -1,6 +1,6 @@
+import ComicPaperV1 from "./v1/ComicPaperV1";
 const express = require("express");
 const app = express();
-const ComicPaperV1 = require("./v1/ComicPaperV1");
 
 require("dotenv").config();
 

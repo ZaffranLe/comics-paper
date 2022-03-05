@@ -74,9 +74,6 @@ function hasConfigurationEnvironment(environmentName: string) {
  */
 export function getCurrentConfiguration(): ConfigurationSchema {
     const environmentName = process.env.NODE_ENV;
-    console.log("====================");
-    console.log(process.env.NODE_ENV);
-    console.log("====================");
     hasConfigurationEnvironment(environmentName);
     return Configuration[environmentName];
 }
