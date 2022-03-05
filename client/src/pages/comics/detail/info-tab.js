@@ -1,9 +1,13 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function InfoTab({ comic }) {
     const MAX_RATING = 5;
     const [ratingIcons, setRatingIcons] = React.useState([]);
+
+    const navigate = useNavigate();
+
     React.useEffect(() => {
         let _mangaRating = comic.likes;
         const _ratingIcons = [];
@@ -20,6 +24,10 @@ function InfoTab({ comic }) {
         }
         setRatingIcons(_ratingIcons);
     }, [comic]);
+
+    const handleViewChapter = (chapter) => {
+        navigate(`../comics/${comic.slug}&${comic.id}/chapter/${chapter.name}&${chapter.id}`);
+    };
 
     return (
         <>
@@ -58,12 +66,24 @@ function InfoTab({ comic }) {
                         </tr>
                     </tbody>
                 </table>
-                <button className="p-2 mr-2 ring-2 ring-gray-800 rounded-xl hover:bg-gray-800 hover:text-white font-semibold">
-                    Chap đầu
-                </button>
-                <button className="p-2 ml-2 ring-2 ring-gray-800 rounded-xl hover:bg-gray-800 hover:text-white font-semibold">
-                    Chap cuối
-                </button>
+                {comic.chapters.length > 0 && (
+                    <>
+                        <button
+                            onClick={() =>
+                                handleViewChapter(comic.chapters[comic.chapters.length - 1])
+                            }
+                            className="p-2 mr-2 ring-2 ring-gray-800 rounded-xl hover:bg-gray-800 hover:text-white font-semibold"
+                        >
+                            Chap đầu
+                        </button>
+                        <button
+                            onClick={() => handleViewChapter(comic.chapters[0])}
+                            className="p-2 ml-2 ring-2 ring-gray-800 rounded-xl hover:bg-gray-800 hover:text-white font-semibold"
+                        >
+                            Chap cuối
+                        </button>
+                    </>
+                )}
             </div>
         </>
     );
