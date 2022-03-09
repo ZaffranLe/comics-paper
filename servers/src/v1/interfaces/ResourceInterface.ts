@@ -2,11 +2,11 @@
  * Represents resources prototype.
  */
 export interface ResourceInterface {
-  id: string;
+  id: number;
   originalName: string;
   fileName: string;
   path: string;
   size: number;
   uploadedAt: Date;
-  uploader: string;
+  uploader: number;
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import { classNames } from "../../utils/common";
+
 function Modal(props) {
     const { open, children, onClose, dimmer } = props;
     const clonedChildren = onClose

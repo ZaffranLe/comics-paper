@@ -13,7 +13,7 @@ import ComicBookTagController from "../../controllers/ComicBookTagController";
 
 export const ComicFunction = {
     increaseComicView: async (req, res, next) => {
-        const comicId: string = req.params.id;
+        const comicId: number = req.params.id;
         try {
             // Check the id
             if (!(await ComicController.hasComic(comicId))) {
@@ -89,7 +89,7 @@ export const ComicFunction = {
     createChapter: async (req, res, next) => {
         try {
             const user: User = req["UserRequest"];
-            const comicId: string = req.params.id;
+            const comicId: number = req.params.id;
             // Check field
             if (!comicId) {
                 return next(
@@ -142,8 +142,8 @@ export const ComicFunction = {
     updateChapter: async (req, res, next) => {
         try {
             const user: User = req["UserRequest"];
-            const comicId: string = req.params.id;
-            const chapterId: string = req.params.chapterId;
+            const comicId: number = req.params.id;
+            const chapterId: number = req.params.chapterId;
             // Check field
             if (!comicId) {
                 return next(
@@ -197,7 +197,7 @@ export const ComicFunction = {
 
     getChapter: async (req, res, next) => {
         try {
-            const comicId: string = req.params.id;
+            const comicId: number = req.params.id;
             const { limit, page, sortedBy, order } = req.query;
 
             // Check this comic
@@ -220,8 +220,8 @@ export const ComicFunction = {
 
     getChapterById: async (req, res, next) => {
         try {
-            const comicId: string = req.params.id;
-            const chapterId: string = req.params.chapterId;
+            const comicId: number = req.params.id;
+            const chapterId: number = req.params.chapterId;
 
             // Check this comic
             if (!(await ComicController.hasComic(comicId))) {
@@ -250,7 +250,7 @@ export const ComicFunction = {
 
     getComicAndChapterById: async (req, res, next) => {
         try {
-            const chapterId: string = req.params.chapterId;
+            const chapterId: number = req.params.chapterId;
             const chapter = await ComicChapterController.getChapter(chapterId);
 
             console.log(chapter);
@@ -410,7 +410,7 @@ export const ComicFunction = {
 
     getAllComicTags: async (req, res, next) => {
         try {
-            const comicId: string = req.params.comicId;
+            const comicId: number = req.params.comicId;
             const tags = await ComicBookTagController.getRefsByComicId(comicId);
             res.json(tags);
         } catch (err) {
@@ -483,7 +483,7 @@ export const ComicFunction = {
 
     updateComicById: async (req, res, next) => {
         const user: User = req["UserRequest"];
-        const comicId: string = req.params.id;
+        const comicId: number = req.params.id;
         // Check field
         if (!comicId) {
             return next(new MiddlewareError(Locale.HttpResponseMessage.MissingRequiredFields, 400));
@@ -521,7 +521,7 @@ export const ComicFunction = {
 
     deleteComicById: async (req, res, next) => {
         const user: User = req["UserRequest"];
-        const comicId: string = req.params.id;
+        const comicId: number = req.params.id;
         // Check field
         if (!comicId) {
             return next(new MiddlewareError(Locale.HttpResponseMessage.MissingRequiredFields, 400));

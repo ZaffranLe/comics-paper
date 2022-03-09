@@ -1,8 +1,5 @@
 import { Tables } from "./../Database";
 import { ComicChapterInterface } from "./../interfaces/ComicChapterInterface";
-import { ComicChapterViewTypeEnum } from "../interfaces/ComicChapterInterface";
-import validator from "validator";
-import { v4 as uuid } from "uuid";
 import DatabaseBuilder from "../utils/DatabaseBuilder";
 
 /**
@@ -17,8 +14,8 @@ import DatabaseBuilder from "../utils/DatabaseBuilder";
  */
 async function createChapter(
     name: string,
-    comicId: string,
-    postedBy: string,
+    comicId: number,
+    postedBy: number,
     viewType: number,
     blocks: Array<any>
 ): Promise<ComicChapterInterface> {
@@ -27,17 +24,7 @@ async function createChapter(
         throw new Error("Missing parameters");
     }
 
-    // Comic id and posted by must be uuid
-    if (!validator.isUUID(comicId)) {
-        throw new Error("Comic id must be a uuid");
-    }
-    // Check posted user
-    if (!validator.isUUID(postedBy)) {
-        throw new Error("Posted by must be a uuid");
-    }
-    const chapterId = uuid();
     const chapter: ComicChapterInterface = {
-        id: chapterId,
         name,
         comicId,
         postedBy,
@@ -49,10 +36,9 @@ async function createChapter(
 
     const transaction = await DatabaseBuilder.transaction();
     try {
-        await transaction(Tables.ComicChapter).insert(chapter);
+        const insertedChapter = await transaction(Tables.ComicChapter).insert(chapter);
         blocks = blocks.map((_block) => ({
-            id: uuid(),
-            chapterId,
+            chapterId: insertedChapter[0],
             index: _block.index,
             content: _block.content,
         }));
@@ -67,25 +53,16 @@ async function createChapter(
 }
 
 async function updateChapter(
-    id: string,
+    id: number,
     name: string,
-    comicId: string,
-    postedBy: string,
+    comicId: number,
+    postedBy: number,
     viewType: number,
     blocks: Array<any>
 ): Promise<ComicChapterInterface> {
     // Field check
     if (!name || !comicId || !postedBy) {
         throw new Error("Missing parameters");
-    }
-
-    // Comic id and posted by must be uuid
-    if (!validator.isUUID(comicId)) {
-        throw new Error("Comic id must be a uuid");
-    }
-    // Check posted user
-    if (!validator.isUUID(postedBy)) {
-        throw new Error("Posted by must be a uuid");
     }
 
     const chapter: ComicChapterInterface = {
@@ -124,7 +101,7 @@ async function updateChapter(
  *
  */
 async function getChaptersFromComic(
-    comicId: string,
+    comicId: number,
     filter?: {
         limit?: number;
         page?: number;
@@ -133,7 +110,7 @@ async function getChaptersFromComic(
     }
 ): Promise<ComicChapterInterface[]> {
     // check parameters
-    if (!comicId || !validator.isUUID(comicId)) {
+    if (!comicId) {
         throw new Error("id is required");
     }
     // Retrieve comic
@@ -152,9 +129,9 @@ async function getChaptersFromComic(
  * @param id a identifier of the chapter
  * @returns  the first chapter that having the id
  */
-async function getChapter(id: string): Promise<ComicChapterInterface> {
+async function getChapter(id: number): Promise<ComicChapterInterface> {
     // check parameters
-    if (!id || !validator.isUUID(id)) {
+    if (!id) {
         throw new Error("id is required");
     }
     // Retrieve comic
@@ -172,8 +149,8 @@ async function getChapter(id: string): Promise<ComicChapterInterface> {
  * @param chapterId a identifier of the chapter
  * @param length a block length of this chapter
  */
-async function updateChapterLength(chapterId: string, length: number) {
-    if (!chapterId || !validator.isUUID(chapterId)) {
+async function updateChapterLength(chapterId: number, length: number) {
+    if (!chapterId) {
         throw new Error("id is required");
     }
     await DatabaseBuilder(Tables.ComicChapter).where({ id: chapterId }).update({ length });

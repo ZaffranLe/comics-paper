@@ -13,8 +13,8 @@
  * Otherwise, the content will be a RAW HTML.
  */
 export interface ComicChapterBlockInterface {
-  id: string;
-  chapterId: string;
+  id?: number;
+  chapterId: number;
   index: number;
   content: string;
 }

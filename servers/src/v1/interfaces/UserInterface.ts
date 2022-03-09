@@ -13,7 +13,7 @@ export interface UserInterface {
  * A hierarchy of user response.
  */
 export interface UserResponseInterface extends UserInterface {
-    id: string;
+    id?: number;
 }
 
 export interface UsersResponseInterface extends Array<UserInterface> {}

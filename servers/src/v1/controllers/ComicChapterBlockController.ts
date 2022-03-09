@@ -1,15 +1,13 @@
 import { ComicChapterBlockInterface } from "./../interfaces/ComicChapterBlockInterface";
 import { Tables } from "./../Database";
 import DatabaseBuilder from "../utils/DatabaseBuilder";
-import { v4 as uuid } from "uuid";
 
 async function createChapterBlock(
-    chapterId: string,
+    chapterId: number,
     index: number,
     content: string
 ): Promise<ComicChapterBlockInterface> {
     const chapterBlock: ComicChapterBlockInterface = {
-        id: uuid(),
         chapterId,
         index,
         content,
@@ -20,11 +18,10 @@ async function createChapterBlock(
 }
 
 async function createChapterBlocks(
-    chapterId: string,
+    chapterId: number,
     blocks
 ): Promise<ComicChapterBlockInterface[]> {
     const chapterBlocks: ComicChapterBlockInterface[] = blocks.map((_block) => ({
-        id: uuid(),
         chapterId,
         index: _block.index,
         content: _block.content,

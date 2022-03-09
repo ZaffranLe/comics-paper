@@ -2,10 +2,10 @@
  * Represents a comic.
  */
 export interface ComicInterface {
-  id: string;
+  id?: number;
   name: string;
   description: string;
-  postedBy: string;
+  postedBy: number;
   createdAt: Date;
   updatedAt: Date;
   thumbnail?: string;
@@ -20,7 +20,7 @@ export interface ComicInterface {
  * Represents a comic request object.
  */
 export interface ComicRequestInterface {
-  id?: string;
+  id?: number;
   name?: string;
-  postedBy?: string;
+  postedBy?: number;
 }

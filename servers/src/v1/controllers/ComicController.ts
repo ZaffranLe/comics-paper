@@ -1,8 +1,6 @@
 import { Tables } from "./../Database";
 import { ComicInterface } from "../interfaces/ComicInterface";
 import DatabaseBuilder from "../utils/DatabaseBuilder";
-import { v4 as uuid } from "uuid";
-import validator from "validator";
 import slugify from "slugify";
 
 /**
@@ -16,15 +14,13 @@ import slugify from "slugify";
 async function createComic(
     name: string,
     description: string,
-    postedBy: string,
+    postedBy: number,
     author: string,
     category: string,
     tags,
     thumbnail?: string
 ): Promise<ComicInterface> {
-    const id = uuid();
     const comic: ComicInterface = {
-        id,
         name,
         description,
         postedBy,
@@ -39,9 +35,11 @@ async function createComic(
     };
     const transaction = await DatabaseBuilder.transaction();
     try {
-        await transaction(Tables.Comic).insert(comic);
-        const insertTags = tags.map((_tag) => ({ comicId: id, tagId: _tag }));
-        await transaction(Tables.ComicBookTag).insert(insertTags);
+        const insertedComic = await transaction(Tables.Comic).insert(comic);
+        const insertTags = tags.map((_tag) => ({ comicId: insertedComic[0], tagId: _tag }));
+        if (insertTags.length > 0) {
+            await transaction(Tables.ComicBookTag).insert(insertTags);
+        }
         await transaction.commit();
     } catch (e) {
         await transaction.rollback();
@@ -89,7 +87,7 @@ async function getAllComics(): Promise<ComicInterface[]> {
  */
 async function getComic(id: string): Promise<ComicInterface> {
     // check parameters
-    if (!id || !validator.isUUID(id)) {
+    if (!id) {
         throw new Error("id is required");
     }
     // Retrieve comic
@@ -112,7 +110,7 @@ async function getComic(id: string): Promise<ComicInterface> {
  * @param description a description of comic
  */
 async function updateComic(
-    id: string,
+    id: number,
     name: string,
     description: string,
     author: string,
@@ -121,7 +119,7 @@ async function updateComic(
     thumbnail?: string
 ) {
     // check parameters
-    if (!id || !validator.isUUID(id)) {
+    if (!id) {
         throw new Error("id is required");
     }
     const transaction = await DatabaseBuilder.transaction();
@@ -137,6 +135,7 @@ async function updateComic(
                 category,
                 thumbnail,
             });
+        await transaction(Tables.ComicBookTag).del().where({ comicId: id });
         const insertTags = tags.map((_tag) => ({ comicId: id, tagId: _tag }));
         await transaction(Tables.ComicBookTag).insert(insertTags);
         await transaction.commit();
@@ -151,9 +150,9 @@ async function updateComic(
  * Remove a comic by its id.
  * @param id a comic id to delete
  */
-async function deleteComic(id: string) {
+async function deleteComic(id: number) {
     // check parameters
-    if (!id || !validator.isUUID(id)) {
+    if (!id) {
         throw new Error("id is required");
     }
     const transaction = await DatabaseBuilder.transaction();
@@ -177,9 +176,9 @@ async function deleteComic(id: string) {
  * Increase the number of views of a comic by 1.
  * @param id identify of the comic
  */
-async function updateViewComic(id: string) {
+async function updateViewComic(id: number) {
     // check parameters
-    if (!id || !validator.isUUID(id)) {
+    if (!id) {
         throw new Error("id is required");
     }
     // Retrieve comic
@@ -195,9 +194,9 @@ async function updateViewComic(id: string) {
  * @param id a comic id
  * @returns true if the comic exists, false otherwise.
  */
-async function hasComic(id: string) {
+async function hasComic(id: number) {
     // check parameters
-    if (!id || !validator.isUUID(id)) {
+    if (!id) {
         throw new Error("id is required");
     }
     // Retrieve comic

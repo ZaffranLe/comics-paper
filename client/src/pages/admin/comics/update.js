@@ -26,7 +26,7 @@ function UpdateComic({ open, onClose, onSave, updateComic, tagOptions }) {
                 (_category) => _category.value === updateComic.category
             );
             const _tags = updateComic.tags?.split(",") || [];
-            const _tagOptions = tagOptions.filter((_tag) => _tags.includes(_tag.value));
+            const _tagOptions = tagOptions.filter((_tag) => _tags.includes(_tag.value.toString()));
             setComic({
                 ...comic,
                 ...updateComic,
@@ -123,7 +123,6 @@ function UpdateComic({ open, onClose, onSave, updateComic, tagOptions }) {
                             type="file"
                             accept="image/*"
                             className="hidden"
-                            multiple
                             onChange={handleChangeThumbnail}
                         />
                         <div className="col-span-2">

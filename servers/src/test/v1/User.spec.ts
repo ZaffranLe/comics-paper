@@ -90,7 +90,6 @@ describe(`v1: User `, () => {
       // check id as uuid
       expect(responsesArray[0].id).to.be.not.undefined;
       expect(responsesArray[0].id).to.be.a("string");
-      expect(validator.isUUID(responsesArray[0].id), "uuid").to.be.true;
 
       // validate password as boolean (because it hashed lmao)
       expect(
