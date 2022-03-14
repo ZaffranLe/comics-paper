@@ -194,7 +194,7 @@ function ChapterList({ open, onClose, updateComic }) {
                                 </button>
                                 {chapterInfo.viewType === chapterViewTypes.IMAGE.TEXT && (
                                     <>
-                                        <div className="grid grid-cols-6 gap-8">
+                                        <div className="grid grid-cols-6 gap-8 max-h-80 overflow-auto">
                                             {chapterInfo.blocks.map((_block) => (
                                                 <UploadSingleImg
                                                     block={_block}
