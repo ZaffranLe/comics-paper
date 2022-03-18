@@ -1,20 +1,26 @@
 import React from "react";
-import { mangaList } from "../../../utils/mock-data";
 import { ComicThumbnail } from "../../../components";
-import ComicTrendingSection from "./comic-trending-section";
+import TrendingSection from "./trending-section";
 import * as comicApi from "../../../utils/api/comics";
+import { CATEGORIES } from "../../../utils/constants";
 
 function ComicSection() {
     const [comics, setComics] = React.useState([]);
 
     const fetchComics = async () => {
         try {
-            const resp = await comicApi.getAllComic();
+            const resp = await comicApi.getAllComic({
+                category: CATEGORIES.COMIC,
+                limit: 16,
+                offset: 0,
+                orderBy: "updatedAt",
+                orderType: "DESC",
+            });
             setComics(resp.data);
         } catch (e) {
             console.error(e);
         }
-    }
+    };
 
     React.useEffect(() => {
         fetchComics();
@@ -38,11 +44,15 @@ function ComicSection() {
                     </div>
                     <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
                         {comics.map((_comic) => (
-                            <ComicThumbnail key={_comic.id} comic={_comic} url={`/comics/${_comic.slug}&${_comic.id}`} />
+                            <ComicThumbnail
+                                key={_comic.id}
+                                comic={_comic}
+                                url={`/comics/${_comic.slug}&${_comic.id}`}
+                            />
                         ))}
                     </div>
                 </div>
-                <ComicTrendingSection comics={comics} />
+                <TrendingSection />
             </div>
         </>
     );

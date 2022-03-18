@@ -19,4 +19,5 @@ export interface ComicChapterInterface {
   createdAt: Date;
   updatedAt: Date;
   length?: number;
+  chapterNumber: string;
 }

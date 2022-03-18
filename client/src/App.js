@@ -18,6 +18,10 @@ import {
     faUnlockAlt,
     faUser,
     faPlus,
+    faAngleDoubleDown,
+    faAngleDoubleUp,
+    faMoon,
+    faSun,
 } from "@fortawesome/free-solid-svg-icons";
 import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons";
 import { useDispatch } from "react-redux";
@@ -39,7 +43,11 @@ library.add(
     faTags,
     faStarHalfAlt,
     faStarRegular,
-    faPlus
+    faPlus,
+    faAngleDoubleDown,
+    faAngleDoubleUp,
+    faMoon,
+    faSun
 );
 
 function App() {

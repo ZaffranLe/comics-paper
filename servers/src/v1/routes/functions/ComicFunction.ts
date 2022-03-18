@@ -29,7 +29,7 @@ export const ComicFunction = {
     },
     getAllComics: async (req, res, next) => {
         try {
-            const comics: ComicInterface[] = await ComicController.getAllComics();
+            const comics: ComicInterface[] = await ComicController.getAllComics(req.query);
             // Response
             res.json(comics);
         } catch (err) {
@@ -108,7 +108,7 @@ export const ComicFunction = {
             }
 
             // Extract content from body
-            const { name, viewType, blocks } = req.body;
+            const { name, viewType, blocks, chapterNumber } = req.body;
 
             if (!name) {
                 return next(
@@ -128,7 +128,8 @@ export const ComicFunction = {
                 viewType === "image"
                     ? ComicChapterViewTypeEnum.COMIC_CHAPTER_VIEW_TYPE_IMAGE
                     : ComicChapterViewTypeEnum.COMIC_CHAPTER_VIEW_TYPE_TEXT,
-                blocks
+                blocks,
+                chapterNumber
             );
 
             res.status(201).json({
@@ -162,7 +163,7 @@ export const ComicFunction = {
             }
 
             // Extract content from body
-            const { name, viewType, blocks } = req.body;
+            const { name, viewType, blocks, chapterNumber } = req.body;
 
             if (!name) {
                 return next(
@@ -183,13 +184,44 @@ export const ComicFunction = {
                 viewType === "image"
                     ? ComicChapterViewTypeEnum.COMIC_CHAPTER_VIEW_TYPE_IMAGE
                     : ComicChapterViewTypeEnum.COMIC_CHAPTER_VIEW_TYPE_TEXT,
-                blocks
+                blocks,
+                chapterNumber
             );
 
             res.status(201).json({
                 chapter: generatedChapter,
                 blocks,
             });
+        } catch (err) {
+            return next(new MiddlewareError(err.message, 500));
+        }
+    },
+
+    deleteChapter: async (req, res, next) => {
+        try {
+            const user: User = req["UserRequest"];
+            const comicId: number = req.params.id;
+            const chapterId: number = req.params.chapterId;
+            // Check field
+            if (!comicId) {
+                return next(
+                    new MiddlewareError(Locale.HttpResponseMessage.MissingRequiredFields, 400)
+                );
+            }
+
+            // Check authorization
+            if (!user) {
+                return next(new MiddlewareError(Locale.HttpResponseMessage.Unauthorized, 401));
+            }
+
+            // Check permissions
+            if (!(await user.hasPermission(PermissionEnum.COMIC_CHAPTER_CREATE))) {
+                return next(new MiddlewareError(Locale.HttpResponseMessage.Forbidden, 403));
+            }
+
+            const generatedChapter = await ComicChapterController.deleteChapter(chapterId);
+
+            res.status(200).send();
         } catch (err) {
             return next(new MiddlewareError(err.message, 500));
         }
@@ -230,6 +262,15 @@ export const ComicFunction = {
 
             const chapter = await ComicChapterController.getChapter(chapterId);
             res.json(chapter);
+        } catch (err) {
+            return next(new MiddlewareError(err.message, 500));
+        }
+    },
+
+    getNewestChapters: async (req, res, next) => {
+        try {
+            const chapters = await ComicChapterController.getNewestChapters();
+            res.json(chapters);
         } catch (err) {
             return next(new MiddlewareError(err.message, 500));
         }

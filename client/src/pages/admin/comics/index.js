@@ -107,6 +107,37 @@ function Comics() {
         });
     };
 
+    const handleDeleteChapter = (chapterId) => {
+        setChapterListModal(false);
+        setConfirmModal({
+            content: `Bạn có chắc chắn muốn xóa chương truyện này không?`,
+            open: true,
+            loading: false,
+            onClose: () => {
+                setConfirmModal({ ...confirmModal, open: false });
+                setChapterListModal(true);
+            },
+            onConfirm: async () => {
+                setConfirmModal({ ...confirmModal, loading: true });
+                try {
+                    await comicApi.deleteComicChapter(updateComic.id, chapterId);
+                    toast.success("Xóa truyện thành công");
+                    setChapterListModal(true);
+                    await fetchComics();
+                } catch (e) {
+                    console.error(e);
+                    toast.error("Xóa truyện thất bại, vui lòng thử lại sau.");
+                } finally {
+                    setConfirmModal({
+                        ...confirmModal,
+                        loading: false,
+                        open: false,
+                    });
+                }
+            },
+        });
+    };
+
     const handleOpenContextMenu = (e, _comic) => {
         e.preventDefault();
         setUpdateComic(_comic);
@@ -126,6 +157,7 @@ function Comics() {
 
     const handleCloseChapterList = () => {
         setChapterListModal(false);
+        setUpdateComic(null);
     };
 
     return (
@@ -164,6 +196,7 @@ function Comics() {
             <ChapterList
                 open={chapterListModal}
                 onClose={handleCloseChapterList}
+                onDeleteChapter={handleDeleteChapter}
                 updateComic={updateComic}
                 key={`chapter-list-${randomKey}`}
             />

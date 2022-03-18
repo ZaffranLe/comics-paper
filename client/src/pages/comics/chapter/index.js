@@ -5,12 +5,24 @@ import { Loader, NotFound } from "../../../components";
 import * as comicApi from "../../../utils/api/comics";
 import Select from "react-select";
 import { chapterViewTypes } from "../../../utils/constants";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { classNames } from "../../../utils/common";
 
 function ComicChapter() {
+    const COLOR_MODE = {
+        DARK: "dark",
+        LIGHT: "light",
+    };
+    const MIN_FONT_SIZE = 12;
+    const MAX_FONT_SIZE = 24;
+    const DEFAULT_FONT_SIZE = 16;
+
     const [comic, setComic] = React.useState(null);
     const [chapter, setChapter] = React.useState(null);
     const [chapterOptions, setChapterOptions] = React.useState([]);
     const [loading, setLoading] = React.useState(false);
+    const [fontSize, setFontSize] = React.useState(DEFAULT_FONT_SIZE);
+    const [colorMode, setColorMode] = React.useState(COLOR_MODE.LIGHT);
     const params = useParams();
 
     React.useEffect(() => {
@@ -72,6 +84,26 @@ function ComicChapter() {
         }
     };
 
+    const switchColorMode = () => {
+        let newColorMode = COLOR_MODE.DARK;
+        if (colorMode === COLOR_MODE.DARK) {
+            newColorMode = COLOR_MODE.LIGHT;
+        }
+        setColorMode(newColorMode);
+    };
+
+    const increaseFontSize = () => {
+        if (fontSize < MAX_FONT_SIZE) {
+            setFontSize(fontSize + 1);
+        }
+    };
+
+    const decreaseFontSize = () => {
+        if (fontSize > MIN_FONT_SIZE) {
+            setFontSize(fontSize - 1);
+        }
+    };
+
     return (
         <>
             {loading ? (
@@ -102,7 +134,71 @@ function ComicChapter() {
                                     ))}
                                 </div>
                             )}
-                            {chapter.viewType === chapterViewTypes.TEXT.VALUE && <div></div>}
+                            {chapter.viewType === chapterViewTypes.TEXT.VALUE && (
+                                <>
+                                    <div
+                                        className={classNames(
+                                            "divide-y p-4 rounded-xl",
+                                            colorMode === COLOR_MODE.DARK &&
+                                                "bg-gray-800 text-white"
+                                        )}
+                                        style={{ fontSize }}
+                                    >
+                                        <div className="flex gap-2 pb-4">
+                                            <div
+                                                className={classNames(
+                                                    "cursor-pointer flex items-center border-2 border-gray-800 px-2 h-10 rounded-lg text-sm font-bold",
+                                                    colorMode === COLOR_MODE.DARK &&
+                                                        "border-2 border-white"
+                                                )}
+                                                onClick={decreaseFontSize}
+                                            >
+                                                A
+                                                <FontAwesomeIcon
+                                                    icon="angle-double-down"
+                                                    fixedWidth
+                                                />
+                                            </div>
+                                            <div
+                                                className={classNames(
+                                                    "cursor-pointer flex items-center border-2 border-gray-800 px-2 h-10 rounded-lg text-2xl font-bold",
+                                                    colorMode === COLOR_MODE.DARK &&
+                                                        "border-2 border-white"
+                                                )}
+                                                onClick={increaseFontSize}
+                                            >
+                                                A{" "}
+                                                <FontAwesomeIcon
+                                                    icon="angle-double-up"
+                                                    fixedWidth
+                                                />
+                                            </div>
+                                            <div
+                                                onClick={switchColorMode}
+                                                className={classNames(
+                                                    "text-xl cursor-pointer flex items-center border-2 border-gray-800 px-2 h-10 rounded-lg",
+                                                    colorMode === COLOR_MODE.DARK &&
+                                                        "border-2 border-white"
+                                                )}
+                                            >
+                                                <FontAwesomeIcon
+                                                    icon={
+                                                        colorMode === COLOR_MODE.DARK
+                                                            ? "moon"
+                                                            : "sun"
+                                                    }
+                                                    fixedWidth
+                                                />
+                                            </div>
+                                        </div>
+                                        {chapter.blocks.map((_block) => (
+                                            <pre className="py-8" key={_block.id}>
+                                                {_block.content}
+                                            </pre>
+                                        ))}
+                                    </div>
+                                </>
+                            )}
                             <NavigateSection
                                 comic={comic}
                                 chapter={chapter}

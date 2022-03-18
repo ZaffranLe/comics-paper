@@ -24,13 +24,18 @@ const chapterViewTypes = {
     IMAGE: {
         TEXT: "image",
         VALUE: 1,
-        LABEL: "Ảnh"
+        LABEL: "Ảnh",
     },
     TEXT: {
         TEXT: "text",
         VALUE: 2,
-        LABEL: "Văn bản"
+        LABEL: "Văn bản",
     },
 };
 
-export { categoryOptions, chapterViewTypeOptions, chapterViewTypes };
+const CATEGORIES = {
+    COMIC: "Comic",
+    NOVEL: "Novel",
+};
+
+export { categoryOptions, chapterViewTypeOptions, chapterViewTypes, CATEGORIES };

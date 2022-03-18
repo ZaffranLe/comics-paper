@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
 
-function ChapterList({ open, onClose, updateComic }) {
+function ChapterList({ open, onClose, updateComic, onDeleteChapter }) {
     const DEFAULT_CHAPTER_INFO = {
         id: null,
         name: "",
@@ -19,6 +19,7 @@ function ChapterList({ open, onClose, updateComic }) {
         comicId: "",
         length: 0,
         blocks: [],
+        chapterNumber: "",
     };
     const [chapters, setChapters] = React.useState([]);
     const [isUpdatingChapter, setIsUpdatingChapter] = React.useState(false);
@@ -79,8 +80,29 @@ function ChapterList({ open, onClose, updateComic }) {
     const handleChangeImages = async (e) => {
         try {
             if (e.target.files.length > 0) {
-                const resp = await resourceApi.uploadImages(e.target.files);
-                const images = resp.data;
+                const files = [...e.target.files];
+                let currentIdx = 0;
+                const promises = [];
+                const AMOUNT_OF_IMG = 5;
+                while (currentIdx < files.length) {
+                    promises.push(
+                        resourceApi.uploadImages(
+                            files.slice(currentIdx, currentIdx + AMOUNT_OF_IMG)
+                        )
+                    );
+                    currentIdx += AMOUNT_OF_IMG;
+                }
+                const responses = await Promise.all(promises);
+                let images = [];
+                responses.forEach((_resp) => {
+                    images = images.concat(_resp.data);
+                });
+                images.sort((a, b) => {
+                    if (a.originalName > b.originalName) {
+                        return -1;
+                    }
+                    return 1;
+                });
                 setChapterInfo({
                     ...chapterInfo,
                     length: images.length + chapterInfo.length,
@@ -95,10 +117,12 @@ function ChapterList({ open, onClose, updateComic }) {
                 });
             }
         } catch (e) {
-            if (e.response.data) {
+            if (e.response?.data) {
                 toast.error(
                     e.response?.data?.error?.message || "Upload ảnh thất bại, vui lòng thử lại sau."
                 );
+            } else {
+                console.error(e);
             }
         }
     };
@@ -155,6 +179,49 @@ function ChapterList({ open, onClose, updateComic }) {
         setIsUpdatingChapter(false);
     };
 
+    const handleAddBlock = () => {
+        setChapterInfo({
+            ...chapterInfo,
+            blocks: [
+                ...chapterInfo.blocks,
+                {
+                    id: uuidv4(),
+                    index: chapterInfo.length + 1,
+                    content: "",
+                },
+            ],
+        });
+    };
+
+    const handleUpdateBlockContent = (id, value) => {
+        setChapterInfo({
+            ...chapterInfo,
+            blocks: [
+                ...chapterInfo.blocks.map((_block) => {
+                    if (_block.id === id) {
+                        return {
+                            ..._block,
+                            content: value,
+                        };
+                    }
+                    return _block;
+                }),
+            ],
+        });
+    };
+
+    const handleRemoveBlock = (id) => {
+        setChapterInfo({
+            ...chapterInfo,
+            blocks: [...chapterInfo.blocks.filter((_block) => _block.id !== id)],
+        });
+    };
+
+    const handleDeleteChapter = async (id) => {
+        onDeleteChapter(id);
+        await fetchChapters();
+    };
+
     return (
         <>
             {updateComic && (
@@ -163,8 +230,8 @@ function ChapterList({ open, onClose, updateComic }) {
                         {isUpdatingChapter ? (
                             <>
                                 <div className="text-2xl font-semibold">Cập nhật chương truyện</div>
-                                <div className="grid grid-cols-2 gap-8">
-                                    <div>
+                                <div className="grid grid-cols-5 gap-8">
+                                    <div className="col-span-2">
                                         <div>
                                             <label>Tên chương</label>
                                         </div>
@@ -175,6 +242,16 @@ function ChapterList({ open, onClose, updateComic }) {
                                         />
                                     </div>
                                     <div>
+                                        <div>
+                                            <label>Số chương</label>
+                                        </div>
+                                        <input
+                                            className="input w-full"
+                                            value={chapterInfo.chapterNumber}
+                                            onChange={handleChangeChapterInfo("chapterNumber")}
+                                        />
+                                    </div>
+                                    <div className="col-span-2">
                                         <div>
                                             <label>Cách xem</label>
                                         </div>
@@ -194,7 +271,7 @@ function ChapterList({ open, onClose, updateComic }) {
                                 </button>
                                 {chapterInfo.viewType === chapterViewTypes.IMAGE.TEXT && (
                                     <>
-                                        <div className="grid grid-cols-6 gap-8 max-h-80 overflow-auto">
+                                        <div className="grid grid-cols-6 gap-8 max-h-80 overflow-auto p-2">
                                             {chapterInfo.blocks.map((_block) => (
                                                 <UploadSingleImg
                                                     block={_block}
@@ -226,7 +303,38 @@ function ChapterList({ open, onClose, updateComic }) {
                                         </div>
                                     </>
                                 )}
-                                {chapterInfo.viewType === chapterViewTypes.TEXT.TEXT && <></>}
+                                {chapterInfo.viewType === chapterViewTypes.TEXT.TEXT && (
+                                    <>
+                                        <button
+                                            onClick={handleAddBlock}
+                                            className="hover:underline font-semibold py-2 px-4"
+                                        >
+                                            Thêm block
+                                        </button>
+                                        <div className="max-h-80 overflow-auto p-2">
+                                            {chapterInfo.blocks.map((_block) => (
+                                                <div className="flex my-4" key={_block.id}>
+                                                    <textarea
+                                                        className="input w-full"
+                                                        value={_block.content}
+                                                        onChange={(e) =>
+                                                            handleUpdateBlockContent(
+                                                                _block.id,
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                    />
+                                                    <button
+                                                        onClick={() => handleRemoveBlock(_block.id)}
+                                                        className="hover:underline font-semibold py-2 px-4 text-red-500"
+                                                    >
+                                                        Xóa
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </>
+                                )}
                                 <button
                                     onClick={handleCloseUpdateChapter}
                                     className="hover:bg-gray-400 hover:text-white float-right border-2 border-gray-400 text-gray-400 font-semibold py-2 px-4 rounded-full mr-2 mt-4"
@@ -299,7 +407,12 @@ function ChapterList({ open, onClose, updateComic }) {
                                                         >
                                                             Sửa
                                                         </button>
-                                                        <button className="hover:font-semibold hover:underline ml-2">
+                                                        <button
+                                                            onClick={() =>
+                                                                handleDeleteChapter(_chapter.id)
+                                                            }
+                                                            className="hover:font-semibold hover:underline ml-2"
+                                                        >
                                                             Xóa
                                                         </button>
                                                     </td>

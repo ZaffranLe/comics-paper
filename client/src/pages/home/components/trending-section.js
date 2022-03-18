@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { classNames } from "../../../utils/common";
 import { ComicTrending } from "../../../components";
+import * as comicApi from "../../../utils/api/comics";
+import { CATEGORIES } from "../../../utils/constants";
 
-function ComicTrendingSection({ comics }) {
+function TrendingSection() {
     const filters = [
         {
             key: "today",
@@ -19,6 +21,25 @@ function ComicTrendingSection({ comics }) {
         },
     ];
     const [activeFilter, setActiveFilter] = useState(filters[0].key);
+    const [comics, setComics] = useState([]);
+
+    const fetchComics = async () => {
+        try {
+            const resp = await comicApi.getAllComic({
+                limit: 16,
+                offset: 0,
+                orderBy: "updatedAt",
+                orderType: "DESC",
+            });
+            setComics(resp.data);
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
+    useEffect(() => {
+        fetchComics();
+    }, []);
 
     useEffect(() => {
         // handle filter trending
@@ -58,4 +79,4 @@ function ComicTrendingSection({ comics }) {
     );
 }
 
-export default ComicTrendingSection;
+export default TrendingSection;

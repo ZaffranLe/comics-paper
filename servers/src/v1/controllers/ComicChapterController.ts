@@ -1,6 +1,7 @@
 import { Tables } from "./../Database";
 import { ComicChapterInterface } from "./../interfaces/ComicChapterInterface";
 import DatabaseBuilder from "../utils/DatabaseBuilder";
+import slugify from "slugify";
 
 /**
  * Create new comic chapter.
@@ -17,7 +18,8 @@ async function createChapter(
     comicId: number,
     postedBy: number,
     viewType: number,
-    blocks: Array<any>
+    blocks: Array<any>,
+    chapterNumber: string
 ): Promise<ComicChapterInterface> {
     // Field check
     if (!name || !comicId || !postedBy) {
@@ -32,6 +34,7 @@ async function createChapter(
         createdAt: new Date(),
         updatedAt: new Date(),
         length: blocks.length,
+        chapterNumber,
     };
 
     const transaction = await DatabaseBuilder.transaction();
@@ -43,6 +46,7 @@ async function createChapter(
             content: _block.content,
         }));
         await transaction(Tables.ComicChapterBlock).insert(blocks);
+        await transaction(Tables.Comic).insert({ updatedAt: new Date() });
         await transaction.commit();
     } catch (e) {
         await transaction.rollback();
@@ -58,7 +62,8 @@ async function updateChapter(
     comicId: number,
     postedBy: number,
     viewType: number,
-    blocks: Array<any>
+    blocks: Array<any>,
+    chapterNumber: string
 ): Promise<ComicChapterInterface> {
     // Field check
     if (!name || !comicId || !postedBy) {
@@ -73,6 +78,7 @@ async function updateChapter(
         createdAt: new Date(),
         updatedAt: new Date(),
         length: blocks.length,
+        chapterNumber,
     };
 
     const transaction = await DatabaseBuilder.transaction();
@@ -93,6 +99,18 @@ async function updateChapter(
     }
 
     return chapter;
+}
+
+async function deleteChapter(chapterId: number) {
+    const transaction = await DatabaseBuilder.transaction();
+    try {
+        await transaction(Tables.ComicChapterBlock).del().where({ chapterId });
+        await transaction(Tables.ComicChapter).del().where({ id: chapterId });
+        await transaction.commit();
+    } catch (e) {
+        await transaction.rollback();
+        throw e;
+    }
 }
 
 /**
@@ -143,6 +161,25 @@ async function getChapter(id: number): Promise<ComicChapterInterface> {
     return chapter;
 }
 
+async function getNewestChapters(): Promise<any[]> {
+    const fields = {
+        chapterId: "t1.id",
+        comicId: "t1.comicId",
+        createdAt: "t1.createdAt",
+        chapterName: "t1.name",
+        comicName: "t2.name",
+        comicCategory: "t2.category",
+        comicSlug: "t2.slug",
+        chapterNumber: "t1.chapterNumber",
+    };
+    const chapters = await DatabaseBuilder(`${Tables.ComicChapter} as t1`)
+        .join(`${Tables.Comic} AS t2`, "t1.comicId", "t2.id")
+        .columns(fields)
+        .orderBy("t1.createdAt", "desc")
+        .limit(10);
+    return chapters;
+}
+
 /**
  * Update chapter length.
  *
@@ -159,9 +196,11 @@ async function updateChapterLength(chapterId: number, length: number) {
 const ComicChapterController = {
     createChapter,
     updateChapter,
+    deleteChapter,
     getChaptersFromComic,
     getChapter,
     updateChapterLength,
+    getNewestChapters,
 };
 
 export default ComicChapterController;

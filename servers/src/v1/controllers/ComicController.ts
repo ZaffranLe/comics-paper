@@ -54,7 +54,8 @@ async function createComic(
  * @returns the comic.
  *
  */
-async function getAllComics(): Promise<ComicInterface[]> {
+async function getAllComics(query): Promise<ComicInterface[]> {
+    const { limit, offset, orderBy, orderType, ...searchFields } = query;
     const fields = {
         id: "t1.id",
         thumbnail: "t2.id",
@@ -73,10 +74,18 @@ async function getAllComics(): Promise<ComicInterface[]> {
             "(SELECT GROUP_CONCAT(t3.tagId SEPARATOR ',') FROM comic_book_tags t3 WHERE t3.comicId = t1.id)"
         ),
     };
-    const comics: ComicInterface[] = await DatabaseBuilder(`${Tables.Comic} AS t1`)
+    let comics = DatabaseBuilder(`${Tables.Comic} AS t1`)
         .join(`${Tables.Resource} AS t2`, "t1.thumbnail", "t2.id")
         .columns(fields);
-    return comics;
+    if (orderBy) {
+        comics = comics.orderBy(orderBy, orderType || "ASC");
+    }
+    if (limit) {
+        comics = comics.limit(limit);
+    }
+    comics = comics.where(searchFields);
+    comics = comics.offset(offset || 0);
+    return await comics;
 }
 
 /**
