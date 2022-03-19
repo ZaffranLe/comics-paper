@@ -45,7 +45,7 @@ async function createChapter(
             content: _block.content,
         }));
         await transaction(Tables.ComicChapterBlock).insert(blocks);
-        await transaction(Tables.Comic).insert({ updatedAt: new Date() });
+        await transaction(Tables.Comic).update({ updatedAt: new Date() }).where({ id: comicId });
         await transaction.commit();
     } catch (e) {
         await transaction.rollback();
