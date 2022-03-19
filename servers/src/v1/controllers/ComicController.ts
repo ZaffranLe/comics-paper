@@ -55,7 +55,7 @@ async function createComic(
  *
  */
 async function getAllComics(query): Promise<ComicInterface[]> {
-    const { limit, offset, orderBy, orderType, ...searchFields } = query;
+    const { limit, offset, orderBy, orderType, tags, notTags, slug, ...searchFields } = query;
     const fields = {
         id: "t1.id",
         thumbnail: "t2.id",
@@ -75,8 +75,23 @@ async function getAllComics(query): Promise<ComicInterface[]> {
         ),
     };
     let comics = DatabaseBuilder(`${Tables.Comic} AS t1`)
-        .join(`${Tables.Resource} AS t2`, "t1.thumbnail", "t2.id")
+        .leftJoin(`${Tables.Resource} AS t2`, "t1.thumbnail", "t2.id")
         .columns(fields);
+    if (tags) {
+        comics = comics.whereRaw(
+            "t1.id IN (SELECT comicId FROM comic_book_tags WHERE tagId IN (?))",
+            [tags]
+        );
+    }
+    if (notTags) {
+        comics = comics.whereRaw(
+            "t1.id NOT IN (SELECT comicId FROM comic_book_tags WHERE tagId IN (?))",
+            [notTags]
+        );
+    }
+    if (slug) {
+        comics = comics.whereRaw("slug LIKE ?", [`%${slug}%`]);
+    }
     if (orderBy) {
         comics = comics.orderBy(orderBy, orderType || "ASC");
     }

@@ -22,6 +22,7 @@ import {
     faAngleDoubleUp,
     faMoon,
     faSun,
+    faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons";
 import { useDispatch } from "react-redux";
@@ -47,7 +48,9 @@ library.add(
     faAngleDoubleDown,
     faAngleDoubleUp,
     faMoon,
-    faSun
+    faSun,
+    faSearch,
+    faTimes
 );
 
 function App() {

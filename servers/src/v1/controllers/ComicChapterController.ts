@@ -1,7 +1,6 @@
 import { Tables } from "./../Database";
 import { ComicChapterInterface } from "./../interfaces/ComicChapterInterface";
 import DatabaseBuilder from "../utils/DatabaseBuilder";
-import slugify from "slugify";
 
 /**
  * Create new comic chapter.

@@ -1,6 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import { ComicThumbnail } from "../../components";
 import Select from "react-select";
 import { classNames } from "../../utils/common";
@@ -12,18 +11,27 @@ function Comics() {
     const [comics, setComics] = useState([]);
     const [tags, setTags] = useState([]);
     const [searchInfo, setSearchInfo] = useState({
-        type: null,
+        category: null,
         tags: [],
         notTags: [],
         tagsValue: [],
         notTagsValue: [],
+        limit: 16,
+        offset: 0,
     });
     const [filterSectionOpen, setFilterSectionOpen] = useState(false);
 
-    const fetchComics = async () => {
+    const fetchComics = async (query = {}, append = false) => {
         try {
-            const resp = await comicApi.getAllComic();
-            setComics(resp.data);
+            const searchQuery = { ...query };
+            delete searchQuery.tagsValue;
+            delete searchQuery.notTagsValue;
+            const resp = await comicApi.getAllComic(searchQuery);
+            if (append) {
+                setComics([...comics, ...resp.data]);
+            } else {
+                setComics(resp.data);
+            }
         } catch (e) {
             console.error(e);
         }
@@ -45,10 +53,10 @@ function Comics() {
         fetchBookTags();
     }, []);
 
-    const handleSelectType = (selectedType) => {
+    const handleSelectCategory = (selectedCategory) => {
         setSearchInfo({
             ...searchInfo,
-            type: selectedType,
+            category: searchInfo.category === selectedCategory ? null : selectedCategory,
         });
     };
 
@@ -58,6 +66,24 @@ function Comics() {
             [name]: selectedTags.map((_tag) => _tag.value),
             [`${name}Value`]: selectedTags,
         });
+    };
+
+    const handleSearch = () => {
+        const query = {
+            ...searchInfo,
+            offset: 0,
+        };
+        setSearchInfo(query);
+        fetchComics(query);
+    };
+
+    const handleFetchMoreComic = () => {
+        const query = {
+            ...searchInfo,
+            offset: searchInfo.offset + searchInfo.limit,
+        };
+        setSearchInfo(query);
+        fetchComics(query, true);
     };
 
     const includedTagOptions = tags.filter((_tag) => !searchInfo.notTags.includes(_tag.value));
@@ -96,12 +122,12 @@ function Comics() {
                                         <div key={_option.value}>
                                             <span
                                                 className={classNames(
-                                                    searchInfo.type === _option.value
+                                                    searchInfo.category === _option.value
                                                         ? "font-bold bg-gray-200"
                                                         : "font-medium",
-                                                    "cursor-pointer hover:underline hover:bg-gray-100 rounded px-2 py-1"
+                                                    "cursor-pointer select-none hover:underline hover:bg-gray-100 rounded px-2 py-1"
                                                 )}
-                                                onClick={() => handleSelectType(_option.value)}
+                                                onClick={() => handleSelectCategory(_option.value)}
                                             >
                                                 {_option.label}
                                             </span>
@@ -134,6 +160,14 @@ function Comics() {
                                     />
                                 </div>
                             </div>
+                            <div>
+                                <button
+                                    onClick={handleSearch}
+                                    className="bg-gray-800 hover:bg-gray-600 text-white w-full rounded-lg m-2 p-2"
+                                >
+                                    <FontAwesomeIcon icon="search" /> Tìm kiếm
+                                </button>
+                            </div>
                         </div>
                     )}
                 </div>
@@ -160,14 +194,17 @@ function Comics() {
                                     <div key={_option.value}>
                                         <span
                                             className={classNames(
-                                                searchInfo.type === _option.value
+                                                searchInfo.category === _option.value
                                                     ? "font-bold bg-gray-200"
                                                     : "font-medium",
-                                                "cursor-pointer hover:underline hover:bg-gray-100 rounded px-2 py-1"
+                                                "cursor-pointer select-none hover:underline hover:bg-gray-100 rounded px-2 py-1"
                                             )}
-                                            onClick={() => handleSelectType(_option.value)}
+                                            onClick={() => handleSelectCategory(_option.value)}
                                         >
-                                            {_option.label}
+                                            {_option.label}{" "}
+                                            {searchInfo.category === _option.value && (
+                                                <FontAwesomeIcon icon="times" />
+                                            )}
                                         </span>
                                     </div>
                                 ))}
@@ -197,6 +234,14 @@ function Comics() {
                                     value={searchInfo.notTagsValue}
                                 />
                             </div>
+                        </div>
+                        <div>
+                            <button
+                                onClick={handleSearch}
+                                className="bg-gray-800 hover:bg-gray-600 text-white w-full rounded-lg m-2 p-2"
+                            >
+                                <FontAwesomeIcon icon="search" /> Tìm kiếm
+                            </button>
                         </div>
                     </div>
                 </div>
