@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Loader } from "../../../components";
 import * as comicApi from "../../../utils/api/comics";
+import moment from "moment";
 
 function FeedSection() {
     const [chapters, setChapters] = React.useState([]);
@@ -82,7 +83,7 @@ function FeedSection() {
                                             </Link>
                                         </td>
                                         <td className="p-3">
-                                            {new Date(_chapter.createdAt).toLocaleDateString()}
+                                            {moment(_chapter.createdAt).format("HH:mm DD/MM/YYYY")}
                                         </td>
                                     </tr>
                                 ))}

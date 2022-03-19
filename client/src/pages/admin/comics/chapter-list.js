@@ -35,10 +35,10 @@ function ChapterList({ open, onClose, updateComic, onDeleteChapter }) {
     };
 
     React.useEffect(() => {
-        if (updateComic) {
+        if (updateComic && open) {
             fetchChapters();
         }
-    }, []);
+    }, [open]);
 
     const handleOpenUpdateChapter = async (_chapterInfo = null) => {
         if (_chapterInfo) {
@@ -361,6 +361,7 @@ function ChapterList({ open, onClose, updateComic, onDeleteChapter }) {
                                     <thead className="bg-gray-900 text-white">
                                         <tr>
                                             <th>#</th>
+                                            <th>Chương</th>
                                             <th>Tên</th>
                                             <th>Ngày đăng</th>
                                             <th>Thời gian chỉnh sửa</th>
@@ -385,6 +386,9 @@ function ChapterList({ open, onClose, updateComic, onDeleteChapter }) {
                                                     className="hover:bg-gray-100 border-b border-gray-200"
                                                 >
                                                     <td className="p-3">{_idx + 1}</td>
+                                                    <td className="p-3">
+                                                        {_chapter.chapterNumber}
+                                                    </td>
                                                     <td className="p-3">{_chapter.name}</td>
                                                     <td className="p-3">
                                                         {moment(_chapter.createdAt).format(

@@ -78,7 +78,9 @@ function ComicDetail() {
                                         onClick={() => handleViewChapter(_chapter)}
                                         className="border-2 border-gray-800 p-2 rounded-lg hover:font-semibold cursor-pointer"
                                     >
-                                        <div>{_chapter.name}</div>
+                                        <div>
+                                            Chương {_chapter.chapterNumber} - {_chapter.name}
+                                        </div>
                                         <span className="font-light">
                                             {moment(_chapter.createdAt).format("HH:mm DD/MM/YYYY")}
                                         </span>
