@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { classNames } from "../../../utils/common";
 import { ComicTrending } from "../../../components";
 import * as comicApi from "../../../utils/api/comics";
-import { CATEGORIES } from "../../../utils/constants";
 
 function TrendingSection() {
     const filters = [
@@ -26,7 +25,7 @@ function TrendingSection() {
     const fetchComics = async () => {
         try {
             const resp = await comicApi.getAllComic({
-                limit: 16,
+                limit: 8,
                 offset: 0,
                 orderBy: "updatedAt",
                 orderType: "DESC",
@@ -70,7 +69,7 @@ function TrendingSection() {
                     ))}
                 </div>
                 <div className="grid grid-rows-1 divide-y">
-                    {comics.slice(0, 6).map((_comic, _idx) => (
+                    {comics.map((_comic, _idx) => (
                         <ComicTrending key={_comic.id} comic={_comic} idx={_idx} />
                     ))}
                 </div>
