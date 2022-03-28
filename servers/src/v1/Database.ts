@@ -29,6 +29,10 @@ export const Tables = {
   ComicTag: "comic_tags",
   // Comic book tag
   ComicBookTag: "comic_book_tags",
+  // Comic comment
+  ComicComment: "comic_comments",
+  // Review
+  ComicReview: "comic_reviews",
 };
 
 export async function setupDatabase() {
@@ -141,6 +145,31 @@ export async function setupDatabase() {
     //comicId and tagId
     table.string("comicId").notNullable();
     table.string("tagId").notNullable();
+  });
+
+  // comment
+  await createTable(Tables.ComicComment, (table) => {
+    table.string("id").primary();
+    table.string("comicChapterId").notNullable();
+    table.string("authorId").notNullable();
+    table.text("content").notNullable();
+    table
+      .dateTime(`createdAt`)
+      .notNullable()
+      .defaultTo(DatabaseBuilder.fn.now());
+  });
+
+  // Comic review
+  await createTable(Tables.ComicReview, (table) => {
+    table.string("id").primary();
+    table.string("comicId").notNullable();
+    table.string("userId").notNullable();
+    table.text("content").notNullable();
+    table.integer("rating").notNullable();
+    table
+      .dateTime(`createdAt`)
+      .notNullable()
+      .defaultTo(DatabaseBuilder.fn.now());
   });
 }
 

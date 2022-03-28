@@ -24,7 +24,9 @@ router.post(`/:id/chapters`, getAuth, ComicFunction.createChapter);
  *
  */
 router.get(`/search/`, ComicFunction.searchComic);
-
+/**
+ * Get all chapters inside a book
+ */
 router.get(`/:id/chapters`, ComicFunction.getChapter);
 
 /**
@@ -34,7 +36,7 @@ router.get(`/chapters/viewType`, ComicFunction.getAllViewTypes);
 
 /**
  * Get a SPECIFIC comic chapter by its id
- */
+- */
 router.get(
   `/chapters/chapter/:chapterId/`,
   ComicFunction.getComicAndChapterById
