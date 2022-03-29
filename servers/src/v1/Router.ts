@@ -1,5 +1,6 @@
 import * as express from "express";
 import ComicRouter from "./routes/ComicRouter";
+import CommentRouter from "./routes/CommentRouter";
 import { PermissionRouter } from "./routes/PermissionRouter";
 import ResourceRouter from "./routes/ResourceRouter";
 import UserRouter from "./routes/UserRouter";
@@ -24,6 +25,7 @@ export const Router = [
     Path: "/comics",
     Router: ComicRouter,
   },
+  { Path: "/comments", Router: CommentRouter },
 ];
 
 export async function setupRoutes(app: express.Application) {

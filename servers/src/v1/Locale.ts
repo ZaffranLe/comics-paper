@@ -105,6 +105,10 @@ export const Locale = {
       Name: "comic_book_ref_tag_delete",
       Description: "Delete a comic book reference tag",
     },
+    ComicChapterComment: {
+      Name: "comic_chapter_comment",
+      Description: "Comment on a comic chapter",
+    },
   },
 
   HttpResponseMessage: {
@@ -137,5 +141,7 @@ export const Locale = {
     PermissionGroupNotExists: "Permission group not exists.",
     ComicTagAlreadyExists: "Comic tag already exists.",
     ComicTagNotFound: "Comic tag not found.",
+    ComicChapterNotFound: "Comic chapter not found.",
+    ComicCommentNotFound: "Comic comment not found.",
   },
 };

@@ -10,6 +10,7 @@ import ComicChapterController from "../../controllers/ComicChapterController";
 import ComicChapterBlockController from "../../controllers/ComicChapterBlockController";
 import ComicTagController from "../../controllers/ComicTagController";
 import ComicBookTagController from "../../controllers/ComicBookTagController";
+import ComicCommentController from "../../controllers/ComicCommentController";
 
 export const ComicFunction = {
     increaseComicView: async (req, res, next) => {

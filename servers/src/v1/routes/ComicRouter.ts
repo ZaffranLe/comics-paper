@@ -25,7 +25,9 @@ router.delete(`/:id/chapters/:chapterId`, getAuth, ComicFunction.deleteChapter);
  *
  */
 router.get(`/search/`, ComicFunction.searchComic);
-
+/**
+ * Get all chapters inside a book
+ */
 router.get(`/:id/chapters`, ComicFunction.getChapter);
 
 router.get(`/:id/chapters/:chapterId`, ComicFunction.getChapterById);
