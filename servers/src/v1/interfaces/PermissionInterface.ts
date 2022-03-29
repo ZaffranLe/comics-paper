@@ -51,4 +51,8 @@ export enum PermissionEnum {
 
   // Comic chapter comments
   COMIC_CHAPTER_COMMENT,
+
+  // Review
+  REVIEW_CREATE,
+  REVIEW_DELETE,
 }
