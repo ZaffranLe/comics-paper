@@ -234,6 +234,12 @@ async function setupPermission() {
     Locale.Permission.ComicChapterComment.Description
   );
 
+  generatePermission(
+    PermissionEnum.REVIEW_CREATE,
+    Locale.Permission.ReviewCreate.Name,
+    Locale.Permission.ReviewCreate.Description
+  );
+
   // console.log("All permissions: ");
   console.table(await PermissionController.getPermissions());
 }
@@ -345,6 +351,12 @@ async function setupDefaultPermissionRelationship() {
     PermissionGroupEnum.ADMIN,
     PermissionEnum.COMIC_CHAPTER_COMMENT
   );
+
+  generateRelation(PermissionGroupEnum.USER, PermissionEnum.REVIEW_CREATE);
+
+  generateRelation(PermissionGroupEnum.MOD, PermissionEnum.REVIEW_CREATE);
+
+  generateRelation(PermissionGroupEnum.ADMIN, PermissionEnum.REVIEW_CREATE);
 
   // console.log(
   //   "Relationships",

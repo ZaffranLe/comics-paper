@@ -109,6 +109,10 @@ export const Locale = {
       Name: "comic_chapter_comment",
       Description: "Comment on a comic chapter",
     },
+    ReviewCreate: {
+      Name: "review_create",
+      Description: "Create a new review",
+    },
   },
 
   HttpResponseMessage: {
@@ -143,5 +147,6 @@ export const Locale = {
     ComicTagNotFound: "Comic tag not found.",
     ComicChapterNotFound: "Comic chapter not found.",
     ComicCommentNotFound: "Comic comment not found.",
+    ReviewNotFound: "Review not found.",
   },
 };
