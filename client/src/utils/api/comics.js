@@ -82,6 +82,21 @@ function deleteComic(id) {
     });
 }
 
+function getReviewsByComic(id) {
+    return api({
+        url: `/v1/reviews/comic/${id}`,
+        method: "GET",
+    });
+}
+
+function createReview(review) {
+    return api({
+        url: `/v1/reviews`,
+        method: "POST",
+        data: review,
+    });
+}
+
 export {
     createComic,
     getAllComic,
@@ -94,4 +109,6 @@ export {
     createComicChapter,
     updateComicChapter,
     deleteComicChapter,
+    getReviewsByComic,
+    createReview,
 };

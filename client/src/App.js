@@ -59,6 +59,9 @@ function App() {
     const fetchProfile = async () => {
         const tokenValid = checkTokenValid();
         dispatch(authActions.setAuthenticated(tokenValid));
+        if (tokenValid) {
+            dispatch(authActions.getProfile());
+        }
     };
 
     React.useEffect(() => {

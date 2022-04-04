@@ -7,6 +7,7 @@ const initialState = {
     loginModal: false,
     profile: {
         info: {
+            id: "",
             username: "",
             nickname: "",
             email: "",
@@ -56,9 +57,10 @@ export const {
 function getProfile() {
     return async (dispatch) => {
         const profileResp = await userApi.getProfile();
-        const { username, nickname, introduction, email } = profileResp.data;
+        const { username, nickname, introduction, email, id } = profileResp.data;
         dispatch(
             setProfileInfo({
+                id,
                 username,
                 nickname: nickname || "",
                 introduction: introduction || "",

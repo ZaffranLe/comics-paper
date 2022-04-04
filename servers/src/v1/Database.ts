@@ -137,18 +137,18 @@ export async function setupDatabase() {
 
     // comment
     await createTable(Tables.ComicComment, (table) => {
-        table.string("id").primary();
-        table.string("comicChapterId").notNullable();
-        table.string("authorId").notNullable();
+        table.increments("id").primary();
+        table.integer("comicChapterId").notNullable();
+        table.integer("authorId").notNullable();
         table.text("content").notNullable();
         table.dateTime(`createdAt`).notNullable().defaultTo(DatabaseBuilder.fn.now());
     });
 
     // Comic review
     await createTable(Tables.ComicReview, (table) => {
-        table.string("id").primary();
-        table.string("comicId").notNullable();
-        table.string("userId").notNullable();
+        table.increments("id").primary();
+        table.integer("comicId").notNullable();
+        table.integer("userId").notNullable();
         table.text("content").notNullable();
         table.integer("rating").notNullable();
         table.dateTime(`createdAt`).notNullable().defaultTo(DatabaseBuilder.fn.now());

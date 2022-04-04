@@ -7,6 +7,7 @@ import Select from "react-select";
 import { chapterViewTypes } from "../../../utils/constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { classNames } from "../../../utils/common";
+import moment from "moment";
 
 function ComicChapter() {
     const COLOR_MODE = {
@@ -279,6 +280,46 @@ function NavigateSection({ comic, chapter, chapterOptions }) {
                         </button>
                     )}
                 </div>
+            </div>
+            <div className="w-full">
+                {/* {user && (
+                    <div>
+                        {reviewData.ratingIcons.map((_rate, _idx) => (
+                            <FontAwesomeIcon
+                                key={_idx}
+                                className="text-yellow-400 cursor-pointer text-xl"
+                                icon={_rate ? "fa-star" : "far fa-star"}
+                                onClick={() => handleUpdateRating(_idx)}
+                            />
+                        ))}
+                        <textarea
+                            className="input w-full mt-2"
+                            placeholder="Hãy cho chúng mình biết cảm nhận của bạn về bộ truyện này"
+                            value={reviewData.content}
+                            onChange={handleChangeReviewContent}
+                        />
+                        <button
+                            onClick={handleSubmitReview}
+                            className="bg-gray-800 text-white font-semibold rounded-lg py-2 px-20"
+                        >
+                            Đăng
+                        </button>
+                    </div>
+                )}
+                {comic.reviews.map((_review) => (
+                    <div key={_review.id} className="p-4">
+                        <div>
+                            <span className="font-semibold">
+                                {_review.user.nickname || _review.user.username}
+                            </span>
+                            {" - "}
+                            <span>{moment(_review.createdAt).format("HH:mm DD/MM/YYYY")}</span>
+                        </div>
+                        <div>
+                            <pre>{_review.content}</pre>
+                        </div>
+                    </div>
+                ))} */}
             </div>
         </>
     );

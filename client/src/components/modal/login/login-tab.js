@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import * as authActions from "../../../redux/slices/auth";
 import * as authApi from "../../../utils/api/users";
-import { classNames } from "../../../utils/common";
+import { classNames, getUserInfoFromToken } from "../../../utils/common";
 
 function LoginTab(props) {
     const [loginInfo, setLoginInfo] = useState({
@@ -34,8 +34,7 @@ function LoginTab(props) {
             dispatch(authActions.setAuthenticated(true));
         } catch (e) {
             toast.error(
-                e.response?.data?.error?.message ||
-                    "Đăng nhập thất bại, vui lòng thử lại sau."
+                e.response?.data?.error?.message || "Đăng nhập thất bại, vui lòng thử lại sau."
             );
             console.error(e);
         } finally {
@@ -68,9 +67,7 @@ function LoginTab(props) {
                 </div>
                 <button
                     className={classNames(
-                        loading
-                            ? "bg-gray-500"
-                            : "bg-gray-800 hover:bg-gray-700",
+                        loading ? "bg-gray-500" : "bg-gray-800 hover:bg-gray-700",
                         "text-white py-2 rounded focus:bg-gray-600"
                     )}
                     disabled={loading}

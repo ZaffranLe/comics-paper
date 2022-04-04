@@ -2,7 +2,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
 import { Modal } from "../";
 import { classNames } from "../../utils/common";
 import * as authActions from "../../redux/slices/auth";

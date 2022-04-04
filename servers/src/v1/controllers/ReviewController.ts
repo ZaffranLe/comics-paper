@@ -6,7 +6,6 @@ import { v4 as uuid } from "uuid";
  */
 async function createReview(comicId, userId, rating, content) {
   const review = {
-    id: uuid(),
     comicId,
     userId,
     rating,

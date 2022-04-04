@@ -3,8 +3,8 @@ import DatabaseBuilder from "../utils/DatabaseBuilder";
 import { v4 as uuid } from "uuid";
 
 async function createComment(
-  comicChapterId: string,
-  authorId: string,
+  comicChapterId: number,
+  authorId: number,
   content: string
 ) {
   const comment = {
@@ -17,7 +17,7 @@ async function createComment(
   return comment;
 }
 
-async function updateComment(commentId: string, content: string) {
+async function updateComment(commentId: number, content: string) {
   return await DatabaseBuilder(Tables.ComicComment)
     .where({ id: commentId })
     .update({ content, id: commentId });
