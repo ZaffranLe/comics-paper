@@ -96,6 +96,12 @@ function createReview(review) {
         data: review,
     });
 }
+function getAllComment(chapterId) {
+    return api({
+        url: `/v1/comments/chapter/${chapterId}`,
+        method: "GET",
+    });
+}
 
 export {
     createComic,
@@ -111,4 +117,5 @@ export {
     deleteComicChapter,
     getReviewsByComic,
     createReview,
+    getAllComment,
 };

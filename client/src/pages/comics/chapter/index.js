@@ -6,7 +6,7 @@ import * as comicApi from "../../../utils/api/comics";
 import Select from "react-select";
 import { chapterViewTypes } from "../../../utils/constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { classNames } from "../../../utils/common";
+import { classNames, getUserInfoFromToken } from "../../../utils/common";
 import moment from "moment";
 
 function ComicChapter() {
@@ -20,13 +20,17 @@ function ComicChapter() {
 
     const [comic, setComic] = React.useState(null);
     const [chapter, setChapter] = React.useState(null);
+    const [comments, setComments] = React.useState([]);
+    const [commentContent, setCommentContent] = React.useState("");
     const [chapterOptions, setChapterOptions] = React.useState([]);
+    const [user, setUser] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
     const [fontSize, setFontSize] = React.useState(DEFAULT_FONT_SIZE);
     const [colorMode, setColorMode] = React.useState(COLOR_MODE.LIGHT);
     const params = useParams();
 
     React.useEffect(() => {
+        fetchUserInfo();
         const [comicSlug, comicId] = params.url.split("&");
         const [chapterSlug, chapterId] = params.chapterUrl.split("&");
         if (!comic || comic.id !== comicId || comic.slug !== comicSlug) {
@@ -41,6 +45,11 @@ function ComicChapter() {
             document.title = `${comic.name} - ${chapter.name}`;
         }
     }, [comic, chapter]);
+
+    const fetchUserInfo = () => {
+        const userInfo = getUserInfoFromToken();
+        setUser(userInfo);
+    };
 
     const fetchComic = async (url) => {
         try {
@@ -73,6 +82,7 @@ function ComicChapter() {
                 label: chapter.name,
                 value: `${chapter.name}&${chapter.id}`,
             };
+            await fetchChapterComment(chapterId);
             setChapter(chapter);
         } catch (e) {
             toast.error(
@@ -82,6 +92,20 @@ function ComicChapter() {
             console.error(e);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const fetchChapterComment = async (chapterId) => {
+        try {
+            const commentResp = await comicApi.getAllComment(chapterId);
+            const comments = commentResp.data;
+            setComments(comments);
+        } catch (e) {
+            toast.error(
+                e.response?.data?.error?.message ||
+                    "Lấy thông tin chương truyện thất bại! Vui lòng thử lại sau."
+            );
+            console.error(e);
         }
     };
 
@@ -104,6 +128,12 @@ function ComicChapter() {
             setFontSize(fontSize - 1);
         }
     };
+
+    const handleChangeCommentContent = (e) => {
+        setCommentContent(e.target.value);
+    };
+
+    const handleSubmitComment = () => {};
 
     return (
         <>
@@ -205,6 +235,43 @@ function ComicChapter() {
                                 chapter={chapter}
                                 chapterOptions={chapterOptions}
                             />
+                            <div className="w-full">
+                                {user && (
+                                    <div>
+                                        <textarea
+                                            className="input w-full mt-2"
+                                            placeholder="Hãy cho chúng mình biết cảm nhận của bạn về bộ truyện này"
+                                            value={commentContent}
+                                            onChange={handleChangeCommentContent}
+                                        />
+                                        <button
+                                            onClick={handleSubmitComment}
+                                            className="bg-gray-800 text-white font-semibold rounded-lg py-2 px-20"
+                                        >
+                                            Đăng
+                                        </button>
+                                    </div>
+                                )}
+                                {comments.map((_comment) => (
+                                    <div key={_comment.id} className="p-4">
+                                        <div>
+                                            <span className="font-semibold">
+                                                {_comment.author.nickname ||
+                                                    _comment.author.username}
+                                            </span>
+                                            {" - "}
+                                            <span>
+                                                {moment(_comment.createdAt).format(
+                                                    "HH:mm DD/MM/YYYY"
+                                                )}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <pre>{_comment.content}</pre>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     ) : (
                         <NotFound />
@@ -280,46 +347,6 @@ function NavigateSection({ comic, chapter, chapterOptions }) {
                         </button>
                     )}
                 </div>
-            </div>
-            <div className="w-full">
-                {/* {user && (
-                    <div>
-                        {reviewData.ratingIcons.map((_rate, _idx) => (
-                            <FontAwesomeIcon
-                                key={_idx}
-                                className="text-yellow-400 cursor-pointer text-xl"
-                                icon={_rate ? "fa-star" : "far fa-star"}
-                                onClick={() => handleUpdateRating(_idx)}
-                            />
-                        ))}
-                        <textarea
-                            className="input w-full mt-2"
-                            placeholder="Hãy cho chúng mình biết cảm nhận của bạn về bộ truyện này"
-                            value={reviewData.content}
-                            onChange={handleChangeReviewContent}
-                        />
-                        <button
-                            onClick={handleSubmitReview}
-                            className="bg-gray-800 text-white font-semibold rounded-lg py-2 px-20"
-                        >
-                            Đăng
-                        </button>
-                    </div>
-                )}
-                {comic.reviews.map((_review) => (
-                    <div key={_review.id} className="p-4">
-                        <div>
-                            <span className="font-semibold">
-                                {_review.user.nickname || _review.user.username}
-                            </span>
-                            {" - "}
-                            <span>{moment(_review.createdAt).format("HH:mm DD/MM/YYYY")}</span>
-                        </div>
-                        <div>
-                            <pre>{_review.content}</pre>
-                        </div>
-                    </div>
-                ))} */}
             </div>
         </>
     );
