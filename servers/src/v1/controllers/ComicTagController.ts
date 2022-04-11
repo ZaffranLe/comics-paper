@@ -4,7 +4,6 @@ import {
 } from "./../interfaces/ComicTagInterface";
 import { Tables } from "./../Database";
 import DatabaseBuilder from "../utils/DatabaseBuilder";
-import { v4 as uuid } from "uuid";
 
 /**
  * Creates tag, puts it into database, and returns the tag.
@@ -14,7 +13,6 @@ import { v4 as uuid } from "uuid";
  */
 async function createTag(keyword: string) {
     const tag = {
-        id: uuid(),
         keyword,
     };
     await DatabaseBuilder(Tables.ComicTag).insert(tag);
@@ -27,7 +25,7 @@ async function createTag(keyword: string) {
  * @param keyword a keyword to represents tag search engine
  * @returns an object bare uuid and keyword
  */
-async function updateTag(id: string, keyword: string) {
+async function updateTag(id: number, keyword: string) {
     const tag = {
         id,
         keyword,
@@ -42,7 +40,7 @@ async function updateTag(id: string, keyword: string) {
  * @param id uuid of deleting tag
  * @returns an object bare uuid and keyword
  */
-async function deleteTag(id: string) {
+async function deleteTag(id: number) {
     await DatabaseBuilder(Tables.ComicTag).delete().where({ id });
     return id;
 }
@@ -71,7 +69,7 @@ async function getTag(keyword: string): Promise<ComicTagResponseInterface> {
  * @param tagId a tag identifier to search for tags
  * @returns a tag object, null if not found.
  */
-async function getTagById(tagId: string) {
+async function getTagById(tagId: number) {
     return await DatabaseBuilder(Tables.ComicTag).where({ id: tagId }).first();
 }
 

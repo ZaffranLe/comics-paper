@@ -7,7 +7,7 @@ import DatabaseBuilder from "../utils/DatabaseBuilder";
  * @param comicId a comic tag identifier to create reference
  * @param tagId a tag identifier to create reference
  */
-async function createRefTag(comicId: string, tagId: string) {
+async function createRefTag(comicId: number, tagId: number) {
   await DatabaseBuilder(Tables.ComicBookTag).insert({ comicId, tagId });
 }
 
@@ -18,7 +18,7 @@ async function createRefTag(comicId: string, tagId: string) {
  * @param tagId a tag identifier to check reference
  * @returns true whether the reference exists in the database, false otherwise.
  */
-async function hasRef(comicId: string, tagId: string) {
+async function hasRef(comicId: number, tagId: number) {
   const result = await DatabaseBuilder(Tables.ComicBookTag)
     .where({ comicId, tagId })
     .select();
@@ -32,7 +32,7 @@ async function hasRef(comicId: string, tagId: string) {
  * @param comicId a comic identifier to
  * @returns a list of tags associated with this comic
  */
-async function getRefsByComicId(comicId: string) {
+async function getRefsByComicId(comicId: number) {
   return await DatabaseBuilder()
     .from({ cbt: Tables.ComicBookTag })
     .where({ comicId })
@@ -45,7 +45,7 @@ async function getRefsByComicId(comicId: string) {
  * @param comicId a comic identifier to delete reference
  * @param tagId a tag identifier to delete reference
  */
-async function deleteRef(comicId: string, tagId: string) {
+async function deleteRef(comicId: number, tagId: number) {
   await DatabaseBuilder(Tables.ComicBookTag).where({ comicId, tagId }).delete();
 }
 

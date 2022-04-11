@@ -48,4 +48,11 @@ export enum PermissionEnum {
   // Comic book tag
   COMIC_BOOK_TAG_REF_CREATE,
   COMIC_BOOK_TAG_REF_DELETE,
+
+  // Comic chapter comments
+  COMIC_CHAPTER_COMMENT,
+
+  // Review
+  REVIEW_CREATE,
+  REVIEW_DELETE,
 }

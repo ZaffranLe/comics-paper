@@ -1,5 +1,5 @@
 export interface ComicTagResponseInterface {
-  id: string;
+  id: number;
   keyword: string;
 }
 

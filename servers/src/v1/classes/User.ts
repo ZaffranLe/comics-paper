@@ -6,14 +6,14 @@ import { isValidIntroduction, isValidNickname } from "../utils/ValidatorUtils";
 import { Locale } from "../Locale";
 
 export class User implements UserInterface {
-  id: string;
+  id: number;
   username: string;
   password: string;
   email: string;
   nickname: string;
   introduction: string;
 
-  constructor(user: UserInterface, id?: string) {
+  constructor(user: UserInterface, id?: number) {
     this.id = id;
     this.username = user.username;
     this.password = user.password;

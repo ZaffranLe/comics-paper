@@ -11,12 +11,13 @@ export enum ComicChapterViewTypeEnum {
  * Comic chapter interface
  */
 export interface ComicChapterInterface {
-  id: string;
+  id?: number;
   name: string;
-  comicId: string;
+  comicId: number;
   viewType: ComicChapterViewTypeEnum;
-  postedBy: string;
+  postedBy: number;
   createdAt: Date;
   updatedAt: Date;
   length?: number;
+  chapterNumber: string;
 }
