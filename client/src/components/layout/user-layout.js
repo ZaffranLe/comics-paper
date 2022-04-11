@@ -59,11 +59,6 @@ function UserLayout() {
             key: "comic",
             path: "/comics",
         },
-        {
-            name: "Tìm kiếm",
-            key: "search",
-            path: "/advanced-search",
-        },
     ];
 
     return (

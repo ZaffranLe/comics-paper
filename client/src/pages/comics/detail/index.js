@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getUserInfoFromToken } from "../../../utils/common";
+import { useSelector } from "react-redux";
 
 function ComicDetail() {
     const [comic, setComic] = React.useState(null);
@@ -17,6 +18,7 @@ function ComicDetail() {
         ratingIcons: [0, 0, 0, 0, 0],
         content: "",
     });
+    const { isAuthenticated } = useSelector((state) => state.auth);
     const params = useParams();
     const navigate = useNavigate();
 
@@ -48,8 +50,15 @@ function ComicDetail() {
 
     React.useEffect(() => {
         fetchComic(params.url);
-        fetchUserInfo();
     }, [params]);
+
+    React.useEffect(() => {
+        if (isAuthenticated) {
+            fetchUserInfo();
+        } else {
+            setUser(null);
+        }
+    }, [isAuthenticated]);
 
     React.useEffect(() => {
         if (comic) {

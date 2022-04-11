@@ -8,21 +8,26 @@ function InfoTab({ comic }) {
 
     const navigate = useNavigate();
 
-    React.useEffect(() => {
-        let _mangaRating = comic.likes;
+    const avgRating = React.useMemo(() => {
+        let _avgRating = (
+            comic.reviews.reduce((rating, review) => (rating += review.rating), 0) /
+            comic.reviews.length
+        ).toFixed(2);
+        let stars = _avgRating;
         const _ratingIcons = [];
-        while (_mangaRating >= 1) {
-            _mangaRating -= 1;
+        while (stars >= 1) {
+            stars -= 1;
             _ratingIcons.push("fa-star");
         }
-        while (_mangaRating >= 0.5) {
-            _mangaRating -= 0.5;
+        while (stars >= 0.5) {
+            stars -= 0.5;
             _ratingIcons.push("fa-star-half-alt");
         }
-        for (let i = 0; i < MAX_RATING - Math.round(comic.likes); i++) {
+        for (let i = 0; i < MAX_RATING - Math.round(_avgRating); i++) {
             _ratingIcons.push("far fa-star");
         }
         setRatingIcons(_ratingIcons);
+        return _avgRating;
     }, [comic]);
 
     const handleViewChapter = (chapter) => {
@@ -35,7 +40,7 @@ function InfoTab({ comic }) {
                 {ratingIcons.map((_icon, _idx) => (
                     <FontAwesomeIcon className="text-yellow-400" icon={_icon} key={_idx} />
                 ))}{" "}
-                {comic.likes}
+                {avgRating}
             </div>
             <div>
                 <table className="w-full">
@@ -43,7 +48,8 @@ function InfoTab({ comic }) {
                         <tr>
                             <td className="font-bold">Đánh giá</td>
                             <td>
-                                Trung bình {comic.likes}/5 trên tổng số {comic.likes} đánh giá
+                                Trung bình {avgRating}/5 trên tổng số {comic.reviews.length} đánh
+                                giá
                             </td>
                         </tr>
                         <tr>

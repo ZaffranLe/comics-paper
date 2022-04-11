@@ -24,7 +24,7 @@ function TrendingSection() {
 
     const fetchComics = async () => {
         try {
-            const resp = await comicApi.getAllComic({
+            const resp = await comicApi.getAllComicTrending({
                 limit: 8,
                 offset: 0,
                 orderBy: "updatedAt",

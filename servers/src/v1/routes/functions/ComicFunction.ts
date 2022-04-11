@@ -37,6 +37,15 @@ export const ComicFunction = {
             return next(new MiddlewareError(err.message, 500));
         }
     },
+    getAllComicTrending: async (req, res, next) => {
+        try {
+            const comics = await ComicController.getAllComicTrending(req.query);
+            // Response
+            res.json(comics);
+        } catch (err) {
+            return next(new MiddlewareError(err.message, 500));
+        }
+    },
     createNewComic: async (req, res, next) => {
         const user: User = req["UserRequest"];
 

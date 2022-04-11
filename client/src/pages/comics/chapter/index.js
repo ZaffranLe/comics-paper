@@ -8,6 +8,8 @@ import { chapterViewTypes } from "../../../utils/constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { classNames, getUserInfoFromToken } from "../../../utils/common";
 import moment from "moment";
+import { useSelector } from "react-redux";
+import { v1 } from "uuid";
 
 function ComicChapter() {
     const COLOR_MODE = {
@@ -27,6 +29,7 @@ function ComicChapter() {
     const [loading, setLoading] = React.useState(false);
     const [fontSize, setFontSize] = React.useState(DEFAULT_FONT_SIZE);
     const [colorMode, setColorMode] = React.useState(COLOR_MODE.LIGHT);
+    const { isAuthenticated } = useSelector((state) => state.auth);
     const params = useParams();
 
     React.useEffect(() => {
@@ -45,6 +48,14 @@ function ComicChapter() {
             document.title = `${comic.name} - ${chapter.name}`;
         }
     }, [comic, chapter]);
+
+    React.useEffect(() => {
+        if (isAuthenticated) {
+            fetchUserInfo();
+        } else {
+            setUser(null);
+        }
+    }, [isAuthenticated]);
 
     const fetchUserInfo = () => {
         const userInfo = getUserInfoFromToken();
@@ -133,7 +144,26 @@ function ComicChapter() {
         setCommentContent(e.target.value);
     };
 
-    const handleSubmitComment = () => {};
+    const handleSubmitComment = async () => {
+        try {
+            const comment = {
+                content: commentContent,
+            };
+            const resp = await comicApi.createComment(chapter.id, comment);
+            setComments([
+                {
+                    ...resp.data,
+                },
+                ...comments,
+            ]);
+            setCommentContent("");
+        } catch (e) {
+            toast.error(
+                e.response?.data?.error?.message || "Bình luận thất bại! Vui lòng thử lại sau."
+            );
+            console.error(e);
+        }
+    };
 
     return (
         <>
@@ -235,6 +265,9 @@ function ComicChapter() {
                                 chapter={chapter}
                                 chapterOptions={chapterOptions}
                             />
+                            <div>
+                                <div className="w-full text-2xl font-bold my-4">Bình luận</div>
+                            </div>
                             <div className="w-full">
                                 {user && (
                                     <div>

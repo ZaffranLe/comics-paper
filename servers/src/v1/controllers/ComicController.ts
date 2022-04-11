@@ -48,12 +48,6 @@ async function createComic(
     return comic;
 }
 
-/**
- *  Retrieves a comic by using it id
- * @param id a comic id
- * @returns the comic.
- *
- */
 async function getAllComics(query): Promise<ComicInterface[]> {
     const { limit, offset, orderBy, orderType, tags, notTags, slug, ...searchFields } = query;
     const fields = {
@@ -76,6 +70,7 @@ async function getAllComics(query): Promise<ComicInterface[]> {
     };
     let comics = DatabaseBuilder(`${Tables.Comic} AS t1`)
         .leftJoin(`${Tables.Resource} AS t2`, "t1.thumbnail", "t2.id")
+        // .leftJoin(`${Tables.ComicReview} AS t3`, "t1.id", "t3.comicId")
         .columns(fields);
     if (tags) {
         comics = comics.whereRaw(
@@ -101,6 +96,61 @@ async function getAllComics(query): Promise<ComicInterface[]> {
     comics = comics.where(searchFields);
     comics = comics.offset(offset || 0);
     return await comics;
+}
+
+async function getAllComicTrending(query) {
+    const { limit, offset, orderBy, orderType, tags, notTags, slug, ...searchFields } = query;
+    let comics = DatabaseBuilder(`${Tables.Comic} AS t1`)
+        .leftJoin(`${Tables.Resource} AS t2`, "t1.thumbnail", "t2.id")
+        // .leftJoin(`${Tables.ComicReview} AS t3`, "t1.id", "t3.comicId")
+        .columns({
+            id: "t1.id",
+            thumbnail: "t2.id",
+            thumbnailImg: "t2.fileName",
+            name: "t1.name",
+            slug: "t1.slug",
+            reviewRating: "t1.likes",
+            reviewCount: "t1.views",
+        });
+    if (tags) {
+        comics = comics.whereRaw(
+            "t1.id IN (SELECT comicId FROM comic_book_tags WHERE tagId IN (?))",
+            [tags]
+        );
+    }
+    if (notTags) {
+        comics = comics.whereRaw(
+            "t1.id NOT IN (SELECT comicId FROM comic_book_tags WHERE tagId IN (?))",
+            [notTags]
+        );
+    }
+    if (slug) {
+        comics = comics.whereRaw("slug LIKE ?", [`%${slug}%`]);
+    }
+    if (orderBy) {
+        comics = comics.orderBy(orderBy, orderType || "ASC");
+    }
+    if (limit) {
+        comics = comics.limit(limit);
+    }
+    comics = comics.where(searchFields);
+    comics = comics.offset(offset || 0);
+    const result = await comics;
+    const promises = [];
+    result.forEach((_comic) => {
+        promises.push(
+            DatabaseBuilder(`${Tables.ComicReview}`)
+                .where("comicId", _comic.id)
+                .avg("rating as reviewRating").count("rating as reviewCount")
+                .first()
+        );
+    });
+    const reviewResps = await Promise.all(promises);
+    result.forEach((_comic, _index) => {
+        _comic.reviewRating = reviewResps[_index].reviewRating;
+        _comic.reviewCount = reviewResps[_index].reviewCount;
+    });
+    return result;
 }
 
 /**
@@ -252,6 +302,7 @@ async function searchComic(query) {
 const ComicController = {
     createComic,
     getAllComics,
+    getAllComicTrending,
     getComic,
     updateComic,
     deleteComic,

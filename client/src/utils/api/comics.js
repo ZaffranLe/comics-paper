@@ -53,6 +53,14 @@ function getAllComic(query) {
     });
 }
 
+function getAllComicTrending(query) {
+    return api({
+        url: "/v1/comics/trending",
+        method: "GET",
+        params: query,
+    });
+}
+
 function getComicByUrl(url) {
     return api({
         url: `/v1/comics/${url}`,
@@ -103,9 +111,18 @@ function getAllComment(chapterId) {
     });
 }
 
+function createComment(chapterId, comment) {
+    return api({
+        url: `/v1/comments/${chapterId}/comments`,
+        method: "POST",
+        data: comment,
+    });
+}
+
 export {
     createComic,
     getAllComic,
+    getAllComicTrending,
     getComicByUrl,
     getAllComicChapters,
     getComicChapter,
@@ -118,4 +135,5 @@ export {
     getReviewsByComic,
     createReview,
     getAllComment,
+    createComment,
 };

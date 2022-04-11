@@ -14,6 +14,8 @@ export interface ComicInterface {
   views: number;
   author: string;
   category: string;
+  reviewCount?: number;
+  reviewRating?: number;
 }
 
 /**
