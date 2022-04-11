@@ -12,7 +12,7 @@ function InfoTab({ comic }) {
         let _avgRating = (
             comic.reviews.reduce((rating, review) => (rating += review.rating), 0) /
             comic.reviews.length
-        ).toFixed(2);
+        ).toFixed(2) || 0;
         let stars = _avgRating;
         const _ratingIcons = [];
         while (stars >= 1) {
