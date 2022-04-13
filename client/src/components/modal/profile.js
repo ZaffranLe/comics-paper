@@ -12,12 +12,6 @@ function Profile() {
     } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
 
-    React.useEffect(() => {
-        if (open) {
-            dispatch(authActions.getProfile());
-        }
-    }, [open, dispatch]);
-
     const handleChangeUserInfo = (field) => (e) => {
         dispatch(
             authActions.updateProfileInfo({ field, value: e.target.value })

@@ -2,18 +2,21 @@ import { createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import * as userApi from "../../utils/api/users";
 
+const defaultProfileInfo = {
+    id: "",
+    username: "",
+    nickname: "",
+    email: "",
+    introduction: "",
+    password: "",
+    role: [],
+};
+
 const initialState = {
     isAuthenticated: false,
     loginModal: false,
     profile: {
-        info: {
-            id: "",
-            username: "",
-            nickname: "",
-            email: "",
-            introduction: "",
-            password: "",
-        },
+        info: defaultProfileInfo,
         modal: false,
         loading: false,
     },

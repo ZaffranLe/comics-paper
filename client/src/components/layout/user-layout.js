@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Banner from "../../assets/img/megumi-bg.jpg";
@@ -46,7 +46,7 @@ function UserLayout() {
 
     const removeSearchResult = () => {
         setComics([]);
-    }
+    };
 
     const pageMenu = [
         {
