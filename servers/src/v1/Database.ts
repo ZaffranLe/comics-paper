@@ -113,6 +113,7 @@ export async function setupDatabase() {
             .notNullable()
             .defaultTo(ComicChapterViewTypeEnum.COMIC_CHAPTER_VIEW_TYPE_IMAGE);
         table.integer("length").notNullable().defaultTo(0);
+        table.string("chapterNumber");
     });
 
     await createTable(Tables.ComicChapterBlock, (table) => {
