@@ -9,10 +9,11 @@ function InfoTab({ comic }) {
     const navigate = useNavigate();
 
     const avgRating = React.useMemo(() => {
-        let _avgRating = (
-            comic.reviews.reduce((rating, review) => (rating += review.rating), 0) /
-            comic.reviews.length
-        ).toFixed(2) || 0;
+        let _avgRating =
+            (
+                comic.reviews.reduce((rating, review) => (rating += review.rating), 0) /
+                    comic.reviews.length || 0
+            ).toFixed(2);
         let stars = _avgRating;
         const _ratingIcons = [];
         while (stars >= 1) {

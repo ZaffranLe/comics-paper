@@ -180,6 +180,15 @@ function ComicDetail() {
                                         </button>
                                     </div>
                                 )}
+                                {!user && comic.reviews.length === 0 && (
+                                    <>
+                                        <span>
+                                            Chưa có đánh giá nào. <span className="font-bold cursor-pointer">Đăng nhập</span> để trở
+                                            thành người đầu tiên đưa ra nhận xét về bộ truyện này
+                                            nhé
+                                        </span>
+                                    </>
+                                )}
                                 {comic.reviews.map((_review) => (
                                     <div key={_review.id} className="p-4">
                                         <div>
