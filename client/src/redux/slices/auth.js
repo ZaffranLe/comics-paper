@@ -9,7 +9,7 @@ const defaultProfileInfo = {
     email: "",
     introduction: "",
     password: "",
-    role: [],
+    role: null,
 };
 
 const initialState = {
@@ -60,14 +60,15 @@ export const {
 function getProfile() {
     return async (dispatch) => {
         const profileResp = await userApi.getProfile();
-        const { username, nickname, introduction, email, id } = profileResp.data;
+        const { username, nickname, introduction, email, id, role } = profileResp.data;
         dispatch(
             setProfileInfo({
                 id,
                 username,
-                nickname: nickname || "",
-                introduction: introduction || "",
-                email: email || "",
+                nickname,
+                introduction,
+                email,
+                role,
             })
         );
     };

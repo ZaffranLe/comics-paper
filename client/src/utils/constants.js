@@ -38,4 +38,8 @@ const CATEGORIES = {
     NOVEL: "Novel",
 };
 
-export { categoryOptions, chapterViewTypeOptions, chapterViewTypes, CATEGORIES };
+const ROLE = {
+    ADMIN: 1,
+};
+
+export { categoryOptions, chapterViewTypeOptions, chapterViewTypes, CATEGORIES, ROLE };

@@ -4,24 +4,20 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { checkTokenValid, classNames } from "../../utils/common";
+import { ROLE } from "../../utils/constants";
 
 function MenuItem({ item, onClick, activeMenu }) {
     return (
         <>
             <div
                 className={classNames(
-                    activeMenu.includes(item.path)
-                        ? "bg-gray-600"
-                        : "hover:bg-gray-500",
+                    activeMenu.includes(item.path) ? "bg-gray-600" : "hover:bg-gray-500",
                     "flex font-semibold cursor-pointer my-1 p-2 rounded"
                 )}
                 onClick={() => onClick(item)}
             >
                 <div className="grow">
-                    {item.icon && (
-                        <FontAwesomeIcon icon={item.icon} fixedWidth />
-                    )}{" "}
-                    {item.name}
+                    {item.icon && <FontAwesomeIcon icon={item.icon} fixedWidth />} {item.name}
                 </div>
             </div>
         </>
@@ -29,7 +25,10 @@ function MenuItem({ item, onClick, activeMenu }) {
 }
 
 function AdminLayout() {
-    const { isAuthenticated } = useSelector((state) => state.auth);
+    const {
+        isAuthenticated,
+        profile: { info: user },
+    } = useSelector((state) => state.auth);
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -39,6 +38,9 @@ function AdminLayout() {
             if (!tokenValid) {
                 navigate("/");
             }
+        }
+        if (user.role?.id !== ROLE.ADMIN) {
+            navigate("/");
         }
     }, []);
 
@@ -98,9 +100,7 @@ function AdminLayout() {
                     </div>
                 </div>
                 <div className="flex items-center bg-gray-800 text-gray-300 p-3">
-                    <span className="mx-auto">
-                        Player Zaff, 2020. All rights reserved.
-                    </span>
+                    <span className="mx-auto">Player Zaff, 2020. All rights reserved.</span>
                 </div>
             </div>
         </>
