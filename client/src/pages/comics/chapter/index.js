@@ -272,25 +272,31 @@ function ComicChapter() {
                                         </button>
                                     </div>
                                 )}
-                                {comments.map((_comment) => (
-                                    <div key={_comment.id} className="p-4">
-                                        <div>
-                                            <span className="font-semibold">
-                                                {_comment.author.nickname ||
-                                                    _comment.author.username}
-                                            </span>
-                                            {" - "}
-                                            <span>
-                                                {moment(_comment.createdAt).format(
-                                                    "HH:mm DD/MM/YYYY"
-                                                )}
-                                            </span>
+                                {comments.length > 0 ? (
+                                    comments.map((_comment) => (
+                                        <div key={_comment.id} className="p-4">
+                                            <div>
+                                                <span className="font-semibold">
+                                                    {_comment.author.nickname ||
+                                                        _comment.author.username}
+                                                </span>
+                                                {" - "}
+                                                <span>
+                                                    {moment(_comment.createdAt).format(
+                                                        "HH:mm DD/MM/YYYY"
+                                                    )}
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <pre>{_comment.content}</pre>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <pre>{_comment.content}</pre>
-                                        </div>
-                                    </div>
-                                ))}
+                                    ))
+                                ) : (
+                                    <>
+                                        <span className="text-lg">Chưa có bình luận nào.</span>
+                                    </>
+                                )}
                             </div>
                         </div>
                     ) : (

@@ -130,20 +130,28 @@ function ComicDetail() {
                                 Danh sách chương
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                                {comic.chapters.map((_chapter) => (
-                                    <div
-                                        key={_chapter.id}
-                                        onClick={() => handleViewChapter(_chapter)}
-                                        className="border-2 border-gray-800 p-2 rounded-lg hover:font-semibold cursor-pointer"
-                                    >
-                                        <div>
-                                            Chương {_chapter.chapterNumber} - {_chapter.name}
+                                {comic.chapters.length > 0 ? (
+                                    comic.chapters.map((_chapter) => (
+                                        <div
+                                            key={_chapter.id}
+                                            onClick={() => handleViewChapter(_chapter)}
+                                            className="border-2 border-gray-800 p-2 rounded-lg hover:font-semibold cursor-pointer"
+                                        >
+                                            <div>
+                                                Chương {_chapter.chapterNumber} - {_chapter.name}
+                                            </div>
+                                            <span className="font-light">
+                                                {moment(_chapter.createdAt).format(
+                                                    "HH:mm DD/MM/YYYY"
+                                                )}
+                                            </span>
                                         </div>
-                                        <span className="font-light">
-                                            {moment(_chapter.createdAt).format("HH:mm DD/MM/YYYY")}
-                                        </span>
-                                    </div>
-                                ))}
+                                    ))
+                                ) : (
+                                    <>
+                                        <span className="text-lg">Chưa có chương truyện nào</span>
+                                    </>
+                                )}
                             </div>
                             <div>
                                 <div className="w-full text-2xl font-bold my-4">Đánh giá</div>
@@ -175,7 +183,7 @@ function ComicDetail() {
                                 )}
                                 {!user.id && comic.reviews.length === 0 && (
                                     <>
-                                        <span>
+                                        <span className="text-lg">
                                             Chưa có đánh giá nào.{" "}
                                             <span
                                                 className="font-bold cursor-pointer hover:underline"
