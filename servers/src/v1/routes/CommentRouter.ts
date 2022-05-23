@@ -24,6 +24,7 @@ router.put(`/comment/:commentId`, getAuth, CommentFunction.updateComment);
  *
  */
 router.delete(`/comment/:commentId`, getAuth, CommentFunction.deleteComment);
+router.get("/user/:userId", CommentFunction.getAllCommentsByUserId);
 /**
  * Exports this router
  */

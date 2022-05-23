@@ -102,6 +102,7 @@ function logout() {
         dispatch(setAuthenticated(false));
         localStorage.removeItem("token");
         toast.success("Đăng xuất thành công, hẹn gặp lại.");
+        dispatch(setProfileInfo(defaultProfileInfo));
     };
 }
 

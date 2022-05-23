@@ -15,5 +15,7 @@ router.get(`/`, getAuth, UserFunction.getAllUsers);
 
 router.get("/:id", UserFunction.getUserFromId);
 
+router.get("/detail/:id", UserFunction.getUserDetail);
+
 const UserRouter = router;
 export default UserRouter;

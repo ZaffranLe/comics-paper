@@ -8,6 +8,7 @@ router.get(`/review/:reviewId`, ReviewFunction.getReviewById);
 router.get(`/comic/:comicId`, ReviewFunction.getReviewsByComicId);
 router.put(`/:reviewId`, getAuth, ReviewFunction.updateReview);
 router.delete(`/:reviewId`, getAuth, ReviewFunction.deleteReview);
+router.get("/user/:userId", ReviewFunction.getReviewsByUserId);
 
 const ReviewRouter = router;
 export default ReviewRouter;

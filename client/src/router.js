@@ -13,6 +13,7 @@ import AdminBookTags from "./pages/admin/book-tags";
 import AdminComics from "./pages/admin/comics";
 // components
 import { AdminLayout, UserLayout } from "./components";
+import AdminUserDetail from "./pages/admin/users/detail";
 
 function AppRouter() {
     return (
@@ -29,6 +30,7 @@ function AppRouter() {
                     <Route path="/dashboard" element={<AdminLayout />}>
                         <Route index element={<AdminDashboard />} />
                         <Route path="users" element={<AdminUsers />} />
+                        <Route path="users/:id" element={<AdminUserDetail />} />
                         <Route path="book-tags" element={<AdminBookTags />} />
                         <Route path="comics" element={<AdminComics />} />
                     </Route>

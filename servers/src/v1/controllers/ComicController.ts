@@ -141,7 +141,8 @@ async function getAllComicTrending(query) {
         promises.push(
             DatabaseBuilder(`${Tables.ComicReview}`)
                 .where("comicId", _comic.id)
-                .avg("rating as reviewRating").count("rating as reviewCount")
+                .avg("rating as reviewRating")
+                .count("rating as reviewCount")
                 .first()
         );
     });
@@ -299,6 +300,13 @@ async function searchComic(query) {
     return comic;
 }
 
+async function getComicByUser(id) {
+    const comics = await DatabaseBuilder(Tables.Comic)
+        .where({ author: id })
+        .orderBy("createdAt", "DESC");
+    return comics;
+}
+
 const ComicController = {
     createComic,
     getAllComics,
@@ -309,5 +317,6 @@ const ComicController = {
     updateViewComic,
     hasComic,
     searchComic,
+    getComicByUser,
 };
 export default ComicController;

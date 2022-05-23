@@ -114,11 +114,55 @@ async function deleteComment(commentId: string) {
     return await DatabaseBuilder(Tables.ComicComment).where({ id: commentId }).del();
 }
 
+async function getCommentByUserId(userId) {
+    const responses: any[] = await DatabaseBuilder(Tables.ComicComment)
+        .where({ authorId: userId })
+        .column(
+            { commentId: `${Tables.ComicComment}.id` },
+            { content: `${Tables.ComicComment}.content` },
+            { createdAt: `${Tables.ComicComment}.createdAt` },
+            { authorId: `${Tables.ComicComment}.authorId` },
+            { authorName: `${Tables.User}.username` },
+            { authorNickname: `${Tables.User}.nickname` },
+            { authorEmail: `${Tables.User}.email` },
+            { chapterName: `${Tables.ComicChapter}.name` },
+            { chapterId: `${Tables.ComicChapter}.id` },
+            { chapterCreatedAt: `${Tables.ComicChapter}.createdAt` },
+            { chapterUpdatedAt: `${Tables.ComicChapter}.updatedAt` },
+            { chapterPostedBy: `${Tables.ComicChapter}.postedBy` },
+            { chapterViewType: `${Tables.ComicChapter}.viewType` }
+        )
+        .join(
+            Tables.ComicChapter,
+            `${Tables.ComicComment}.comicChapterId`,
+            `${Tables.ComicChapter}.id`
+        )
+        .join(Tables.User, `${Tables.ComicComment}.authorId`, `${Tables.User}.id`)
+        .orderBy(`${Tables.ComicComment}.createdAt`, "desc");
+
+    return responses.map((response) => {
+        return {
+            id: response.commentId,
+            content: response.content,
+            createdAt: response.createdAt,
+            chapter: {
+                id: response.chapterId,
+                name: response.chapterName,
+                createdAt: response.chapterCreatedAt,
+                updatedAt: response.chapterUpdatedAt,
+                postedBy: response.chapterPostedBy,
+                viewType: response.chapterViewType,
+            },
+        };
+    });
+}
+
 const ComicCommentController = {
     createComment,
     updateComment,
     getCommentByChapterId,
     getComment,
     deleteComment,
+    getCommentByUserId,
 };
 export default ComicCommentController;
