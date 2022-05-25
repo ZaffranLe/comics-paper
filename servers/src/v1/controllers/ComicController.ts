@@ -302,7 +302,7 @@ async function searchComic(query) {
 
 async function getComicByUser(id) {
     const comics = await DatabaseBuilder(Tables.Comic)
-        .where({ author: id })
+        .where({ postedBy: id })
         .orderBy("createdAt", "DESC");
     return comics;
 }

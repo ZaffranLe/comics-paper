@@ -2,10 +2,12 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import * as userApi from "../../../utils/api/users";
-import * as comicApi from "../../../utils/api/comics";
+import { classNames } from "../../../utils/common";
+import ComicList from "./comic-list";
 
 function AdminUserDetail() {
-    const [userInfo, setUserInfo] = React.useState({});
+    const [userDetail, setUserDetail] = React.useState({});
+    const [activeMenu, setActiveMenu] = React.useState("");
     const params = useParams();
 
     React.useEffect(() => {
@@ -16,14 +18,70 @@ function AdminUserDetail() {
     const fetchUserDetail = async (id) => {
         try {
             const resp = await userApi.getUserDetail(id);
-            setUserInfo(resp.data);
+            setUserDetail(resp.data);
         } catch (e) {
             console.error(e);
             toast.error("Lấy thông tin người dùng thất bại");
         }
     };
 
-    return <></>;
+    const MENU_LIST = [
+        {
+            name: "Truyện đã đăng",
+            key: "comics",
+        },
+        {
+            name: "Đánh giá truyện",
+            key: "reviews",
+        },
+        {
+            name: "Bình luận truyện",
+            key: "comments",
+        },
+    ];
+
+    return (
+        <>
+            <div className="text-2xl font-bold">Chi tiết người dùng</div>
+            <div className="flex gap-x-32 items-center mt-2">
+                <div>
+                    <p>
+                        <span className="font-semibold">Email: </span>
+                        <span>{userDetail.user?.email}</span>
+                    </p>
+                    <p>
+                        <span className="font-semibold">Username: </span>
+                        <span>{userDetail.user?.username}</span>
+                    </p>
+                    <p>
+                        <span className="font-semibold">Nickname: </span>
+                        <span>{userDetail.user?.nickname}</span>
+                    </p>
+                    <p>
+                        <span className="font-semibold">Introduction: </span>
+                        <span>{userDetail.user?.introduction}</span>
+                    </p>
+                </div>
+                <div className="flex gap-x-4">
+                    {MENU_LIST.map((_menu) => (
+                        <button
+                            key={_menu.key}
+                            onClick={() => setActiveMenu(_menu.key)}
+                            className={classNames(
+                                "border border-black rounded-lg p-2",
+                                activeMenu === _menu.key && "bg-black text-white font-semibold"
+                            )}
+                        >
+                            {_menu.name}
+                        </button>
+                    ))}
+                </div>
+            </div>
+            {activeMenu === MENU_LIST.COMIC && <ComicList comics={userDetail.comics} />}
+            {activeMenu === MENU_LIST.REVIEW && <></>}
+            {activeMenu === MENU_LIST.COMMENT && <></>}
+        </>
+    );
 }
 
 export default AdminUserDetail;

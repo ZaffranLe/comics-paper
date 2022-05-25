@@ -337,9 +337,10 @@ async function updatePermissionRole(userId: number, permissionRole: number) {
 
 async function getUserDetail(userId: string) {
     const user = await getUserFromUUID(userId);
-    const comics = comicController.getComicByUser(userId);
-    const reviews = reviewController.getReviewsByUserId(userId);
-    const comments = commentController.getCommentByUserId(userId);
+    delete user.password;
+    const comics = await comicController.getComicByUser(userId);
+    const reviews = await reviewController.getReviewsByUserId(userId);
+    const comments = await commentController.getCommentByUserId(userId);
     return {
         user,
         comics,
