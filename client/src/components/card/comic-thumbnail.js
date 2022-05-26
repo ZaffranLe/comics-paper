@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function ComicThumbnail({ comic, url }) {
+function ComicThumbnail({ comic, url, newTab = false }) {
     return (
         <>
-            <Link to={url}>
+            <Link to={url} target={newTab ? "_blank" : "_self"}>
                 <div>
                     <div
                         style={{

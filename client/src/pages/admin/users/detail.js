@@ -25,6 +25,12 @@ function AdminUserDetail() {
         }
     };
 
+    const EMENU_LIST = {
+        COMICS: "comics",
+        REVIEWS: "reviews",
+        COMMENTS: "comments",
+    };
+
     const MENU_LIST = [
         {
             name: "Truyện đã đăng",
@@ -77,9 +83,9 @@ function AdminUserDetail() {
                     ))}
                 </div>
             </div>
-            {activeMenu === MENU_LIST.COMIC && <ComicList comics={userDetail.comics} />}
-            {activeMenu === MENU_LIST.REVIEW && <></>}
-            {activeMenu === MENU_LIST.COMMENT && <></>}
+            {activeMenu === EMENU_LIST.COMICS && <ComicList comics={userDetail.comics} />}
+            {activeMenu === EMENU_LIST.REVIEWS && <></>}
+            {activeMenu === EMENU_LIST.COMMENTS && <></>}
         </>
     );
 }
