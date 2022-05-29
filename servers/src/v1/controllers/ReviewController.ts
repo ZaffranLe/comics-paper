@@ -133,10 +133,14 @@ async function getReviewsByUserId(userId: string) {
             { userId: `${Tables.ComicReview}.userId` },
             { rating: `${Tables.ComicReview}.rating` },
             { content: `${Tables.ComicReview}.content` },
-            { createdAt: `${Tables.ComicReview}.createdAt` }
+            { createdAt: `${Tables.ComicReview}.createdAt` },
+            { userUsername: `${Tables.User}.username` },
+            { userNickname: `${Tables.User}.nickname` },
+            { userIntroduction: `${Tables.User}.introduction` }
         )
         .where(`${Tables.ComicReview}.userId`, userId)
-        .join(Tables.Comic, `${Tables.ComicReview}.comicId`, `${Tables.Comic}.id`);
+        .join(Tables.Comic, `${Tables.ComicReview}.comicId`, `${Tables.Comic}.id`)
+        .join(Tables.User, `${Tables.ComicReview}.userId`, `${Tables.User}.id`);
 
     return responses.map((response) => {
         return filterResponse(response);

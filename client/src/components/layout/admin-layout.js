@@ -38,8 +38,7 @@ function AdminLayout() {
             if (!tokenValid) {
                 navigate("/");
             }
-        }
-        if (user.role?.id !== ROLE.ADMIN) {
+        } else if (user.role?.id !== ROLE.ADMIN) {
             navigate("/");
         }
     }, []);

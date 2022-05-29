@@ -4,27 +4,10 @@ import { toast } from "react-toastify";
 import * as userApi from "../../../utils/api/users";
 import { classNames } from "../../../utils/common";
 import ComicList from "./comic-list";
+import CommentList from "./comment-list";
+import ReviewList from "./review-list";
 
 function AdminUserDetail() {
-    const [userDetail, setUserDetail] = React.useState({});
-    const [activeMenu, setActiveMenu] = React.useState("");
-    const params = useParams();
-
-    React.useEffect(() => {
-        const userId = params.id;
-        fetchUserDetail(userId);
-    }, [params]);
-
-    const fetchUserDetail = async (id) => {
-        try {
-            const resp = await userApi.getUserDetail(id);
-            setUserDetail(resp.data);
-        } catch (e) {
-            console.error(e);
-            toast.error("Lấy thông tin người dùng thất bại");
-        }
-    };
-
     const EMENU_LIST = {
         COMICS: "comics",
         REVIEWS: "reviews",
@@ -45,6 +28,24 @@ function AdminUserDetail() {
             key: "comments",
         },
     ];
+    const [userDetail, setUserDetail] = React.useState({});
+    const [activeMenu, setActiveMenu] = React.useState(EMENU_LIST.COMICS);
+    const params = useParams();
+
+    React.useEffect(() => {
+        const userId = params.id;
+        fetchUserDetail(userId);
+    }, [params]);
+
+    const fetchUserDetail = async (id) => {
+        try {
+            const resp = await userApi.getUserDetail(id);
+            setUserDetail(resp.data);
+        } catch (e) {
+            console.error(e);
+            toast.error("Lấy thông tin người dùng thất bại");
+        }
+    };
 
     return (
         <>
@@ -68,24 +69,24 @@ function AdminUserDetail() {
                         <span>{userDetail.user?.introduction}</span>
                     </p>
                 </div>
-                <div className="flex gap-x-4">
-                    {MENU_LIST.map((_menu) => (
-                        <button
-                            key={_menu.key}
-                            onClick={() => setActiveMenu(_menu.key)}
-                            className={classNames(
-                                "border border-black rounded-lg p-2",
-                                activeMenu === _menu.key && "bg-black text-white font-semibold"
-                            )}
-                        >
-                            {_menu.name}
-                        </button>
-                    ))}
-                </div>
+            </div>
+            <div className="flex gap-x-4 mt-8">
+                {MENU_LIST.map((_menu) => (
+                    <button
+                        key={_menu.key}
+                        onClick={() => setActiveMenu(_menu.key)}
+                        className={classNames(
+                            "border border-black rounded-lg p-2",
+                            activeMenu === _menu.key && "bg-black text-white font-semibold"
+                        )}
+                    >
+                        {_menu.name}
+                    </button>
+                ))}
             </div>
             {activeMenu === EMENU_LIST.COMICS && <ComicList comics={userDetail.comics} />}
-            {activeMenu === EMENU_LIST.REVIEWS && <></>}
-            {activeMenu === EMENU_LIST.COMMENTS && <></>}
+            {activeMenu === EMENU_LIST.REVIEWS && <ReviewList reviews={userDetail.reviews} />}
+            {activeMenu === EMENU_LIST.COMMENTS && <CommentList comments={userDetail.comments} />}
         </>
     );
 }

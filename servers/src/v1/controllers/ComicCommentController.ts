@@ -130,7 +130,10 @@ async function getCommentByUserId(userId) {
             { chapterCreatedAt: `${Tables.ComicChapter}.createdAt` },
             { chapterUpdatedAt: `${Tables.ComicChapter}.updatedAt` },
             { chapterPostedBy: `${Tables.ComicChapter}.postedBy` },
-            { chapterViewType: `${Tables.ComicChapter}.viewType` }
+            { chapterViewType: `${Tables.ComicChapter}.viewType` },
+            { comicId: `${Tables.ComicChapter}.comicId` },
+            { comicName: `${Tables.Comic}.name` },
+            { comicSlug: `${Tables.Comic}.slug` }
         )
         .join(
             Tables.ComicChapter,
@@ -138,6 +141,7 @@ async function getCommentByUserId(userId) {
             `${Tables.ComicChapter}.id`
         )
         .join(Tables.User, `${Tables.ComicComment}.authorId`, `${Tables.User}.id`)
+        .join(Tables.Comic, `${Tables.ComicChapter}.comicId`, `${Tables.Comic}.id`)
         .orderBy(`${Tables.ComicComment}.createdAt`, "desc");
 
     return responses.map((response) => {
@@ -152,6 +156,17 @@ async function getCommentByUserId(userId) {
                 updatedAt: response.chapterUpdatedAt,
                 postedBy: response.chapterPostedBy,
                 viewType: response.chapterViewType,
+                comic: {
+                    id: response.comicId,
+                    name: response.comicName,
+                    slug: response.comicSlug,
+                },
+            },
+            author: {
+                id: response.authorId,
+                username: response.authorName,
+                nickname: response.authorNickname,
+                email: response.authorEmail,
             },
         };
     });
