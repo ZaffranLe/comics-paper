@@ -97,12 +97,6 @@ function ChapterList({ open, onClose, updateComic, onDeleteChapter }) {
                 responses.forEach((_resp) => {
                     images = images.concat(_resp.data);
                 });
-                images.sort((a, b) => {
-                    if (a.originalName > b.originalName) {
-                        return -1;
-                    }
-                    return 1;
-                });
                 setChapterInfo({
                     ...chapterInfo,
                     length: images.length + chapterInfo.length,
