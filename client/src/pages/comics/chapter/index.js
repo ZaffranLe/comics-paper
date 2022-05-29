@@ -25,15 +25,15 @@ function ComicChapter() {
     const [comments, setComments] = React.useState([]);
     const [commentContent, setCommentContent] = React.useState("");
     const [chapterOptions, setChapterOptions] = React.useState([]);
-    const [user, setUser] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
     const [fontSize, setFontSize] = React.useState(DEFAULT_FONT_SIZE);
     const [colorMode, setColorMode] = React.useState(COLOR_MODE.LIGHT);
-    const { isAuthenticated } = useSelector((state) => state.auth);
+    const {
+        profile: { info: user },
+    } = useSelector((state) => state.auth);
     const params = useParams();
 
     React.useEffect(() => {
-        fetchUserInfo();
         const [comicSlug, comicId] = params.url.split("&");
         const [chapterSlug, chapterId] = params.chapterUrl.split("&");
         if (!comic || comic.id !== comicId || comic.slug !== comicSlug) {
@@ -48,19 +48,6 @@ function ComicChapter() {
             document.title = `${comic.name} - ${chapter.name}`;
         }
     }, [comic, chapter]);
-
-    React.useEffect(() => {
-        if (isAuthenticated) {
-            fetchUserInfo();
-        } else {
-            setUser(null);
-        }
-    }, [isAuthenticated]);
-
-    const fetchUserInfo = () => {
-        const userInfo = getUserInfoFromToken();
-        setUser(userInfo);
-    };
 
     const fetchComic = async (url) => {
         try {
@@ -269,7 +256,7 @@ function ComicChapter() {
                                 <div className="w-full text-2xl font-bold my-4">Bình luận</div>
                             </div>
                             <div className="w-full">
-                                {user && (
+                                {user.id && (
                                     <div>
                                         <textarea
                                             className="input w-full mt-2"
@@ -285,25 +272,31 @@ function ComicChapter() {
                                         </button>
                                     </div>
                                 )}
-                                {comments.map((_comment) => (
-                                    <div key={_comment.id} className="p-4">
-                                        <div>
-                                            <span className="font-semibold">
-                                                {_comment.author.nickname ||
-                                                    _comment.author.username}
-                                            </span>
-                                            {" - "}
-                                            <span>
-                                                {moment(_comment.createdAt).format(
-                                                    "HH:mm DD/MM/YYYY"
-                                                )}
-                                            </span>
+                                {comments.length > 0 ? (
+                                    comments.map((_comment) => (
+                                        <div key={_comment.id} className="p-4">
+                                            <div>
+                                                <span className="font-semibold">
+                                                    {_comment.author.nickname ||
+                                                        _comment.author.username}
+                                                </span>
+                                                {" - "}
+                                                <span>
+                                                    {moment(_comment.createdAt).format(
+                                                        "HH:mm DD/MM/YYYY"
+                                                    )}
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <pre>{_comment.content}</pre>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <pre>{_comment.content}</pre>
-                                        </div>
-                                    </div>
-                                ))}
+                                    ))
+                                ) : (
+                                    <>
+                                        <span className="text-lg">Chưa có bình luận nào.</span>
+                                    </>
+                                )}
                             </div>
                         </div>
                     ) : (

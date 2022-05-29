@@ -37,6 +37,16 @@ export const ComicFunction = {
             return next(new MiddlewareError(err.message, 500));
         }
     },
+    getComicByUser: async (req, res, next) => {
+        try {
+            const userId = req.params.id;
+            const comics: ComicInterface[] = await ComicController.getComicByUser(userId);
+            // Response
+            res.json(comics);
+        } catch (err) {
+            return next(new MiddlewareError(err.message, 500));
+        }
+    },
     getAllComicTrending: async (req, res, next) => {
         try {
             const comics = await ComicController.getAllComicTrending(req.query);

@@ -3,6 +3,7 @@ import * as userApi from "../../../utils/api/users";
 import UpdateUser from "./update";
 import { v1 as uuidv1 } from "uuid";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 function Users() {
     const [users, setUsers] = React.useState([]);
@@ -55,18 +56,23 @@ function Users() {
                             <th>Tên đăng nhập</th>
                             <th>Biệt danh</th>
                             <th>Email</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         {users.map((_user, _idx) => (
-                            <tr
-                                key={_user.id}
-                                className="border-t even:bg-slate-50"
-                            >
+                            <tr key={_user.id} className="border-t even:bg-slate-50">
                                 <td className="text-center py-2">{_idx + 1}</td>
                                 <td className="py-2">{_user.username}</td>
                                 <td className="py-2">{_user.nickname}</td>
                                 <td className="py-2">{_user.email}</td>
+                                <td className="py-2">
+                                    <Link to={`/dashboard/users/${_user.id}`}>
+                                        <button className="bg-transparent hover:underline hover:text-indigo-500 px-2 py-1">
+                                            Chi tiết
+                                        </button>
+                                    </Link>
+                                </td>
                             </tr>
                         ))}
                     </tbody>

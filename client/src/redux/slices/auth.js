@@ -2,18 +2,21 @@ import { createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import * as userApi from "../../utils/api/users";
 
+const defaultProfileInfo = {
+    id: "",
+    username: "",
+    nickname: "",
+    email: "",
+    introduction: "",
+    password: "",
+    role: null,
+};
+
 const initialState = {
     isAuthenticated: false,
     loginModal: false,
     profile: {
-        info: {
-            id: "",
-            username: "",
-            nickname: "",
-            email: "",
-            introduction: "",
-            password: "",
-        },
+        info: defaultProfileInfo,
         modal: false,
         loading: false,
     },
@@ -57,14 +60,15 @@ export const {
 function getProfile() {
     return async (dispatch) => {
         const profileResp = await userApi.getProfile();
-        const { username, nickname, introduction, email, id } = profileResp.data;
+        const { username, nickname, introduction, email, id, role } = profileResp.data;
         dispatch(
             setProfileInfo({
                 id,
                 username,
-                nickname: nickname || "",
-                introduction: introduction || "",
-                email: email || "",
+                nickname,
+                introduction,
+                email,
+                role,
             })
         );
     };
@@ -98,6 +102,7 @@ function logout() {
         dispatch(setAuthenticated(false));
         localStorage.removeItem("token");
         toast.success("Đăng xuất thành công, hẹn gặp lại.");
+        dispatch(setProfileInfo(defaultProfileInfo));
     };
 }
 

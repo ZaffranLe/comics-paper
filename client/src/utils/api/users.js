@@ -53,6 +53,13 @@ function updateProfile(user) {
     });
 }
 
+function getUserDetail(userId) {
+    return api({
+        url: `/v1/users/detail/${userId}`,
+        method: "GET",
+    });
+}
+
 export {
     register,
     login,
@@ -61,4 +68,5 @@ export {
     updateUser,
     getProfile,
     updateProfile,
+    getUserDetail,
 };

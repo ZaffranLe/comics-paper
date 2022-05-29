@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import * as authActions from "../../../redux/slices/auth";
 import * as authApi from "../../../utils/api/users";
-import { classNames, getUserInfoFromToken } from "../../../utils/common";
+import { classNames } from "../../../utils/common";
 
 function LoginTab(props) {
     const [loginInfo, setLoginInfo] = useState({
@@ -32,6 +32,7 @@ function LoginTab(props) {
             toast.success("Đăng nhập thành công.");
             dispatch(authActions.setLoginModal(false));
             dispatch(authActions.setAuthenticated(true));
+            dispatch(authActions.getProfile());
         } catch (e) {
             toast.error(
                 e.response?.data?.error?.message || "Đăng nhập thất bại, vui lòng thử lại sau."

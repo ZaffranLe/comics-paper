@@ -6,19 +6,21 @@ import * as comicApi from "../../../utils/api/comics";
 import { toast } from "react-toastify";
 import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { getUserInfoFromToken } from "../../../utils/common";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import * as authActions from "../../../redux/slices/auth";
 
 function ComicDetail() {
     const [comic, setComic] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
-    const [user, setUser] = React.useState(null);
     const [reviewData, setReviewData] = React.useState({
         reviewExist: false,
         ratingIcons: [0, 0, 0, 0, 0],
         content: "",
     });
-    const { isAuthenticated } = useSelector((state) => state.auth);
+    const {
+        profile: { info: user },
+    } = useSelector((state) => state.auth);
+    const dispatch = useDispatch();
     const params = useParams();
     const navigate = useNavigate();
 
@@ -43,22 +45,9 @@ function ComicDetail() {
         }
     };
 
-    const fetchUserInfo = () => {
-        const userInfo = getUserInfoFromToken();
-        setUser(userInfo);
-    };
-
     React.useEffect(() => {
         fetchComic(params.url);
     }, [params]);
-
-    React.useEffect(() => {
-        if (isAuthenticated) {
-            fetchUserInfo();
-        } else {
-            setUser(null);
-        }
-    }, [isAuthenticated]);
 
     React.useEffect(() => {
         if (comic) {
@@ -108,6 +97,10 @@ function ComicDetail() {
         }
     };
 
+    const handleOpenLoginModal = () => {
+        dispatch(authActions.setLoginModal("login"));
+    };
+
     const ratingIcons = [0, 0, 0, 0, 0];
 
     return (
@@ -137,26 +130,34 @@ function ComicDetail() {
                                 Danh sách chương
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                                {comic.chapters.map((_chapter) => (
-                                    <div
-                                        key={_chapter.id}
-                                        onClick={() => handleViewChapter(_chapter)}
-                                        className="border-2 border-gray-800 p-2 rounded-lg hover:font-semibold cursor-pointer"
-                                    >
-                                        <div>
-                                            Chương {_chapter.chapterNumber} - {_chapter.name}
+                                {comic.chapters.length > 0 ? (
+                                    comic.chapters.map((_chapter) => (
+                                        <div
+                                            key={_chapter.id}
+                                            onClick={() => handleViewChapter(_chapter)}
+                                            className="border-2 border-gray-800 p-2 rounded-lg hover:font-semibold cursor-pointer"
+                                        >
+                                            <div>
+                                                Chương {_chapter.chapterNumber} - {_chapter.name}
+                                            </div>
+                                            <span className="font-light">
+                                                {moment(_chapter.createdAt).format(
+                                                    "HH:mm DD/MM/YYYY"
+                                                )}
+                                            </span>
                                         </div>
-                                        <span className="font-light">
-                                            {moment(_chapter.createdAt).format("HH:mm DD/MM/YYYY")}
-                                        </span>
-                                    </div>
-                                ))}
+                                    ))
+                                ) : (
+                                    <>
+                                        <span className="text-lg">Chưa có chương truyện nào</span>
+                                    </>
+                                )}
                             </div>
                             <div>
                                 <div className="w-full text-2xl font-bold my-4">Đánh giá</div>
                             </div>
                             <div className="w-full">
-                                {user && !reviewData.reviewExist && (
+                                {user.id && !reviewData.reviewExist && (
                                     <div>
                                         {reviewData.ratingIcons.map((_rate, _idx) => (
                                             <FontAwesomeIcon
@@ -179,6 +180,21 @@ function ComicDetail() {
                                             Đăng
                                         </button>
                                     </div>
+                                )}
+                                {!user.id && comic.reviews.length === 0 && (
+                                    <>
+                                        <span className="text-lg">
+                                            Chưa có đánh giá nào.{" "}
+                                            <span
+                                                className="font-bold cursor-pointer hover:underline"
+                                                onClick={handleOpenLoginModal}
+                                            >
+                                                Đăng nhập
+                                            </span>{" "}
+                                            để trở thành người đầu tiên đưa ra nhận xét về bộ truyện
+                                            này nhé
+                                        </span>
+                                    </>
                                 )}
                                 {comic.reviews.map((_review) => (
                                     <div key={_review.id} className="p-4">

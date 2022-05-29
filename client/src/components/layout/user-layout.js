@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Banner from "../../assets/img/megumi-bg.jpg";
@@ -8,12 +8,16 @@ import * as authActions from "../../redux/slices/auth";
 import _ from "lodash";
 import slugify from "slugify";
 import * as comicApi from "../../utils/api/comics";
+import { ROLE } from "../../utils/constants";
 
 function UserLayout() {
     const [pageMenuOpen, setPageMenuOpen] = useState(false);
     const [profileMenuOpen, setProfileMenuOpen] = useState(false);
     const [comics, setComics] = useState([]);
-    const { isAuthenticated } = useSelector((state) => state.auth);
+    const {
+        isAuthenticated,
+        profile: { info: user },
+    } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
 
     const handleOpenLoginModal = () => {
@@ -46,7 +50,7 @@ function UserLayout() {
 
     const removeSearchResult = () => {
         setComics([]);
-    }
+    };
 
     const pageMenu = [
         {
@@ -177,14 +181,16 @@ function UserLayout() {
                                                 >
                                                     Thông tin cá nhân
                                                 </div>
-                                                <Link to="/dashboard">
-                                                    <div
-                                                        className="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100"
-                                                        role="menuitem"
-                                                    >
-                                                        Quản lý
-                                                    </div>
-                                                </Link>
+                                                {user.role?.id === ROLE.ADMIN && (
+                                                    <Link to="/dashboard">
+                                                        <div
+                                                            className="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100"
+                                                            role="menuitem"
+                                                        >
+                                                            Quản lý
+                                                        </div>
+                                                    </Link>
+                                                )}
                                                 <div
                                                     className="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100"
                                                     role="menuitem"

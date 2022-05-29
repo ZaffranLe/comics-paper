@@ -7,6 +7,9 @@ import { Tables } from "./../Database";
 import DatabaseBuilder from "../utils/DatabaseBuilder";
 import { UserResponseInterface, UsersResponseInterface } from "../interfaces/UserInterface";
 import PasswordUtils from "../utils/PasswordUtils";
+import comicController from "./ComicController";
+import reviewController from "./ReviewController";
+import commentController from "./ComicCommentController";
 
 /**
  *  Create a native relation between user and permission group.
@@ -332,6 +335,20 @@ async function updatePermissionRole(userId: number, permissionRole: number) {
         .where({ userId });
 }
 
+async function getUserDetail(userId: string) {
+    const user = await getUserFromUUID(userId);
+    delete user.password;
+    const comics = await comicController.getAllComics({ postedBy: userId });
+    const reviews = await reviewController.getReviewsByUserId(userId);
+    const comments = await commentController.getCommentByUserId(userId);
+    return {
+        user,
+        comics,
+        reviews,
+        comments,
+    };
+}
+
 export const UserController = {
     createUserPermission,
     createUser,
@@ -346,4 +363,5 @@ export const UserController = {
     updateUserProfile,
     updateUserPassword,
     updatePermissionRole,
+    getUserDetail,
 };

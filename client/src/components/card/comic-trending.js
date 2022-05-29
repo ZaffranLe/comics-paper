@@ -28,7 +28,7 @@ function ComicTrending({ comic, idx }) {
                                 icon="star"
                                 className="text-orange-400"
                             />{" "}
-                            {comic.reviewRating} - {comic.reviewCount} đánh giá
+                            {comic.reviewRating || 0} - {comic.reviewCount} đánh giá
                         </div>
                     </div>
                 </div>
