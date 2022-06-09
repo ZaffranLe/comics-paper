@@ -45,6 +45,13 @@ function getNewestChapters() {
     });
 }
 
+function getFollowingComics() {
+    return api({
+        url: "/v1/comics/following",
+        method: "GET",
+    });
+}
+
 function getAllComic(query) {
     return api({
         url: "/v1/comics",
@@ -65,6 +72,13 @@ function getComicByUrl(url) {
     return api({
         url: `/v1/comics/${url}`,
         method: "GET",
+    });
+}
+
+function increaseView(id) {
+    return api({
+        url: `/v1/comics/${id}/viewed`,
+        method: "POST",
     });
 }
 
@@ -136,4 +150,6 @@ export {
     createReview,
     getAllComment,
     createComment,
+    increaseView,
+    getFollowingComics,
 };

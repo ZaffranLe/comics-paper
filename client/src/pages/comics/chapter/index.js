@@ -38,6 +38,7 @@ function ComicChapter() {
         const [chapterSlug, chapterId] = params.chapterUrl.split("&");
         if (!comic || comic.id !== comicId || comic.slug !== comicSlug) {
             fetchComic(params.url);
+            increaseComicView(comicId);
         }
         if (!chapter || chapter.name !== chapterSlug || chapter.id !== chapterId)
             fetchChapter(comicId, chapterId);
@@ -48,6 +49,14 @@ function ComicChapter() {
             document.title = `${comic.name} - ${chapter.name}`;
         }
     }, [comic, chapter]);
+
+    const increaseComicView = async (comicId) => {
+        try {
+            await comicApi.increaseView(comicId);
+        } catch (e) {
+            console.error(e);
+        }
+    };
 
     const fetchComic = async (url) => {
         try {

@@ -23,6 +23,7 @@ import {
     faMoon,
     faSun,
     faSearch,
+    faEye,
 } from "@fortawesome/free-solid-svg-icons";
 import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons";
 import { useDispatch } from "react-redux";
@@ -50,7 +51,8 @@ library.add(
     faMoon,
     faSun,
     faSearch,
-    faTimes
+    faTimes,
+    faEye
 );
 
 function App() {

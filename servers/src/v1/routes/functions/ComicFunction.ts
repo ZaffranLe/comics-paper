@@ -28,6 +28,15 @@ export const ComicFunction = {
             return next(new MiddlewareError(err.message, 500));
         }
     },
+    getFollowingComics: async (req, res, next) => {
+        try {
+            const comics: ComicInterface[] = await ComicController.getFollowingComics();
+            // Response
+            res.json(comics);
+        } catch (err) {
+            return next(new MiddlewareError(err.message, 500));
+        }
+    },
     getAllComics: async (req, res, next) => {
         try {
             const comics: ComicInterface[] = await ComicController.getAllComics(req.query);

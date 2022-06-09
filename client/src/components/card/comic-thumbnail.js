@@ -20,7 +20,7 @@ function ComicThumbnail({ comic, url, newTab = false }) {
                                     {comic.category}
                                 </span>
                             </div>
-                            <div className="flex h-1/2 items-end">
+                            {/* <div className="flex h-1/2 items-end">
                                 <div className="flex grid grid-cols-3 items-center w-full">
                                     <div className="bg-gray-800 text-white px-2 py-1 rounded w-fit h-fit">
                                         CH.1
@@ -29,7 +29,7 @@ function ComicThumbnail({ comic, url, newTab = false }) {
                                         1 tháng trước
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                     <div className="text-center font-bold cursor-pointer hover:underline peer-hover:underline">
