@@ -5,6 +5,7 @@ const router = express.Router();
 
 router.post("/", getAuth, ComicFunction.createNewComic);
 router.get("/", ComicFunction.getAllComics);
+router.get("/following", ComicFunction.getFollowingComics);
 router.get("/trending", ComicFunction.getAllComicTrending);
 router.get("/user/:id", ComicFunction.getComicByUser);
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Banner from "../../assets/img/megumi-bg.jpg";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,6 +19,7 @@ function UserLayout() {
         profile: { info: user },
     } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleOpenLoginModal = () => {
         dispatch(authActions.setLoginModal("login"));
@@ -180,6 +181,13 @@ function UserLayout() {
                                                     onClick={handleOpenProfile}
                                                 >
                                                     Thông tin cá nhân
+                                                </div>
+                                                <div
+                                                    className="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100"
+                                                    role="menuitem"
+                                                    onClick={() => navigate("/follow")}
+                                                >
+                                                    Truyện theo dõi
                                                 </div>
                                                 {user.role?.id === ROLE.ADMIN && (
                                                     <Link to="/dashboard">

@@ -14,6 +14,7 @@ import AdminComics from "./pages/admin/comics";
 // components
 import { AdminLayout, UserLayout } from "./components";
 import AdminUserDetail from "./pages/admin/users/detail";
+import Follow from "./pages/follow";
 
 function AppRouter() {
     return (
@@ -23,6 +24,7 @@ function AppRouter() {
                     <Route path="/" element={<UserLayout />}>
                         <Route index element={<Home />} />
                         <Route path="comics" element={<Comics />} />
+                        <Route path="follow" element={<Follow />} />
                         <Route path="comics/:url" element={<ComicDetail />} />
                         <Route path="comics/:url/chapter/:chapterUrl" element={<ComicChapter />} />
                         <Route path="*" element={<Home />} />
