@@ -332,6 +332,16 @@ async function getComicByUser(id) {
     return comics;
 }
 
+async function followComic(userId, comicId) {
+    const exist = await DatabaseBuilder(Tables.FollowComic).where({ userId, comicId }).first();
+    if (exist) {
+        await DatabaseBuilder(Tables.FollowComic).where({ userId, comicId }).del();
+        return false;
+    }
+    await DatabaseBuilder(Tables.FollowComic).insert({ userId, comicId });
+    return true;
+}
+
 const ComicController = {
     createComic,
     getAllComics,
@@ -344,5 +354,6 @@ const ComicController = {
     searchComic,
     getComicByUser,
     getFollowingComics,
+    followComic,
 };
 export default ComicController;

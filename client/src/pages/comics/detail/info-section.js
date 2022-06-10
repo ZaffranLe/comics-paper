@@ -21,7 +21,7 @@ function InfoSection({ comic }) {
                     )}
                     onClick={() => setActiveTab(TABS.INFO)}
                 >
-                    Info
+                    Thông tin
                 </button>
                 <button
                     className={classNames(
@@ -30,7 +30,7 @@ function InfoSection({ comic }) {
                     )}
                     onClick={() => setActiveTab(TABS.SUMMARY)}
                 >
-                    Summary
+                    Tóm tắt nội dung
                 </button>
             </div>
             <div className="ring-2 ring-gray-800 p-4 my-4 rounded-xl">
