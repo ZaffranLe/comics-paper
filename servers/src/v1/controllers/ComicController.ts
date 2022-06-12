@@ -319,7 +319,6 @@ async function searchComic(query) {
     if (id === undefined) {
         id = "";
     }
-    console.log(slug, id);
     const comic = await DatabaseBuilder(Tables.Comic).where({ slug }).orWhere({ id }).first();
     // console.log(comic);
     return comic;
@@ -342,6 +341,11 @@ async function followComic(userId, comicId) {
     return true;
 }
 
+async function getFollowState(userId, comicId) {
+    const exist = await DatabaseBuilder(Tables.FollowComic).where({ userId, comicId }).first();
+    return exist ? true : false;
+}
+
 const ComicController = {
     createComic,
     getAllComics,
@@ -355,5 +359,6 @@ const ComicController = {
     getComicByUser,
     getFollowingComics,
     followComic,
+    getFollowState,
 };
 export default ComicController;

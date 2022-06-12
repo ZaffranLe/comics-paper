@@ -140,6 +140,13 @@ function followComic(comicId) {
     });
 }
 
+function getFollowState(comicId) {
+    return api({
+        url: `/v1/comics/${comicId}/follow`,
+        method: "GET",
+    });
+}
+
 export {
     createComic,
     getAllComic,
@@ -160,4 +167,5 @@ export {
     increaseView,
     getFollowingComics,
     followComic,
+    getFollowState,
 };

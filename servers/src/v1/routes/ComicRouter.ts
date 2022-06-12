@@ -15,6 +15,7 @@ router.get("/user/:id", ComicFunction.getComicByUser);
  */
 router.post(`/:id/viewed`, ComicFunction.increaseComicView);
 router.post("/:id/follow/", getAuth, ComicFunction.followComic);
+router.get("/:id/follow/", getAuth, ComicFunction.getFollowState);
 
 /**
  * Create comic chapter
