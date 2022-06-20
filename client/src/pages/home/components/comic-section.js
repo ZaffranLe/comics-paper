@@ -6,6 +6,7 @@ import { CATEGORIES } from "../../../utils/constants";
 
 function ComicSection() {
     const [comics, setComics] = React.useState([]);
+    const [selected, setSelected] = React.useState("NEW");
 
     const fetchComics = async () => {
         try {
@@ -38,7 +39,14 @@ function ComicSection() {
                                 </span>
                             </div>
                             <div>
-                                <span className="underline">Mới nhất</span>
+                                <span className={selected === "NEW" && "underline"} onClick={() => setSelected("NEW")}>
+                                    Mới nhất
+                                </span>
+                            </div>
+                            <div>
+                                <span className={selected === "MOST" && "underline"} onClick={() => setSelected("MOST")}>
+                                    Nhiều người đọc nhất
+                                </span>
                             </div>
                         </div>
                     </div>
