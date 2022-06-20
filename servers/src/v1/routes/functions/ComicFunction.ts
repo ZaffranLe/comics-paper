@@ -51,7 +51,9 @@ export const ComicFunction = {
                 return next(new MiddlewareError(Locale.HttpResponseMessage.ComicNotFound, 404));
             }
             // Get the follow state
-            const isFollowing = await ComicController.getFollowState(req.UserRequest.id, comicId);
+            const isFollowing = req.UserRequest
+                ? await ComicController.getFollowState(req.UserRequest.id, comicId)
+                : false;
             // Response
             res.json(isFollowing);
         } catch (err) {
