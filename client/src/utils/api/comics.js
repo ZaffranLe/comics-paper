@@ -133,6 +133,20 @@ function createComment(chapterId, comment) {
     });
 }
 
+function followComic(comicId) {
+    return api({
+        url: `/v1/comics/${comicId}/follow`,
+        method: "POST",
+    });
+}
+
+function getFollowState(comicId) {
+    return api({
+        url: `/v1/comics/${comicId}/follow`,
+        method: "GET",
+    });
+}
+
 export {
     createComic,
     getAllComic,
@@ -152,4 +166,6 @@ export {
     createComment,
     increaseView,
     getFollowingComics,
+    followComic,
+    getFollowState,
 };

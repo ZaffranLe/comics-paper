@@ -29,10 +29,16 @@ function ComicDetail() {
             setLoading(true);
             const comicResp = await comicApi.getComicByUrl(url);
             const _comic = comicResp.data.comic;
-            const chaptersResp = await comicApi.getAllComicChapters(_comic.id);
+            const apiList = [
+                comicApi.getAllComicChapters(_comic.id),
+                comicApi.getReviewsByComic(_comic.id),
+                comicApi.getFollowState(_comic.id),
+            ];
+            const resps = await Promise.all(apiList);
+            const [chaptersResp, reviewsResp, followStateResp] = resps;
             _comic.chapters = chaptersResp.data;
-            const reviewsResp = await comicApi.getReviewsByComic(_comic.id);
             _comic.reviews = reviewsResp.data;
+            _comic.isFollow = followStateResp.data;
             setComic(_comic);
         } catch (e) {
             toast.error(
@@ -101,6 +107,15 @@ function ComicDetail() {
         dispatch(authActions.setLoginModal("login"));
     };
 
+    const handleFollowComic = async () => {
+        try {
+            const resp = await comicApi.followComic(comic.id);
+            setComic({ ...comic, isFollow: resp.data });
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
     const ratingIcons = [0, 0, 0, 0, 0];
 
     return (
@@ -123,7 +138,10 @@ function ComicDetail() {
                                     />
                                 </div>
                                 <div className="col-span-3 py-4">
-                                    <InfoSection comic={comic} />
+                                    <InfoSection
+                                        comic={comic}
+                                        handleFollowComic={handleFollowComic}
+                                    />
                                 </div>
                             </div>
                             <div className="w-full text-center text-2xl font-bold my-4">
