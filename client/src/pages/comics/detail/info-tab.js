@@ -6,9 +6,7 @@ import { useNavigate } from "react-router-dom";
 function InfoTab({ comic, handleFollowComic }) {
     const MAX_RATING = 5;
     const [ratingIcons, setRatingIcons] = React.useState([]);
-    const {
-        profile: { info: user },
-    } = useSelector((state) => state.auth);
+    const { isAuthenticated } = useSelector((state) => state.auth);
 
     const navigate = useNavigate();
 
@@ -77,10 +75,10 @@ function InfoTab({ comic, handleFollowComic }) {
                         </tr>
                     </tbody>
                 </table>
-                {user && (
+                {isAuthenticated && (
                     <button
                         onClick={handleFollowComic}
-                        className="p-2 m r-2 ring-2 ring-gray-800 rounded-xl hover:bg-gray-800 hover:text-white font-semibold"
+                        className="p-2 mr-2 ring-2 ring-gray-800 rounded-xl hover:bg-gray-800 hover:text-white font-semibold"
                     >
                         {comic.isFollow ? "Bỏ theo dõi" : "Theo dõi"}
                     </button>
