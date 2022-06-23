@@ -199,7 +199,7 @@ async function getComic(id: string): Promise<ComicInterface> {
         .join(`${Tables.ComicTag} AS t2`, "t1.tagId", "t2.id")
         .where({ "t1.comicId": id })
         .columns({ id: "t1.tagId", keyword: "t2.keyword" });
-    return { ...comic, thumbnailImg: thumbnailInfo.fileName, tags };
+    return { ...comic, thumbnailImg: thumbnailInfo?.fileName, tags };
 }
 
 /**
