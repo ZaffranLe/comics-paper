@@ -12,7 +12,7 @@ async function createReview(comicId, userId, rating, content) {
             rating,
             content,
         };
-        const comicInfo = await DatabaseBuilder(Tables.Comic).where({ comicId }).first();
+        const comicInfo = await DatabaseBuilder(Tables.Comic).where({ id: comicId }).first();
         const numberOfReviews = await DatabaseBuilder(Tables.ComicReview).where({ comicId });
         const newRating =
             (comicInfo.likes * numberOfReviews.length + rating) / (numberOfReviews.length + 1);
