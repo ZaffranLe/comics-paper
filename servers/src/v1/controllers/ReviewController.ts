@@ -17,7 +17,7 @@ async function createReview(comicId, userId, rating, content) {
         const newRating =
             (comicInfo.likes * numberOfReviews.length + rating) / (numberOfReviews.length + 1);
         await transaction(Tables.ComicReview).insert(review);
-        await transaction(Tables.Comic).where({ comicId }).update({ likes: newRating });
+        await transaction(Tables.Comic).where({ id: comicId }).update({ likes: newRating });
         await transaction.commit();
         return review;
     } catch (e) {
