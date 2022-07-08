@@ -94,7 +94,7 @@ export async function setupDatabase() {
         table.string(`category`).notNullable();
         table.dateTime(`createdAt`).notNullable().defaultTo(DatabaseBuilder.fn.now());
         table.dateTime(`updatedAt`).notNullable().defaultTo(DatabaseBuilder.fn.now());
-        table.string(`thumbnail`).nullable();
+        table.integer(`thumbnail`).nullable();
         table.integer(`views`).notNullable().defaultTo(0);
         table.integer(`likes`).notNullable().defaultTo(0);
         table.string(`slug`).notNullable();

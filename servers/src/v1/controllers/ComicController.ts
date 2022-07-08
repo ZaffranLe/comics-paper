@@ -18,7 +18,7 @@ async function createComic(
     author: string,
     category: string,
     tags,
-    thumbnail?: string
+    thumbnail?: number
 ): Promise<ComicInterface> {
     const comic: ComicInterface = {
         name,

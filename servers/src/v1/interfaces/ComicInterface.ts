@@ -8,7 +8,7 @@ export interface ComicInterface {
   postedBy: number;
   createdAt: Date;
   updatedAt: Date;
-  thumbnail?: string;
+  thumbnail?: number;
   slug: string;
   likes: number;
   views: number;
