@@ -1,11 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { toast } from "react-toastify";
-import { Modal } from "../../../components";
-import { classNames } from "../../../utils/common";
-import * as resourceApi from "../../../utils/api/resources";
+import { Modal } from "../../../../components";
+import { classNames } from "../../../../utils/common";
+import * as resourceApi from "../../../../utils/api/resources";
 import Select from "react-select";
-import { categoryOptions } from "../../../utils/constants";
+import { categoryOptions } from "../../../../utils/constants";
 
 function UpdateComic({ open, onClose, onSave, updateComic, tagOptions }) {
     const [comic, setComic] = React.useState({
@@ -102,7 +102,8 @@ function UpdateComic({ open, onClose, onSave, updateComic, tagOptions }) {
                             htmlFor="comic-thumbnail-upload"
                             className={classNames(
                                 comic.thumbnail ? "border-gray-800" : "border-green-700",
-                                "border rounded-lg flex items-center cursor-pointer select-none"
+                                "border rounded-lg flex items-center cursor-pointer select-none",
+                                "h-[200px] overflow-hidden"
                             )}
                         >
                             {comic.thumbnail ? (
