@@ -26,6 +26,47 @@ export const ComicFunction = {
             return next(new MiddlewareError(err.message, 500));
         }
     },
+    followComic: async (req, res, next) => {
+        const comicId = req.params.id;
+        try {
+            // Check the id
+            if (!(await ComicController.hasComic(comicId))) {
+                return next(new MiddlewareError(Locale.HttpResponseMessage.ComicNotFound, 404));
+            }
+            // Follow the comic
+            const isFollowing = await ComicController.followComic(req.UserRequest.id, comicId);
+            // Response
+            res.json(isFollowing);
+        } catch (err) {
+            return next(new MiddlewareError(err.message, 500));
+        }
+    },
+    getFollowState: async (req, res, next) => {
+        const comicId = req.params.id;
+        try {
+            // Check the id
+            if (!(await ComicController.hasComic(comicId))) {
+                return next(new MiddlewareError(Locale.HttpResponseMessage.ComicNotFound, 404));
+            }
+            // Get the follow state
+            const isFollowing = req.UserRequest
+                ? await ComicController.getFollowState(req.UserRequest.id, comicId)
+                : false;
+            // Response
+            res.json(isFollowing);
+        } catch (err) {
+            return next(new MiddlewareError(err.message, 500));
+        }
+    },
+    getFollowingComics: async (req, res, next) => {
+        try {
+            const comics: ComicInterface[] = await ComicController.getFollowingComics();
+            // Response
+            res.json(comics);
+        } catch (err) {
+            return next(new MiddlewareError(err.message, 500));
+        }
+    },
     getAllComics: async (req, res, next) => {
         try {
             const comics: ComicInterface[] = await ComicController.getAllComics(req.query);

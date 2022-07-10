@@ -1,19 +1,20 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-function InfoTab({ comic }) {
+function InfoTab({ comic, handleFollowComic }) {
     const MAX_RATING = 5;
     const [ratingIcons, setRatingIcons] = React.useState([]);
+    const { isAuthenticated } = useSelector((state) => state.auth);
 
     const navigate = useNavigate();
 
     const avgRating = React.useMemo(() => {
-        let _avgRating =
-            (
-                comic.reviews.reduce((rating, review) => (rating += review.rating), 0) /
-                    comic.reviews.length || 0
-            ).toFixed(2);
+        let _avgRating = (
+            comic.reviews.reduce((rating, review) => (rating += review.rating), 0) /
+                comic.reviews.length || 0
+        ).toFixed(2);
         let stars = _avgRating;
         const _ratingIcons = [];
         while (stars >= 1) {
@@ -41,7 +42,8 @@ function InfoTab({ comic }) {
                 {ratingIcons.map((_icon, _idx) => (
                     <FontAwesomeIcon className="text-yellow-400" icon={_icon} key={_idx} />
                 ))}{" "}
-                {avgRating}
+                {avgRating} - {comic.views || 0}{" "}
+                <FontAwesomeIcon className="text-blue-500" icon="eye" />
             </div>
             <div>
                 <table className="w-full">
@@ -73,13 +75,21 @@ function InfoTab({ comic }) {
                         </tr>
                     </tbody>
                 </table>
+                {isAuthenticated && (
+                    <button
+                        onClick={handleFollowComic}
+                        className="p-2 mr-2 ring-2 ring-gray-800 rounded-xl hover:bg-gray-800 hover:text-white font-semibold"
+                    >
+                        {comic.isFollow ? "Bỏ theo dõi" : "Theo dõi"}
+                    </button>
+                )}
                 {comic.chapters.length > 0 && (
                     <>
                         <button
                             onClick={() =>
                                 handleViewChapter(comic.chapters[comic.chapters.length - 1])
                             }
-                            className="p-2 mr-2 ring-2 ring-gray-800 rounded-xl hover:bg-gray-800 hover:text-white font-semibold"
+                            className="p-2 ml-2 mr-2 ring-2 ring-gray-800 rounded-xl hover:bg-gray-800 hover:text-white font-semibold"
                         >
                             Chap đầu
                         </button>

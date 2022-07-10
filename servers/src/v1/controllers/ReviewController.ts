@@ -1,18 +1,29 @@
 import { Tables } from "./../Database";
 import DatabaseBuilder from "../utils/DatabaseBuilder";
-import { v4 as uuid } from "uuid";
 /**
  * Create a new review
  */
 async function createReview(comicId, userId, rating, content) {
-    const review = {
-        comicId,
-        userId,
-        rating,
-        content,
-    };
-    await DatabaseBuilder(Tables.ComicReview).insert(review);
-    return review;
+    const transaction = await DatabaseBuilder.transaction();
+    try {
+        const review = {
+            comicId,
+            userId,
+            rating,
+            content,
+        };
+        const comicInfo = await DatabaseBuilder(Tables.Comic).where({ id: comicId }).first();
+        const numberOfReviews = await DatabaseBuilder(Tables.ComicReview).where({ comicId });
+        const newRating =
+            (comicInfo.likes * numberOfReviews.length + rating) / (numberOfReviews.length + 1);
+        await transaction(Tables.ComicReview).insert(review);
+        await transaction(Tables.Comic).where({ id: comicId }).update({ likes: newRating });
+        await transaction.commit();
+        return review;
+    } catch (e) {
+        await transaction.rollback();
+        throw e;
+    }
 }
 
 function filterResponse(response) {

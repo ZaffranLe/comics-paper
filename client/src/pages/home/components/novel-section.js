@@ -10,7 +10,7 @@ function NovelSection() {
         try {
             const resp = await comicApi.getAllComic({
                 category: CATEGORIES.NOVEL,
-                limit: 18,
+                limit: 12,
                 offset: 0,
                 orderBy: "updatedAt",
                 orderType: "DESC",

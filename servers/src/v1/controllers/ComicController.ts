@@ -48,6 +48,31 @@ async function createComic(
     return comic;
 }
 
+async function getFollowingComics(): Promise<ComicInterface[]> {
+    const fields = {
+        id: "t1.id",
+        thumbnail: "t3.id",
+        thumbnailImg: "t3.fileName",
+        name: "t1.name",
+        description: "t1.description",
+        author: "t1.author",
+        likes: "t1.likes",
+        views: "t1.views",
+        slug: "t1.slug",
+        category: "t1.category",
+        updatedAt: "t1.updatedAt",
+        createdAt: "t1.createdAt",
+        postedBy: "t1.postedBy",
+    };
+    let comics = DatabaseBuilder(`${Tables.FollowComic} AS t2`)
+        .leftJoin(`${Tables.Comic} AS t1`, "t2.comicId", "t1.id")
+        .leftJoin(`${Tables.Resource} AS t3`, "t1.thumbnail", "t3.id")
+        .columns(fields);
+    // comics = comics.where({
+    // });
+    return await comics;
+}
+
 async function getAllComics(query): Promise<ComicInterface[]> {
     const { limit, offset, orderBy, orderType, tags, notTags, slug, ...searchFields } = query;
     const fields = {
@@ -302,7 +327,6 @@ async function searchComic(query) {
     if (id === undefined) {
         id = "";
     }
-    console.log(slug, id);
     const comic = await DatabaseBuilder(Tables.Comic).where({ slug }).orWhere({ id }).first();
     // console.log(comic);
     return comic;
@@ -313,6 +337,21 @@ async function getComicByUser(id) {
         .where({ postedBy: id })
         .orderBy("createdAt", "DESC");
     return comics;
+}
+
+async function followComic(userId, comicId) {
+    const exist = await DatabaseBuilder(Tables.FollowComic).where({ userId, comicId }).first();
+    if (exist) {
+        await DatabaseBuilder(Tables.FollowComic).where({ userId, comicId }).del();
+        return false;
+    }
+    await DatabaseBuilder(Tables.FollowComic).insert({ userId, comicId });
+    return true;
+}
+
+async function getFollowState(userId, comicId) {
+    const exist = await DatabaseBuilder(Tables.FollowComic).where({ userId, comicId }).first();
+    return exist ? true : false;
 }
 
 const ComicController = {
@@ -327,5 +366,8 @@ const ComicController = {
     hasComic,
     searchComic,
     getComicByUser,
+    getFollowingComics,
+    followComic,
+    getFollowState,
 };
 export default ComicController;

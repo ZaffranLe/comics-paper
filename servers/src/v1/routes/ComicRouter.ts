@@ -3,6 +3,8 @@ import express from "express";
 import { getAuth } from "../middlewares/AuthMiddleware";
 const router = express.Router();
 
+router.get("/following", ComicFunction.getFollowingComics);
+router.get("/trending", ComicFunction.getAllComicTrending);
 router.get("/user/:id", ComicFunction.getComicByUser);
 
 /**
@@ -10,6 +12,8 @@ router.get("/user/:id", ComicFunction.getComicByUser);
  * Increase the view count 1 unit
  */
 router.post(`/:id/viewed`, ComicFunction.increaseComicView);
+router.post("/:id/follow/", getAuth, ComicFunction.followComic);
+router.get("/:id/follow/", getAuth, ComicFunction.getFollowState);
 
 
 /**

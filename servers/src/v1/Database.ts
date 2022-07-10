@@ -33,6 +33,7 @@ export const Tables = {
     ComicComment: "comic_comments",
     // Review
     ComicReview: "comic_reviews",
+    FollowComic: "follow_comic",
 };
 
 export async function setupDatabase() {
@@ -127,6 +128,13 @@ export async function setupDatabase() {
         // id, keywords
         table.increments("id").primary();
         table.string("keyword").notNullable();
+    });
+
+    await createTable(Tables.FollowComic, (table) => {
+        // id, keywords
+        table.integer("userId");
+        table.integer("comicId");
+        table.primary([`userId`, `comicId`]);
     });
 
     await createTable(Tables.ComicBookTag, (table) => {
