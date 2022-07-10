@@ -15,12 +15,8 @@ router.post(`/:id/viewed`, ComicFunction.increaseComicView);
 router.post("/:id/follow/", getAuth, ComicFunction.followComic);
 router.get("/:id/follow/", getAuth, ComicFunction.getFollowState);
 
-
-/**
- * Get a comic by id or name
- */
 router.get(`/:id`, ComicFunction.getComicById);
-router.get(`/slug/:slug`, ComicFunction.getComicById);
+router.get(`/slug/:slug`, ComicFunction.getComicBySlug);
 
 router.post(`/tags/`, getAuth, ComicFunction.createNewTag);
 router.put(`/tags/:id`, getAuth, ComicFunction.updateTag);

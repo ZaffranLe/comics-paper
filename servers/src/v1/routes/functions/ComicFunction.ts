@@ -581,7 +581,7 @@ export const ComicFunction = {
     },
 
     getComicBySlug: async (req, res, next) => {
-        const slug: string = req.params.id;
+        const slug: string = req.params.slug;
         try {
             const comic: ComicInterface = await ComicController.getComicBySlug(slug);
             // not found

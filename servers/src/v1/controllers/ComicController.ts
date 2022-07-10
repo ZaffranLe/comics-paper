@@ -195,8 +195,8 @@ async function getComicBySlug(slug: string): Promise<ComicInterface> {
     return comic;
 }
 
-async function getComicFromFields(fields: any): Promise<ComicInterface> {
-    const comic = await DatabaseBuilder(Tables.Comic).where(fields).first();
+async function getComicFromFields(query: any): Promise<ComicInterface> {
+    const comic = await DatabaseBuilder(Tables.Comic).where(query).first();
     if (comic) {
         const thumbnailInfo = await DatabaseBuilder(Tables.Resource)
             .where({ id: comic.thumbnail })
