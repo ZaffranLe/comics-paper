@@ -73,7 +73,7 @@ const ReviewFunction = {
             }
 
             // Comic is not found
-            const currentComic = await ComicController.getComic(comicId);
+            const currentComic = await ComicController.getComicById(comicId);
             if (!currentComic) {
                 return next(new MiddlewareError(Locale.HttpResponseMessage.ComicNotFound, 404));
             }

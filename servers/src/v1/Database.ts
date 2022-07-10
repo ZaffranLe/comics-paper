@@ -87,7 +87,7 @@ export async function setupDatabase() {
 
     await createTable(Tables.Comic, (table) => {
         table.increments("id").primary();
-        table.string("name").notNullable();
+        table.string("name").notNullable().unique();
         table.text(`description`).notNullable();
         table.integer(`postedBy`).notNullable();
         table.string(`author`).notNullable();

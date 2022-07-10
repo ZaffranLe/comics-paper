@@ -82,9 +82,10 @@ router.get(`/:comicId/tags/`, ComicFunction.getAllComicTags);
 router.delete(`/:comicId/tags/:tagId`, getAuth, ComicFunction.deleteRefBetweenTagAndComic);
 
 /**
- * Get a comic by id
+ * Get a comic by id or name
  */
 router.get(`/:id`, ComicFunction.getComicById);
+router.get(`/slug/:slug`, ComicFunction.getComicById);
 
 /**
  * Update comic information
