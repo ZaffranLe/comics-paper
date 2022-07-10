@@ -34,14 +34,13 @@ function ComicChapter() {
     const params = useParams();
 
     React.useEffect(() => {
-        const [comicSlug, comicId] = params.url.split("&");
+        const { slug } = params;
         const [chapterSlug, chapterId] = params.chapterUrl.split("&");
-        if (!comic || comic.id !== comicId || comic.slug !== comicSlug) {
-            fetchComic(params.url);
-            increaseComicView(comicId);
+        if (!comic || comic.slug !== slug) {
+            fetchComic(slug);
         }
-        if (!chapter || chapter.name !== chapterSlug || chapter.id !== chapterId)
-            fetchChapter(comicId, chapterId);
+        // if (!chapter || chapter.name !== chapterSlug || chapter.id !== chapterId)
+        //     fetchChapter(comicId, chapterId);
     }, [params]);
 
     React.useEffect(() => {
@@ -58,9 +57,9 @@ function ComicChapter() {
         }
     };
 
-    const fetchComic = async (url) => {
+    const fetchComic = async (slug) => {
         try {
-            const resp = await comicApi.getComicByUrl(url);
+            const resp = await comicApi.getComicBySlug(slug);
             const _comic = resp.data.comic;
             const chapterListResp = await comicApi.getAllComicChapters(_comic.id);
             const chapterList = chapterListResp.data;
@@ -71,6 +70,7 @@ function ComicChapter() {
             }));
             setChapterOptions(_chapterOptions);
             setComic(_comic);
+            increaseComicView(_comic.id);
         } catch (e) {
             toast.error(
                 e.response?.data?.error?.message ||

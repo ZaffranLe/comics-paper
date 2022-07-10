@@ -8,6 +8,7 @@ import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSelector, useDispatch } from "react-redux";
 import * as authActions from "../../../redux/slices/auth";
+import { getImageUrl } from "../../../utils/common";
 
 function ComicDetail() {
     const [comic, setComic] = React.useState(null);
@@ -24,10 +25,10 @@ function ComicDetail() {
     const params = useParams();
     const navigate = useNavigate();
 
-    const fetchComic = async (url) => {
+    const fetchComic = async (slug) => {
         try {
             setLoading(true);
-            const comicResp = await comicApi.getComicByUrl(url);
+            const comicResp = await comicApi.getComicBySlug(slug);
             const _comic = comicResp.data.comic;
             const apiList = [
                 comicApi.getAllComicChapters(_comic.id),
@@ -52,7 +53,7 @@ function ComicDetail() {
     };
 
     React.useEffect(() => {
-        fetchComic(params.url);
+        fetchComic(params.slug);
     }, [params]);
 
     React.useEffect(() => {
@@ -133,7 +134,7 @@ function ComicDetail() {
                                 <div>
                                     <img
                                         className="rounded-lg border-2 border-gray-800 w-full"
-                                        src={`${process.env.REACT_APP_ORIGIN_BACKEND}/public/${comic.thumbnailImg}`}
+                                        src={getImageUrl(comic.thumbnailImg)}
                                         alt={comic.name}
                                     />
                                 </div>

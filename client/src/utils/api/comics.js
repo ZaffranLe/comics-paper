@@ -68,9 +68,16 @@ function getAllComicTrending(query) {
     });
 }
 
-function getComicByUrl(url) {
+function getComicById(id) {
     return api({
-        url: `/v1/comics/${url}`,
+        url: `/v1/comics/${id}`,
+        method: "GET",
+    });
+}
+
+function getComicBySlug(slug) {
+    return api({
+        url: `/v1/comics/slug/${slug}`,
         method: "GET",
     });
 }
@@ -151,7 +158,8 @@ export {
     createComic,
     getAllComic,
     getAllComicTrending,
-    getComicByUrl,
+    getComicById,
+    getComicBySlug,
     getAllComicChapters,
     getComicChapter,
     getNewestChapters,

@@ -26,8 +26,8 @@ function AppRouter() {
                         <Route index element={<Home />} />
                         <Route path="comics" element={<Comics />} />
                         <Route path="follow" element={<Follow />} />
-                        <Route path="comics/:url" element={<ComicDetail />} />
-                        <Route path="comics/:url/chapter/:chapterUrl" element={<ComicChapter />} />
+                        <Route path="comics/:slug" element={<ComicDetail />} />
+                        <Route path="comics/:slug/chapter/:chapterUrl" element={<ComicChapter />} />
                         <Route path="*" element={<Home />} />
                     </Route>
                     <Route path="/dashboard" element={<AdminLayout />}>

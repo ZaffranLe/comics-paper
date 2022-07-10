@@ -9,7 +9,7 @@ function ComicList({ comics = [] }) {
                     <div key={_comic.id}>
                         <ComicThumbnail
                             comic={_comic}
-                            url={`/comics/${_comic.slug}&${_comic.id}`}
+                            url={`/comics/${_comic.slug}`}
                             newTab={true}
                         />
                     </div>

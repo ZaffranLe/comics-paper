@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { toast } from "react-toastify";
 import { Modal } from "../../../../components";
-import { classNames } from "../../../../utils/common";
+import { classNames, getImageUrl } from "../../../../utils/common";
 import * as resourceApi from "../../../../utils/api/resources";
 import Select from "react-select";
 import { categoryOptions } from "../../../../utils/constants";
@@ -108,7 +108,7 @@ function UpdateComic({ open, onClose, onSave, updateComic, tagOptions }) {
                         >
                             {comic.thumbnail ? (
                                 <img
-                                    src={`${process.env.REACT_APP_ORIGIN_BACKEND}/public/${comic.thumbnailImg}`}
+                                    src={getImageUrl(comic.thumbnailImg)}
                                     className="w-full"
                                     alt="thumbnail"
                                 />

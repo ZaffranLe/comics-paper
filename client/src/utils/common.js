@@ -32,4 +32,8 @@ function getUserInfoFromToken(token = null) {
     }
 }
 
-export { classNames, checkTokenValid, getUserInfoFromToken };
+function getImageUrl(fileName) {
+    return `${process.env.REACT_APP_ORIGIN_BACKEND}/public/${fileName}`;
+}
+
+export { classNames, checkTokenValid, getUserInfoFromToken, getImageUrl };

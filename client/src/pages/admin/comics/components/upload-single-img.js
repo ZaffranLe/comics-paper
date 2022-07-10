@@ -1,4 +1,5 @@
 import React from "react";
+import { getImageUrl } from "../../../../utils/common";
 function UploadSingleImg({ block, handleChangeImage }) {
     return (
         <>
@@ -9,11 +10,7 @@ function UploadSingleImg({ block, handleChangeImage }) {
                         "h-40 border-gray-700 border rounded-lg flex items-center cursor-pointer select-none overflow-hidden"
                     }
                 >
-                    <img
-                        src={`${process.env.REACT_APP_ORIGIN_BACKEND}/public/${block.content}`}
-                        className="w-full"
-                        alt="thumbnail"
-                    />
+                    <img src={getImageUrl(block.content)} className="w-full" alt="thumbnail" />
                 </label>
                 <input
                     id={block.id}
