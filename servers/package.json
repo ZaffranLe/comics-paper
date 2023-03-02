@@ -2,9 +2,9 @@
     "name": "comics-paper-server",
     "private": "true",
     "scripts": {
-        "start": "nodemon -r dotenv/config src/Index.ts",
-        "dev": "NODE_ENV=development nodemon -r dotenv/config src/Index.ts",
-        "test": "NODE_ENV=test mocha -r dotenv/config src/test/**/*.spec.ts",
+        "start": "cross-env NODE_ENV=production node ./scripts/has-env.js &&  nodemon -r dotenv/config src/Index.ts",
+        "dev": "cross-env NODE_ENV=development nodemon -r dotenv/config src/Index.ts",
+        "test": "cross-env NODE_ENV=test mocha -r dotenv/config src/test/**/*.spec.ts",
         "build": "ts-node -T -P ./tsconfig.json -r dotenv/config ./src/Index.ts"
     },
     "devDependencies": {
@@ -32,6 +32,7 @@
         "body-parser": "^1.19.1",
         "chalk": "4.1.2",
         "cors": "^2.8.5",
+        "cross-env": "^7.0.3",
         "dotenv": "^10.0.0",
         "express": "^4.17.2",
         "jimp": "^0.16.1",
