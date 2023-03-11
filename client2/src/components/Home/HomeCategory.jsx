@@ -3,7 +3,7 @@ import HomeCategoryItem from "./HomeCategoryItem";
 
 function HomeCategory({ title }) {
   return (
-    <div className="mx-12 py-6 flex flex-col gap-4">
+    <div className="px-12 py-6 flex flex-col gap-4 dark:bg-neutral-600 dark:text-neutral-50">
       <div className="text-3xl font-bold">
         {title ? title : "Unnamed category"}
       </div>

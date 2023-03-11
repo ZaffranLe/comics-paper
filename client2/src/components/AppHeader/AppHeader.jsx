@@ -3,7 +3,7 @@ import AppHeaderSetting from "./AppHeaderSetting";
 
 function AppHeader() {
   return (
-    <div className="app-header-wrapper">
+    <div className="app-header-wrapper dark:bg-neutral-800 dark:text-neutral-50">
       <div className=" mx-8 py-4 flex flex-row gap-4 items-center">
         <div>
           <b className="text-3xl">Comics Paper</b> | Read the way you want

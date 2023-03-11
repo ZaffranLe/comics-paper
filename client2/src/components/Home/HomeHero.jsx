@@ -2,7 +2,11 @@ import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 
 function HomeHero() {
   return (
-    <div className="bg-neutral-300 py-16 flex flex-row gap-12 px-36 bg-gradient-to-r from-cyan-500 to-blue-400 relative">
+    <div
+      className=" py-16 
+      flex flex-row gap-12 px-36 bg-gradient-to-r from-cyan-500 to-blue-400 relative
+      dark:from-cyan-800 dark:to-blue-600 dark:text-neutral-50"
+    >
       {/* Thumbnail */}
       <div className="w-2/6">
         <a href="">

@@ -2,7 +2,7 @@ function HomeCategoryItem() {
   return (
     <a
       href=""
-      className="w-2/12 inline-block mr-6 text-neutral-500 hover:text-neutral-800"
+      className="w-2/12 inline-block mr-6 text-neutral-500 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-50"
     >
       <div className="flex flex-col">
         <img
