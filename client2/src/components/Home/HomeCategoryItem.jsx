@@ -8,7 +8,7 @@ function HomeCategoryItem() {
         <img
           src="https://dummyimage.com/320x480/000/fff"
           alt="REPLACE THIS PLEASE"
-          className="rounded-md"
+          className="rounded-md shadow-md"
         />
         <div className="flex flex-row">
           <span className="text-xs p-2">Name</span>
