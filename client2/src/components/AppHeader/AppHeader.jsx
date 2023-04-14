@@ -8,6 +8,7 @@ function AppHeader() {
         <div>
           <b className="text-3xl">Comics Paper</b> | Read the way you want
         </div>
+
         <div className="flex-1 flex flex-row-reverse">
           <AppHeaderSetting />
         </div>
