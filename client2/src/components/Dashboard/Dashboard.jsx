@@ -10,6 +10,12 @@ export default function Dashboard() {
 
   console.log(profile);
 
+  /**
+   * Check if the profile can access into the dashboard.
+   *
+   * @returns true if the profile can access into dashboard,
+   *  false otherwise.
+   */
   const didProfileHasAdminPermission = () => {
     if (profile === undefined || profile === null) {
       throw new Error(`Missing profile (undefined or null)`);
@@ -18,6 +24,7 @@ export default function Dashboard() {
     return profile.role.name !== "User";
   };
 
+  // Return home if the client is failed to join dashboard
   if (!hasToken() || profile === null || !didProfileHasAdminPermission()) {
     return <Navigate to="/" />;
   }
