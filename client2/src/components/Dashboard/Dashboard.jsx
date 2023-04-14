@@ -1,17 +1,36 @@
-import React from "react";
+import React, { useEffect } from "react";
 import DashboardAsideMenu from "./DashboardAsideMenu";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { hasToken } from "../../utils/TokenManager";
 
 export default function Dashboard() {
+  const profile = useSelector((store) => store.App.profile);
+  const navigate = useNavigate();
+
+  console.log(profile);
+
+  const didProfileHasAdminPermission = () => {
+    if (profile === undefined || profile === null) {
+      throw new Error(`Missing profile (undefined or null)`);
+    }
+
+    return profile.role.name !== "User";
+  };
+
+  if (!hasToken() || profile === null || !didProfileHasAdminPermission()) {
+    return <Navigate to="/" />;
+  }
+
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-row min-h-[90vh]">
       {/* Dashboard aside menu  */}
       <div className="w-1/5 ">
         <DashboardAsideMenu />
       </div>
 
       {/* Dashboard main */}
-      <div className="w-4/5">
+      <div className="w-4/5 px-2 py-4">
         <Outlet />
       </div>
     </div>

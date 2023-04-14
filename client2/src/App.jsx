@@ -11,6 +11,7 @@ import Register from "./components/Users/Register/Register";
 import Login from "./components/Users/Login/Login";
 import Logout from "./components/Users/Logout/Logout";
 import Dashboard from "./components/Dashboard/Dashboard";
+import DashboardStatistic from "./components/Dashboard/DashboardStatistic";
 
 function App() {
   return (
@@ -36,7 +37,7 @@ function App() {
           <Route path="/users/logout" element={<Logout />}></Route>
         </Route>
         <Route path="/dashboard" element={<Dashboard />}>
-          <Route path="/dashboard/register" element={<Register />}></Route>
+          <Route path="/dashboard" element={<DashboardStatistic />}></Route>
         </Route>
       </Routes>
 
