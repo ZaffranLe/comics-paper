@@ -64,6 +64,9 @@ export default Configuration;
  * @param environmentName a environment name to check.
  */
 function hasConfigurationEnvironment(environmentName: string) {
+    if (environmentName === undefined) {
+        throw new Error(`environmentName is undefined`);
+    }
     // Not available
     if (Configuration[environmentName.trim()] === undefined) {
         throw new Error("Configuration environment is not available.");
