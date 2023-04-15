@@ -12,6 +12,7 @@ import Login from "./components/Users/Login/Login";
 import Logout from "./components/Users/Logout/Logout";
 import Dashboard from "./components/Dashboard/Dashboard";
 import DashboardStatistic from "./components/Dashboard/DashboardStatistic";
+import DashboardComics from "./components/Dashboard/DashboardComics/DashboardComics";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
         </Route>
         <Route path="/dashboard" element={<Dashboard />}>
           <Route path="/dashboard" element={<DashboardStatistic />}></Route>
+          <Route path="/dashboard/comics" element={<DashboardComics />}></Route>
         </Route>
       </Routes>
 

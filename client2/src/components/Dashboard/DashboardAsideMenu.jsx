@@ -18,7 +18,7 @@ export default function DashboardAsideMenu() {
   ]);
 
   return (
-    <div className="mx-2 flex flex-col gap-4 mt-12">
+    <div className="mx-2 flex flex-col gap-4 mt-12 sticky top-14">
       {entryList.map((_item, _index) => {
         return <DashboardMenuItem name={_item.name} url={_item.url} />;
       })}
