@@ -3,8 +3,8 @@ import { FiSun, FiMoon, FiSettings } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import useTheme from "../../hooks/useTheme";
 import { useDispatch, useSelector } from "react-redux";
-import { getToken, hasToken } from "../../utils/TokenManager";
-import { setProfile } from "../../AppSlice";
+import { deleteToken, hasToken } from "../../utils/TokenManager";
+import { removeUserToken, setProfile } from "../../AppSlice";
 import UserRequest from "../../request/UserRequest";
 
 function AppHeaderSetting() {
@@ -21,7 +21,14 @@ function AppHeaderSetting() {
           dispatch(setProfile(profile));
         })
         .catch((error) => {
-          console.error(error);
+          if (
+            error.response !== undefined &&
+            error.response.data !== undefined &&
+            error.response.data.error.message === "Invalid token or expired."
+          ) {
+            deleteToken();
+            dispatch(removeUserToken());
+          }
         });
     }
   }, [hasToken]);
