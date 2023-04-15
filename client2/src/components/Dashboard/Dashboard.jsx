@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import DashboardAsideMenu from "./DashboardAsideMenu";
 import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -7,8 +7,6 @@ import { hasToken } from "../../utils/TokenManager";
 export default function Dashboard() {
   const profile = useSelector((store) => store.App.profile);
   const navigate = useNavigate();
-
-  console.log(profile);
 
   /**
    * Check if the profile can access into the dashboard.
@@ -30,14 +28,14 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="flex flex-row min-h-[90vh]">
+    <div className="flex flex-row min-h-[90vh] mt-4">
       {/* Dashboard aside menu  */}
       <div className="w-1/5 ">
         <DashboardAsideMenu />
       </div>
 
       {/* Dashboard main */}
-      <div className="w-4/5 px-2 py-4">
+      <div className="w-4/5 px-2 py-4 mt-4">
         <Outlet />
       </div>
     </div>
