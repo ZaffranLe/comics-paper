@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Input from "../../../Input/Input";
 import TextareaInput from "../../../Input/TextareaInput";
 import Button from "../../../Button/Button";
+import SelectResource from "../../../Modal/SelectResource";
 
 export default function DashboardComicsItem() {
   const [didActiveEditMode, setActiveEditMode] = useState(false);
@@ -46,6 +47,13 @@ function DashboardComicsEditModal() {
           />
         </button>
       </div>
+
+      <SelectResource
+        visible={true}
+        setVisible={() => {
+          console.log(`close ${new Date()}`);
+        }}
+      />
 
       <div className="flex flex-col gap-4 w-3/4">
         {/* <h1>Edit mode</h1> */}
