@@ -70,8 +70,8 @@ function DashboardComicsEditModal() {
                 <div className="bg-neutral-50 px-2 py-2 rounded-lg flex flex-row border border-neutral-100">
                   <span className="flex-1 text-xs">Chapter {_index}</span>
                   <div className="text-xs flex flex-row gap-2">
-                    <Button text="Edit" />
-                    <Button text="Delete" />
+                    <Button>Edit</Button>
+                    <Button>Delete</Button>
                   </div>
                 </div>
               );
@@ -81,8 +81,8 @@ function DashboardComicsEditModal() {
 
         {/* Footer */}
         <div className="edit-footer flex flex-row-reverse gap-4">
-          <Button text="Change" className={`px-2 py-2`} />
-          <Button text="Cancel" className={` text-red-700`} />
+          <Button className={`px-2 py-2`}>Change</Button>
+          <Button className={` text-red-700`}>Cancel</Button>
         </div>
       </div>
     </div>
