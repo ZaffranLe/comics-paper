@@ -26,6 +26,12 @@ function RegisterTab(props) {
         dispatch(authActions.setLoginModal("login"));
     };
 
+    const handleKeyDownSwitchToLogin = (e) => {
+        if (e.key === "Enter" || e.keyCode === 32) {
+            handleSwitchToLogin();
+        }
+    };
+
     const handleRegister = async () => {
         try {
             if (registerInfo.password !== registerInfo.confirmPassword) {
@@ -47,9 +53,17 @@ function RegisterTab(props) {
         }
     };
 
+    const handleSubmitForm = async (e) => {
+        e.preventDefault();
+        await handleRegister();
+    };
+
     return (
         <>
-            <div className="w-full h-full p-4 flex flex-col gap-4 justify-center">
+            <form
+                className="w-full h-full px-4 flex flex-col gap-4 justify-center"
+                onSubmit={handleSubmitForm}
+            >
                 <div className="font-semibold text-xl border-l-8 border-gray-800 pl-8">
                     Đăng ký
                 </div>
@@ -89,6 +103,7 @@ function RegisterTab(props) {
                     />
                 </div>
                 <button
+                    type="submit"
                     className={classNames(
                         loading
                             ? "bg-gray-500"
@@ -104,11 +119,13 @@ function RegisterTab(props) {
                     <span
                         className="font-semibold cursor-pointer hover:underline"
                         onClick={handleSwitchToLogin}
+                        onKeyDown={handleKeyDownSwitchToLogin}
+                        tabIndex={0}
                     >
                         Đã có tài khoản? Đăng nhập ngay
                     </span>
                 </div>
-            </div>
+            </form>
         </>
     );
 }

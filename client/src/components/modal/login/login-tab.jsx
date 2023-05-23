@@ -35,7 +35,8 @@ function LoginTab(props) {
             dispatch(authActions.getProfile());
         } catch (e) {
             toast.error(
-                e.response?.data?.error?.message || "Đăng nhập thất bại, vui lòng thử lại sau."
+                e.response?.data?.error?.message ||
+                    "Đăng nhập thất bại, vui lòng thử lại sau."
             );
             console.error(e);
         } finally {
@@ -43,9 +44,23 @@ function LoginTab(props) {
         }
     };
 
+    const handleFormSubmit = async (e) => {
+        e.preventDefault();
+        await handleLogin();
+    };
+
+    const handleKeyDownSwitchToRegister = (e) => {
+        if (e.key === "Enter" || e.keyCode === 32) {
+            handleSwitchToRegister();
+        }
+    };
+
     return (
         <>
-            <div className="w-full h-full p-4 flex flex-col gap-4 justify-center">
+            <form
+                className="w-full h-full p-4 flex flex-col gap-4 justify-center"
+                onSubmit={handleFormSubmit}
+            >
                 <div className="font-semibold text-xl border-l-8 border-gray-800 pl-8">
                     Đăng nhập
                 </div>
@@ -68,7 +83,9 @@ function LoginTab(props) {
                 </div>
                 <button
                     className={classNames(
-                        loading ? "bg-gray-500" : "bg-gray-800 hover:bg-gray-700",
+                        loading
+                            ? "bg-gray-500"
+                            : "bg-gray-800 hover:bg-gray-700",
                         "text-white py-2 rounded focus:bg-gray-600"
                     )}
                     disabled={loading}
@@ -81,17 +98,22 @@ function LoginTab(props) {
                         <span
                             className="font-semibold cursor-pointer hover:underline"
                             onClick={handleSwitchToRegister}
+                            onKeyDown={handleKeyDownSwitchToRegister}
+                            tabIndex={0}
                         >
                             Đăng ký
                         </span>
                     </div>
                     <div className="w-1/2 text-right">
-                        <span className="font-semibold cursor-pointer hover:underline">
+                        <span
+                            className="font-semibold cursor-pointer hover:underline"
+                            tabIndex={0}
+                        >
                             Quên mật khẩu?
                         </span>
                     </div>
                 </div>
-            </div>
+            </form>
         </>
     );
 }

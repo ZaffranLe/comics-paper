@@ -5,6 +5,7 @@ import * as authActions from "../../../redux/slices/auth";
 import BookLibrary from "../../../assets/img/library.jpg";
 import LoginTab from "./login-tab";
 import RegisterTab from "./register-tab";
+import classNames from "classnames";
 
 function LoginModal(props) {
     const tabs = {
@@ -22,15 +23,23 @@ function LoginModal(props) {
         <>
             <Modal open={loginModal} dimmer onClose={onClose}>
                 <div
-                    className="grid grid-cols-1 lg:grid-cols-2 bg-white rounded-xl ring-1 ring-gray-300"
-                    style={{ minHeight: "33%", maxWidth: "50%" }}
+                    className={classNames(
+                        "flex flex-row bg-white rounded-xl ring-1 ring-gray-300",
+                        "md:min-w-2/3 w-2/3 max-w-[95%]",
+                        "items-center",
+                        "px-4",
+                        "py-2",
+                        "gap-4"
+                    )}
                 >
-                    {tabs[loginModal]}
-                    <div className="hidden lg:block p-4">
+                    <div className={classNames(`flex-1`, `w-3/6`)}>
+                        {tabs[loginModal]}
+                    </div>
+                    <div className="hidden lg:flex w-3/6 m-6">
                         <img
                             src={BookLibrary}
                             alt="Book Library"
-                            className="w-full h-full"
+                            className={classNames(` h-auto`)}
                         />
                     </div>
                 </div>
