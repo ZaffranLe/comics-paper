@@ -9,7 +9,7 @@ apiCall.interceptors.request.use(
             config.headers["Authorization"] = `Bearer ${token}`;
         }
 
-        config.baseURL = process.env.REACT_APP_ORIGIN_BACKEND;
+        config.baseURL = import.meta.env.REACT_APP_ORIGIN_BACKEND;
 
         return config;
     },
