@@ -10,6 +10,7 @@ function RegisterTab(props) {
         username: "",
         password: "",
         confirmPassword: "",
+        email: "",
     });
     const [loading, setLoading] = useState(false);
 
@@ -76,6 +77,15 @@ function RegisterTab(props) {
                         value={registerInfo.confirmPassword}
                         type="password"
                         onChange={handleChangeRegisterInfo("confirmPassword")}
+                    />
+                </div>
+                <div>
+                    <input
+                        placeholder="Email"
+                        className="input w-full"
+                        value={registerInfo.email}
+                        type="email"
+                        onChange={handleChangeRegisterInfo("email")}
                     />
                 </div>
                 <button
