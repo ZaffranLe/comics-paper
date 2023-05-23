@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+
+    "lib": ["ES2016", "dom"]
+  }
+}
