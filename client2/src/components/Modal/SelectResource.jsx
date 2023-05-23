@@ -4,6 +4,7 @@ import ModalLayout from "./ModalLayout";
 import { AiOutlineClose } from "react-icons/ai";
 import Button from "../Button/Button";
 import Input from "../Input/Input";
+import { Pagination } from "./../Pagination/Pagination";
 
 export default function SelectResource({ visible, setVisible }) {
   return (
@@ -30,14 +31,16 @@ export default function SelectResource({ visible, setVisible }) {
           {/* List */}
           <div className="overflow-y-scroll  mt-4">
             {[...Array(12)].fill(1).map((resource, index) => (
-              <div className="inline-block w-1/6 rounded-md" key={index}>
+              <button className="inline-block w-1/6 rounded-md" key={index}>
                 <img
                   className="px-2 rounded-md"
                   src="https://dummyimage.com/320x480/000/fff"
                 />
-              </div>
+              </button>
             ))}
           </div>
+
+          <Pagination currentPage={0} maxPage={5} />
         </div>
       </div>
     </ModalLayout>
