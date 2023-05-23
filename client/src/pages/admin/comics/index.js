@@ -4,9 +4,9 @@ import * as bookTagApi from "../../../utils/api/book-tags";
 import { ComicThumbnail, ConfirmModal } from "../../../components";
 import { toast } from "react-toastify";
 import { v1 as uuidv1 } from "uuid";
-import UpdateComic from "./update";
-import ContextMenu from "./context-menu";
-import ChapterList from "./chapter-list";
+import UpdateComic from "./components/update-modal";
+import ContextMenu from "./components/context-menu-modal";
+import ChapterList from "./components/chapter-management-modal";
 
 function Comics() {
     const [comics, setComics] = React.useState([]);
@@ -171,8 +171,11 @@ function Comics() {
             </button>
             <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-8 gap-8">
                 {comics.map((_comic) => (
-                    <div key={_comic.id} onClick={(e) => handleOpenContextMenu(e, _comic)}>
-                        <ComicThumbnail comic={_comic} url={`#`} />
+                    <div
+                        key={_comic.id}
+                        // onClick={(e) => handleOpenContextMenu(e, _comic)}
+                    >
+                        <ComicThumbnail comic={_comic} url={`/dashboard/comics/${_comic.id}`} />
                     </div>
                 ))}
             </div>

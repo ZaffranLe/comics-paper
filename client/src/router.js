@@ -11,6 +11,7 @@ import AdminDashboard from "./pages/admin/dashboard";
 import AdminUsers from "./pages/admin/users";
 import AdminBookTags from "./pages/admin/book-tags";
 import AdminComics from "./pages/admin/comics";
+import AdminComicDetail from "./pages/admin/comics/detail";
 // components
 import { AdminLayout, UserLayout } from "./components";
 import AdminUserDetail from "./pages/admin/users/detail";
@@ -34,7 +35,10 @@ function AppRouter() {
                         <Route path="users" element={<AdminUsers />} />
                         <Route path="users/:id" element={<AdminUserDetail />} />
                         <Route path="book-tags" element={<AdminBookTags />} />
-                        <Route path="comics" element={<AdminComics />} />
+                        <Route path="comics">
+                            <Route index element={<AdminComics />} />
+                            <Route path=":id" element={<AdminComicDetail />} />
+                        </Route>
                     </Route>
                 </Routes>
             </BrowserRouter>

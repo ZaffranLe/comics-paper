@@ -55,6 +55,8 @@ library.add(
     faEye
 );
 
+let isInit = false;
+
 function App() {
     const dispatch = useDispatch();
 
@@ -64,10 +66,13 @@ function App() {
         if (tokenValid) {
             dispatch(authActions.getProfile());
         }
+        isInit = true;
     };
 
     React.useEffect(() => {
-        fetchProfile();
+        if (!isInit) {
+            fetchProfile();
+        }
     }, []);
 
     return (

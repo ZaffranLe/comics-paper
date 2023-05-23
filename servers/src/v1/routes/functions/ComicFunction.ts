@@ -7,10 +7,8 @@ import { MiddlewareError } from "./../../errors/MiddlewareError";
 import ComicController from "../../controllers/ComicController";
 import ResourceController from "../../controllers/ResourceController";
 import ComicChapterController from "../../controllers/ComicChapterController";
-import ComicChapterBlockController from "../../controllers/ComicChapterBlockController";
 import ComicTagController from "../../controllers/ComicTagController";
 import ComicBookTagController from "../../controllers/ComicBookTagController";
-import ComicCommentController from "../../controllers/ComicCommentController";
 
 export const ComicFunction = {
     increaseComicView: async (req, res, next) => {
@@ -566,12 +564,28 @@ export const ComicFunction = {
     },
 
     getComicById: async (req, res, next) => {
-        const url: string = req.params.id;
-        const [slug, id] = url.split("&");
+        const id: number = req.params.id;
         try {
-            const comic: ComicInterface = await ComicController.getComic(id);
+            const comic: ComicInterface = await ComicController.getComicById(id);
             // not found
-            if (!comic || comic.slug !== slug) {
+            if (!comic) {
+                return next(new MiddlewareError(Locale.HttpResponseMessage.ComicNotFound, 404));
+            }
+
+            res.json({
+                comic,
+            });
+        } catch (err) {
+            return next(new MiddlewareError(err.message, 500));
+        }
+    },
+
+    getComicBySlug: async (req, res, next) => {
+        const slug: string = req.params.id;
+        try {
+            const comic: ComicInterface = await ComicController.getComicBySlug(slug);
+            // not found
+            if (!comic) {
                 return next(new MiddlewareError(Locale.HttpResponseMessage.ComicNotFound, 404));
             }
 

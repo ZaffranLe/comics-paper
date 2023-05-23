@@ -18,7 +18,7 @@ async function createComic(
     author: string,
     category: string,
     tags,
-    thumbnail?: string
+    thumbnail?: number
 ): Promise<ComicInterface> {
     const comic: ComicInterface = {
         name,
@@ -185,21 +185,29 @@ async function getAllComicTrending(query) {
  * @returns the comic.
  *
  */
-async function getComic(id: string): Promise<ComicInterface> {
-    // check parameters
-    if (!id) {
-        throw new Error("id is required");
+async function getComicById(id: number): Promise<ComicInterface> {
+    const comic = await getComicFromFields({ id });
+    return comic;
+}
+
+async function getComicBySlug(slug: string): Promise<ComicInterface> {
+    const comic = await getComicFromFields({ slug });
+    return comic;
+}
+
+async function getComicFromFields(fields: any): Promise<ComicInterface> {
+    const comic = await DatabaseBuilder(Tables.Comic).where(fields).first();
+    if (comic) {
+        const thumbnailInfo = await DatabaseBuilder(Tables.Resource)
+            .where({ id: comic.thumbnail })
+            .first();
+        const tags = await DatabaseBuilder(`${Tables.ComicBookTag} AS t1`)
+            .join(`${Tables.ComicTag} AS t2`, "t1.tagId", "t2.id")
+            .where({ "t1.comicId": comic.id })
+            .columns({ id: "t1.tagId", keyword: "t2.keyword" });
+        return { ...comic, thumbnailImg: thumbnailInfo.fileName, tags };
     }
-    // Retrieve comic
-    const comic = await DatabaseBuilder(Tables.Comic).where({ id }).first();
-    const thumbnailInfo = await DatabaseBuilder(Tables.Resource)
-        .where({ id: comic.thumbnail })
-        .first();
-    const tags = await DatabaseBuilder(`${Tables.ComicBookTag} AS t1`)
-        .join(`${Tables.ComicTag} AS t2`, "t1.tagId", "t2.id")
-        .where({ "t1.comicId": id })
-        .columns({ id: "t1.tagId", keyword: "t2.keyword" });
-    return { ...comic, thumbnailImg: thumbnailInfo?.fileName, tags };
+    return null;
 }
 
 /**
@@ -350,7 +358,8 @@ const ComicController = {
     createComic,
     getAllComics,
     getAllComicTrending,
-    getComic,
+    getComicById,
+    getComicBySlug,
     updateComic,
     deleteComic,
     updateViewComic,

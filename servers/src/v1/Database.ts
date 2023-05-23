@@ -88,14 +88,14 @@ export async function setupDatabase() {
 
     await createTable(Tables.Comic, (table) => {
         table.increments("id").primary();
-        table.string("name").notNullable();
+        table.string("name").notNullable().unique();
         table.text(`description`).notNullable();
         table.integer(`postedBy`).notNullable();
         table.string(`author`).notNullable();
         table.string(`category`).notNullable();
         table.dateTime(`createdAt`).notNullable().defaultTo(DatabaseBuilder.fn.now());
         table.dateTime(`updatedAt`).notNullable().defaultTo(DatabaseBuilder.fn.now());
-        table.string(`thumbnail`).nullable();
+        table.integer(`thumbnail`).nullable();
         table.integer(`views`).notNullable().defaultTo(0);
         table.integer(`likes`).notNullable().defaultTo(0);
         table.string(`slug`).notNullable();
