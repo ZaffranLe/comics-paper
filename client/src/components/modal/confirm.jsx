@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-import { Modal } from "../";
+import { Modal } from "..";
 import { classNames } from "../../utils/common";
 
 function Confirm({ open, onClose, onConfirm, loading, content }) {
