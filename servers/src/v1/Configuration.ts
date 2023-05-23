@@ -37,7 +37,8 @@ const Configuration = {
             Username: process.env.MYSQL_DEV_USERNAME || "root",
             Password: process.env.MYSQL_DEV_PASSWORD || "",
             Database: process.env.MYSQL_DEV_DATABASE || "",
-            EnableLogging: process.env.MYSQL_DEV_ENABLE_LOGGING === "true" || true,
+            EnableLogging:
+                process.env.MYSQL_DEV_ENABLE_LOGGING === "true" || true,
         },
     },
     /**
@@ -50,7 +51,8 @@ const Configuration = {
             Username: process.env.MYSQL_TEST_USERNAME || "root",
             Password: process.env.MYSQL_TEST_PASSWORD || "",
             Database: process.env.MYSQL_TEST_DATABASE || "comics_paper_test",
-            EnableLogging: process.env.MYSQL_TEST_ENABLE_LOGGING === "true" || false,
+            EnableLogging:
+                process.env.MYSQL_TEST_ENABLE_LOGGING === "true" || false,
         },
     },
 };
@@ -62,6 +64,9 @@ export default Configuration;
  * @param environmentName a environment name to check.
  */
 function hasConfigurationEnvironment(environmentName: string) {
+    if (environmentName === undefined) {
+        throw new Error(`environmentName is undefined`);
+    }
     // Not available
     if (Configuration[environmentName.trim()] === undefined) {
         throw new Error("Configuration environment is not available.");

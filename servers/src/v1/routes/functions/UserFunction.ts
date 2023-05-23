@@ -50,6 +50,10 @@ async function signUp(req: express.Request, res: express.Response, next: express
             return next(new MiddlewareError(Locale.HttpResponseMessage.UserAlreadyExists, 400));
         }
 
+        if (await UserController.hasUserByEmail(email)) {
+           return next(new MiddlewareError(Locale.HttpResponseMessage.EmailAlreadyExists, 400)); 
+        }
+
         // Insert user into database
         const responseUser = await UserController.createUser(
             username,

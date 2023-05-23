@@ -124,6 +124,7 @@ export const Locale = {
     InvalidPassword:
       "Invalid password. Password must be at least 8 characters long and at least one uppercase letter.",
     UserAlreadyExists: "User already exists.",
+    EmailAlreadyExists: "email already exists.",
     UserNotFound: "User not found.",
     IncorrectPassword: "Incorrect password.",
     NoTokenProvided: "No token provided in header.",
