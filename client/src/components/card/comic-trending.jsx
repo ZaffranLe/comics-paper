@@ -14,7 +14,9 @@ function ComicTrending({ comic, idx }) {
                     </div>
                     <div className="col-span-2">
                         <img
-                            src={`${process.env.REACT_APP_ORIGIN_BACKEND}/public/${comic.thumbnailImg}`}
+                            src={`${
+                                import.meta.env.VITE_ORIGIN_BACKEND
+                            }/public/${comic.thumbnailImg}`}
                             alt={comic.name}
                             className="h-24 w-full ring-1 ring-gray-800 rounded"
                         />
@@ -28,7 +30,8 @@ function ComicTrending({ comic, idx }) {
                                 icon="star"
                                 className="text-orange-400"
                             />{" "}
-                            {(Number(comic.reviewRating) || 0).toFixed(2)} - {comic.reviewCount} đánh giá
+                            {(Number(comic.reviewRating) || 0).toFixed(2)} -{" "}
+                            {comic.reviewCount} đánh giá
                         </div>
                     </div>
                 </div>

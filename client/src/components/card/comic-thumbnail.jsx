@@ -8,7 +8,9 @@ function ComicThumbnail({ comic, url, newTab = false }) {
                 <div>
                     <div
                         style={{
-                            backgroundImage: `url(${process.env.REACT_APP_ORIGIN_BACKEND}/public/${comic.thumbnailImg})`,
+                            backgroundImage: `url(${
+                                import.meta.env.VITE_ORIGIN_BACKEND
+                            }/public/${comic.thumbnailImg})`,
                             backgroundSize: "cover",
                             backgroundPositionX: "center",
                         }}

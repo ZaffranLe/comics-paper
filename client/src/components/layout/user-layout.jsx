@@ -35,7 +35,10 @@ function UserLayout() {
 
     const handleSearchComic = (e) => {
         if (e.target.value) {
-            const comicSlug = slugify(e.target.value, { lower: true, remove: /[*+~.()'"!:@]/g });
+            const comicSlug = slugify(e.target.value, {
+                lower: true,
+                remove: /[*+~.()'"!:@]/g,
+            });
             fetchComics({ slug: comicSlug, limit: 5 });
         }
     };
@@ -84,7 +87,10 @@ function UserLayout() {
                                 {pageMenuOpen ? (
                                     <FontAwesomeIcon icon="times" fixedWidth />
                                 ) : (
-                                    <FontAwesomeIcon icon="align-justify" fixedWidth />
+                                    <FontAwesomeIcon
+                                        icon="align-justify"
+                                        fixedWidth
+                                    />
                                 )}
                             </button>
                         </div>
@@ -122,7 +128,10 @@ function UserLayout() {
                                     placeholder="Tìm kiếm..."
                                     aria-placeholder="Tìm kiếm"
                                     className="hidden sm:block p-1 rounded bg-gray-700 text-white"
-                                    onChange={_.debounce(handleSearchComic, 500)}
+                                    onChange={_.debounce(
+                                        handleSearchComic,
+                                        500
+                                    )}
                                 />
                                 {comics.length > 0 && (
                                     <div className="absolute top-10 w-full rounded-lg p-2 bg-white">
@@ -146,8 +155,13 @@ function UserLayout() {
                                         type="button"
                                         className="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                                     >
-                                        <span className="sr-only">View notifications</span>
-                                        <FontAwesomeIcon icon="bell" fixedWidth />
+                                        <span className="sr-only">
+                                            View notifications
+                                        </span>
+                                        <FontAwesomeIcon
+                                            icon="bell"
+                                            fixedWidth
+                                        />
                                     </button>
                                     {/* profile dropdown */}
                                     <div className="relative">
@@ -158,9 +172,15 @@ function UserLayout() {
                                                 id="user-menu-button"
                                                 aria-expanded="false"
                                                 aria-haspopup="true"
-                                                onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+                                                onClick={() =>
+                                                    setProfileMenuOpen(
+                                                        !profileMenuOpen
+                                                    )
+                                                }
                                             >
-                                                <span className="sr-only">Open user menu</span>
+                                                <span className="sr-only">
+                                                    Open user menu
+                                                </span>
                                                 <img
                                                     className="h-8 w-8 rounded-full"
                                                     src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
@@ -185,11 +205,14 @@ function UserLayout() {
                                                 <div
                                                     className="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100"
                                                     role="menuitem"
-                                                    onClick={() => navigate("/follow")}
+                                                    onClick={() =>
+                                                        navigate("/follow")
+                                                    }
                                                 >
                                                     Truyện theo dõi
                                                 </div>
-                                                {user.role?.id === ROLE.ADMIN && (
+                                                {user.role?.id ===
+                                                    ROLE.ADMIN && (
                                                     <Link to="/dashboard">
                                                         <div
                                                             className="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100"
@@ -247,16 +270,18 @@ function UserLayout() {
                 )}
             </nav>
             <main>
-                <div id="home-banner" className="w-full shadow">
+                {/* <div id="home-banner" className="w-full shadow">
                     <img src={Banner} alt="megumi banner" className="mx-auto" />
-                </div>
+                </div> */}
                 <div className="max-w-screen-xl grid grid-rows-1 gap-16 mx-auto px-4 sm:px-6 lg:px-8 pt-8">
                     <Outlet />
                 </div>
             </main>
             <footer>
                 <div className="flex items-center bg-gray-800 text-gray-300 p-3">
-                    <span className="mx-auto">Player Zaff, 2020. All rights reserved.</span>
+                    <span className="mx-auto">
+                        Web Application Development Project 2023{" "}
+                    </span>
                 </div>
             </footer>
             <LoginModal />
