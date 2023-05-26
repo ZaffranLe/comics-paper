@@ -104,7 +104,7 @@ export async function setupDatabase() {
     await createTable(Tables.ComicChapter, (table) => {
         table.increments("id").primary();
         table.string("name").notNullable();
-        table.string("chapter").notNullable();
+        // table.string("chapter").notNullable();
         table.integer(`comicId`).notNullable();
         table.integer(`postedBy`).notNullable();
         table.dateTime(`createdAt`).notNullable().defaultTo(DatabaseBuilder.fn.now());
