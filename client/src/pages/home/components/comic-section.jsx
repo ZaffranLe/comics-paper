@@ -47,7 +47,7 @@ function ComicSection() {
                             <ComicThumbnail
                                 key={_comic.id}
                                 comic={_comic}
-                                url={`/comics/${_comic.slug}&${_comic.id}`}
+                                url={`/comics/${_comic.slug}`}
                             />
                         ))}
                     </div>

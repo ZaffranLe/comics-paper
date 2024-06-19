@@ -1,10 +1,10 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import Select from "react-select";
 import { toast } from "react-toastify";
 import { Modal } from "../../../../components";
-import { classNames } from "../../../../utils/common";
 import * as resourceApi from "../../../../utils/api/resources";
-import Select from "react-select";
+import { classNames, getImageUrl } from "../../../../utils/common";
 import { categoryOptions } from "../../../../utils/constants";
 
 function UpdateComic({ open, onClose, onSave, updateComic, tagOptions }) {
@@ -26,7 +26,9 @@ function UpdateComic({ open, onClose, onSave, updateComic, tagOptions }) {
                 (_category) => _category.value === updateComic.category
             );
             const _tags = updateComic.tags?.split(",") || [];
-            const _tagOptions = tagOptions.filter((_tag) => _tags.includes(_tag.value.toString()));
+            const _tagOptions = tagOptions.filter((_tag) =>
+                _tags.includes(_tag.value.toString())
+            );
             setComic({
                 ...comic,
                 ...updateComic,
@@ -72,14 +74,19 @@ function UpdateComic({ open, onClose, onSave, updateComic, tagOptions }) {
         } catch (e) {
             if (e.response.data) {
                 toast.error(
-                    e.response?.data?.error?.message || "Upload ảnh thất bại, vui lòng thử lại sau."
+                    e.response?.data?.error?.message ||
+                        "Upload ảnh thất bại, vui lòng thử lại sau."
                 );
             }
         }
     };
 
     const handleChangeCategory = (selectedOption) => {
-        setComic({ ...comic, category: selectedOption.value, categoryOption: selectedOption });
+        setComic({
+            ...comic,
+            category: selectedOption.value,
+            categoryOption: selectedOption,
+        });
     };
 
     const handleChangeTags = (selectedOptions) => {
@@ -101,14 +108,16 @@ function UpdateComic({ open, onClose, onSave, updateComic, tagOptions }) {
                         <label
                             htmlFor="comic-thumbnail-upload"
                             className={classNames(
-                                comic.thumbnail ? "border-gray-800" : "border-green-700",
+                                comic.thumbnail
+                                    ? "border-gray-800"
+                                    : "border-green-700",
                                 "border rounded-lg flex items-center cursor-pointer select-none",
                                 "h-[200px] overflow-hidden"
                             )}
                         >
                             {comic.thumbnail ? (
                                 <img
-                                    src={`${process.env.REACT_APP_ORIGIN_BACKEND}/public/${comic.thumbnailImg}`}
+                                    src={getImageUrl(comic.thumbnailImg)}
                                     className="w-full"
                                     alt="thumbnail"
                                 />
@@ -179,12 +188,21 @@ function UpdateComic({ open, onClose, onSave, updateComic, tagOptions }) {
                         <button
                             onClick={handleSave}
                             className={classNames(
-                                !loading && "hover:bg-indigo-400 hover:text-white",
+                                !loading &&
+                                    "hover:bg-indigo-400 hover:text-white",
                                 "ring-2 ring-indigo-400 text-indigo-400 font-semibold py-2 px-4 rounded-full mr-2"
                             )}
                             disabled={loading}
                         >
-                            {loading ? <FontAwesomeIcon icon="spinner" spin fixedWidth /> : "Lưu"}
+                            {loading ? (
+                                <FontAwesomeIcon
+                                    icon="spinner"
+                                    spin
+                                    fixedWidth
+                                />
+                            ) : (
+                                "Lưu"
+                            )}
                         </button>
                         <button
                             onClick={onClose}

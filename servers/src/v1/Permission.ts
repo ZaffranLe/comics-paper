@@ -303,6 +303,8 @@ async function setupDefaultPermissionRelationship() {
 
   // Tags
   generateRelation(PermissionGroupEnum.ADMIN, PermissionEnum.COMIC_TAG_CREATE);
+  generateRelation(PermissionGroupEnum.ADMIN, PermissionEnum.COMIC_TAG_UPDATE);
+  generateRelation(PermissionGroupEnum.ADMIN, PermissionEnum.COMIC_TAG_DELETE);
   generateRelation(
     PermissionGroupEnum.ADMIN,
     PermissionEnum.COMIC_BOOK_TAG_REF_CREATE

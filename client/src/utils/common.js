@@ -32,4 +32,8 @@ function getUserInfoFromToken(token = null) {
     }
 }
 
-export { classNames, checkTokenValid, getUserInfoFromToken };
+function getImageUrl(fileName) {
+    return `${import.meta.env.VITE_ORIGIN_BACKEND}/public/${fileName}`;
+}
+
+export { checkTokenValid, classNames, getImageUrl, getUserInfoFromToken };

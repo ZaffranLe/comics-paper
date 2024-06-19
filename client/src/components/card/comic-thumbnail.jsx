@@ -1,5 +1,5 @@
-import React from "react";
 import { Link } from "react-router-dom";
+import { getImageUrl } from "../../utils/common";
 
 function ComicThumbnail({ comic, url, newTab = false }) {
     return (
@@ -8,7 +8,9 @@ function ComicThumbnail({ comic, url, newTab = false }) {
                 <div>
                     <div
                         style={{
-                            backgroundImage: `url(${process.env.REACT_APP_ORIGIN_BACKEND}/public/${comic.thumbnailImg})`,
+                            backgroundImage: `url(${getImageUrl(
+                                comic.thumbnailImg
+                            )})`,
                             backgroundSize: "cover",
                             backgroundPositionX: "center",
                         }}

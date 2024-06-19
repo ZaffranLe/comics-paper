@@ -14,14 +14,7 @@ router.get("/user/:id", ComicFunction.getComicByUser);
 router.post(`/:id/viewed`, ComicFunction.increaseComicView);
 router.post("/:id/follow/", getAuth, ComicFunction.followComic);
 router.get("/:id/follow/", getAuth, ComicFunction.getFollowState);
-
-
-/**
- * Get a comic by id or name
- */
-router.get(`/:id`, ComicFunction.getComicById);
-router.get(`/slug/:slug`, ComicFunction.getComicById);
-
+router.get(`/view-count`, ComicFunction.countView);
 router.post(`/tags/`, getAuth, ComicFunction.createNewTag);
 router.put(`/tags/:id`, getAuth, ComicFunction.updateTag);
 router.delete(`/tags/:id`, getAuth, ComicFunction.deleteTag);
@@ -37,6 +30,9 @@ router.post(`/:id/chapters`, getAuth, ComicFunction.createChapter);
 router.put(`/:id/chapters/:chapterId`, getAuth, ComicFunction.updateChapter);
 router.delete(`/:id/chapters/:chapterId`, getAuth, ComicFunction.deleteChapter);
 router.get(`/:id/chapters/:chapterId`, ComicFunction.getChapterById);
+
+router.get(`/:id`, ComicFunction.getComicById);
+router.get(`/slug/:slug`, ComicFunction.getComicBySlug);
 
 const ComicRouter = router;
 export default ComicRouter;
