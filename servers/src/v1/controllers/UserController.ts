@@ -1,18 +1,18 @@
-import { PermissionInterface } from "./../interfaces/PermissionInterface";
-import {
-    PermissionGroupEnum,
-    PermissionGroupInterface,
-} from "./../interfaces/PermissionGroupInterface";
-import { Tables } from "./../Database";
-import DatabaseBuilder from "../utils/DatabaseBuilder";
 import {
     UserResponseInterface,
     UsersResponseInterface,
 } from "../interfaces/UserInterface";
+import DatabaseBuilder from "../utils/DatabaseBuilder";
 import PasswordUtils from "../utils/PasswordUtils";
+import { Tables } from "./../Database";
+import {
+    PermissionGroupEnum,
+    PermissionGroupInterface,
+} from "./../interfaces/PermissionGroupInterface";
+import { PermissionInterface } from "./../interfaces/PermissionInterface";
+import commentController from "./ComicCommentController";
 import comicController from "./ComicController";
 import reviewController from "./ReviewController";
-import commentController from "./ComicCommentController";
 
 /**
  *  Create a native relation between user and permission group.
@@ -127,23 +127,6 @@ async function hasUserByUUID(id: number) {
     const user = await DatabaseBuilder(Tables.User)
         .select()
         .where({ id })
-        .first();
-    return user != null;
-}
-
-/**
- * Check whether or not the email is exists.
- *
- * @param email an email for checking
- * @returns true if the email is existed, false otherwise.
- */
-async function hasUserByEmail(email: string) {
-    if (!email) {
-        throw new Error("Email cannot be undefined");
-    }
-    const user = await DatabaseBuilder(Tables.User)
-        .select()
-        .where({ email })
         .first();
     return user != null;
 }
@@ -407,5 +390,4 @@ export const UserController = {
     updateUserPassword,
     updatePermissionRole,
     getUserDetail,
-    hasUserByEmail
 };
