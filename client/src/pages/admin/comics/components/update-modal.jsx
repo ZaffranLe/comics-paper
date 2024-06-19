@@ -4,21 +4,21 @@ import Select from "react-select";
 import { toast } from "react-toastify";
 import { Modal } from "../../../../components";
 import * as resourceApi from "../../../../utils/api/resources";
-import { classNames } from "../../../../utils/common";
+import { classNames, getImageUrl } from "../../../../utils/common";
 import { categoryOptions } from "../../../../utils/constants";
 
 function UpdateComic({ open, onClose, onSave, updateComic, tagOptions }) {
-  const [comic, setComic] = React.useState({
-    thumbnail: null,
-    name: "",
-    description: "",
-    author: "",
-    tags: [],
-    tagOptions: [],
-    category: "",
-    categoryOption: null,
-  });
-  const [loading, setLoading] = React.useState(false);
+    const [comic, setComic] = React.useState({
+        thumbnail: null,
+        name: "",
+        description: "",
+        author: "",
+        tags: [],
+        tagOptions: [],
+        category: "",
+        categoryOption: null,
+    });
+    const [loading, setLoading] = React.useState(false);
 
     React.useEffect(() => {
         if (updateComic) {
@@ -26,7 +26,9 @@ function UpdateComic({ open, onClose, onSave, updateComic, tagOptions }) {
                 (_category) => _category.value === updateComic.category
             );
             const _tags = updateComic.tags?.split(",") || [];
-            const _tagOptions = tagOptions.filter((_tag) => _tags.includes(_tag.value.toString()));
+            const _tagOptions = tagOptions.filter((_tag) =>
+                _tags.includes(_tag.value.toString())
+            );
             setComic({
                 ...comic,
                 ...updateComic,
@@ -37,26 +39,26 @@ function UpdateComic({ open, onClose, onSave, updateComic, tagOptions }) {
         }
     }, [updateComic]);
 
-  const handleSave = async () => {
-    try {
-      setLoading(true);
-      await onSave(comic);
-      onClose();
-    } catch (e) {
-      toast.error(
-        e.response?.data?.error?.message ||
-          "Cập nhật truyện thất bại, vui lòng thử lại sau."
-      );
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  };
+    const handleSave = async () => {
+        try {
+            setLoading(true);
+            await onSave(comic);
+            onClose();
+        } catch (e) {
+            toast.error(
+                e.response?.data?.error?.message ||
+                    "Cập nhật truyện thất bại, vui lòng thử lại sau."
+            );
+            console.error(e);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-  const handleChangeComicInfo = (name) => (e) => {
-    const value = e.target.value;
-    setComic({ ...comic, [name]: value });
-  };
+    const handleChangeComicInfo = (name) => (e) => {
+        const value = e.target.value;
+        setComic({ ...comic, [name]: value });
+    };
 
     const handleChangeThumbnail = async (e) => {
         try {
@@ -72,23 +74,28 @@ function UpdateComic({ open, onClose, onSave, updateComic, tagOptions }) {
         } catch (e) {
             if (e.response.data) {
                 toast.error(
-                    e.response?.data?.error?.message || "Upload ảnh thất bại, vui lòng thử lại sau."
+                    e.response?.data?.error?.message ||
+                        "Upload ảnh thất bại, vui lòng thử lại sau."
                 );
             }
         }
     };
 
     const handleChangeCategory = (selectedOption) => {
-        setComic({ ...comic, category: selectedOption.value, categoryOption: selectedOption });
+        setComic({
+            ...comic,
+            category: selectedOption.value,
+            categoryOption: selectedOption,
+        });
     };
 
-  const handleChangeTags = (selectedOptions) => {
-    setComic({
-      ...comic,
-      tags: selectedOptions.map((_option) => _option.value),
-      tagOptions: selectedOptions,
-    });
-  };
+    const handleChangeTags = (selectedOptions) => {
+        setComic({
+            ...comic,
+            tags: selectedOptions.map((_option) => _option.value),
+            tagOptions: selectedOptions,
+        });
+    };
 
     return (
         <>
@@ -101,14 +108,16 @@ function UpdateComic({ open, onClose, onSave, updateComic, tagOptions }) {
                         <label
                             htmlFor="comic-thumbnail-upload"
                             className={classNames(
-                                comic.thumbnail ? "border-gray-800" : "border-green-700",
+                                comic.thumbnail
+                                    ? "border-gray-800"
+                                    : "border-green-700",
                                 "border rounded-lg flex items-center cursor-pointer select-none",
                                 "h-[200px] overflow-hidden"
                             )}
                         >
                             {comic.thumbnail ? (
                                 <img
-                                    src={`${process.env.REACT_APP_ORIGIN_BACKEND}/public/${comic.thumbnailImg}`}
+                                    src={getImageUrl(comic.thumbnailImg)}
                                     className="w-full"
                                     alt="thumbnail"
                                 />
@@ -179,12 +188,21 @@ function UpdateComic({ open, onClose, onSave, updateComic, tagOptions }) {
                         <button
                             onClick={handleSave}
                             className={classNames(
-                                !loading && "hover:bg-indigo-400 hover:text-white",
+                                !loading &&
+                                    "hover:bg-indigo-400 hover:text-white",
                                 "ring-2 ring-indigo-400 text-indigo-400 font-semibold py-2 px-4 rounded-full mr-2"
                             )}
                             disabled={loading}
                         >
-                            {loading ? <FontAwesomeIcon icon="spinner" spin fixedWidth /> : "Lưu"}
+                            {loading ? (
+                                <FontAwesomeIcon
+                                    icon="spinner"
+                                    spin
+                                    fixedWidth
+                                />
+                            ) : (
+                                "Lưu"
+                            )}
                         </button>
                         <button
                             onClick={onClose}

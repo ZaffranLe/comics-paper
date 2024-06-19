@@ -375,6 +375,14 @@ async function getUserDetail(userId: string) {
     };
 }
 
+async function hasUserByEmail(email: string) {
+    const selectedUsers = await DatabaseBuilder(Tables.User)
+        .select("*")
+        .where({ email });
+
+    return selectedUsers.length !== 0;
+}
+
 export const UserController = {
     createUserPermission,
     createUser,
@@ -390,4 +398,5 @@ export const UserController = {
     updateUserPassword,
     updatePermissionRole,
     getUserDetail,
+    hasUserByEmail,
 };

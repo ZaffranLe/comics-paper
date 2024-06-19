@@ -33,7 +33,7 @@ function getUserInfoFromToken(token = null) {
 }
 
 function getImageUrl(fileName) {
-    return `${process.env.REACT_APP_ORIGIN_BACKEND}/public/${fileName}`;
+    return `${import.meta.env.VITE_ORIGIN_BACKEND}/public/${fileName}`;
 }
 
-export { classNames, checkTokenValid, getUserInfoFromToken, getImageUrl };
+export { checkTokenValid, classNames, getImageUrl, getUserInfoFromToken };
