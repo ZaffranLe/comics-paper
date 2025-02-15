@@ -1,6 +1,6 @@
-import express from "express";
-import { getAuth } from "../middlewares/AuthMiddleware";
-import CommentFunction from "./functions/CommentFunction";
+import express from 'express';
+import { getAuth } from '../middlewares/AuthMiddleware';
+import CommentFunction from './functions/CommentFunction';
 const router = express.Router();
 
 /**
@@ -24,7 +24,7 @@ router.put(`/comment/:commentId`, getAuth, CommentFunction.updateComment);
  *
  */
 router.delete(`/comment/:commentId`, getAuth, CommentFunction.deleteComment);
-router.get("/user/:userId", CommentFunction.getAllCommentsByUserId);
+router.get('/user/:userId', CommentFunction.getAllCommentsByUserId);
 /**
  * Exports this router
  */

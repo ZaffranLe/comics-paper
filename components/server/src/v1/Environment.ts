@@ -3,7 +3,7 @@
  * @returns true whether the application is running on development environment.
  */
 export function isDevelopmentMode(): boolean {
-  return process.env.NODE_ENV === "development";
+  return process.env.NODE_ENV === 'development';
 }
 
 /**
@@ -11,5 +11,5 @@ export function isDevelopmentMode(): boolean {
  * @returns true whether the application is running on test environment.
  */
 export function isTestMode(): boolean {
-  return process.env.NODE_ENV === "test";
+  return process.env.NODE_ENV === 'test';
 }

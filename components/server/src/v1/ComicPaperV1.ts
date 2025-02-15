@@ -1,19 +1,19 @@
-import chalk from "chalk";
-import { MainApplication } from "./MainApplication";
-import express from "express";
-import bodyParser from "body-parser";
-import morgan from "morgan";
-import { ErrorHandler } from "./middlewares/ErrorHandler";
-import cors from "cors"
+import chalk from 'chalk';
+import { MainApplication } from './MainApplication';
+import express from 'express';
+import bodyParser from 'body-parser';
+import morgan from 'morgan';
+import { ErrorHandler } from './middlewares/ErrorHandler';
+import cors from 'cors';
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.text());
-app.use(cors())
+app.use(cors());
 
 // morgan
-app.use(morgan("dev"));
+app.use(morgan('dev'));
 
 MainApplication.init(app)
   .then(() => {

@@ -1,15 +1,15 @@
-import { Tables } from "../Database";
-import { PermissionGroupInterface } from "../interfaces/PermissionGroupInterface";
-import DatabaseBuilder from "../utils/DatabaseBuilder";
+import { Tables } from '../Database';
+import { PermissionGroupInterface } from '../interfaces/PermissionGroupInterface';
+import DatabaseBuilder from '../utils/DatabaseBuilder';
 
 /**
  * Retrieves all permission groups from the database.
  * @returns  all permission groups
  */
 async function getAllPermissionGroups() {
-    return DatabaseBuilder.select().from<PermissionGroupInterface>(
-        Tables.PermissionGroup
-    );
+  return DatabaseBuilder.select().from<PermissionGroupInterface>(
+    Tables.PermissionGroup,
+  );
 }
 
 /**
@@ -18,41 +18,41 @@ async function getAllPermissionGroups() {
  * @returns a permission group object
  */
 async function hasPermissionGroup(id: number) {
-    // Not found a name
-    if (id === undefined) {
-        throw new Error("id not found");
-    }
+  // Not found a name
+  if (id === undefined) {
+    throw new Error('id not found');
+  }
 
-    // Check permission group with name
-    const permissionGroup = await DatabaseBuilder(Tables.PermissionGroup)
-        .where({ id })
-        .first();
+  // Check permission group with name
+  const permissionGroup = await DatabaseBuilder(Tables.PermissionGroup)
+    .where({ id })
+    .first();
 
-    // Not found permission group
-    if (permissionGroup === undefined) {
-        return false;
-    }
+  // Not found permission group
+  if (permissionGroup === undefined) {
+    return false;
+  }
 
-    return true;
+  return true;
 }
 
 async function hasPermissionGroupByName(name: string) {
-    // Not found a name
-    if (name === undefined) {
-        throw new Error("name not found");
-    }
+  // Not found a name
+  if (name === undefined) {
+    throw new Error('name not found');
+  }
 
-    // Check permission group with name
-    const permissionGroup = await DatabaseBuilder(Tables.PermissionGroup)
-        .where({ name })
-        .first();
+  // Check permission group with name
+  const permissionGroup = await DatabaseBuilder(Tables.PermissionGroup)
+    .where({ name })
+    .first();
 
-    // Not found permission group
-    if (permissionGroup === undefined) {
-        return false;
-    }
+  // Not found permission group
+  if (permissionGroup === undefined) {
+    return false;
+  }
 
-    return true;
+  return true;
 }
 
 /**
@@ -62,24 +62,24 @@ async function hasPermissionGroupByName(name: string) {
  * @param description a description of the permission group
  */
 async function createPermissionGroup(
-    id: number,
-    name: string,
-    description: string
+  id: number,
+  name: string,
+  description: string,
 ) {
-    // Not found a name
-    if (id === undefined || name === undefined || description === undefined) {
-        throw new Error("id, name or description not found");
-    }
+  // Not found a name
+  if (id === undefined || name === undefined || description === undefined) {
+    throw new Error('id, name or description not found');
+  }
 
-    // Create a permission group with name
-    const responseId = await DatabaseBuilder(Tables.PermissionGroup).insert({
-        id,
-        name,
-        description,
-    });
+  // Create a permission group with name
+  const responseId = await DatabaseBuilder(Tables.PermissionGroup).insert({
+    id,
+    name,
+    description,
+  });
 
-    console.log();
-    return { id: responseId[0], name, description };
+  console.log();
+  return { id: responseId[0], name, description };
 }
 
 /**
@@ -87,25 +87,25 @@ async function createPermissionGroup(
  * @param permissionGroupId a permission group id
  */
 async function updatePermissionGroup(
-    permissionGroupId: number,
-    name: string,
-    description: string
+  permissionGroupId: number,
+  name: string,
+  description: string,
 ) {
-    // Check field
-    if (
-        permissionGroupId === undefined ||
-        name === undefined ||
-        description === undefined
-    ) {
-        throw new Error("id, name or description not found");
-    }
+  // Check field
+  if (
+    permissionGroupId === undefined ||
+    name === undefined ||
+    description === undefined
+  ) {
+    throw new Error('id, name or description not found');
+  }
 
-    return DatabaseBuilder(Tables.PermissionGroup)
-        .update({
-            name,
-            description,
-        })
-        .where({ id: permissionGroupId });
+  return DatabaseBuilder(Tables.PermissionGroup)
+    .update({
+      name,
+      description,
+    })
+    .where({ id: permissionGroupId });
 }
 
 /**
@@ -115,27 +115,23 @@ async function updatePermissionGroup(
  * @returns all permissions by group id
  */
 async function getPermissionsByGroup(id: number) {
-    return DatabaseBuilder()
-        .select({
-            PermissionName: "p.name",
-            PermissionId: "p.id",
-            PermissionDescription: "p.description",
-        })
-        .from({ pr: Tables.PermissionRelationship })
-        .innerJoin(
-            { pg: Tables.PermissionGroup },
-            "pg.id",
-            "pr.permissionGroup"
-        )
-        .innerJoin({ p: Tables.Permission }, "p.id", "pr.permissionId")
-        .where({ "pr.permissionGroup": id });
+  return DatabaseBuilder()
+    .select({
+      PermissionName: 'p.name',
+      PermissionId: 'p.id',
+      PermissionDescription: 'p.description',
+    })
+    .from({ pr: Tables.PermissionRelationship })
+    .innerJoin({ pg: Tables.PermissionGroup }, 'pg.id', 'pr.permissionGroup')
+    .innerJoin({ p: Tables.Permission }, 'p.id', 'pr.permissionId')
+    .where({ 'pr.permissionGroup': id });
 }
 
 export const PermissionGroupController = {
-    createPermissionGroup,
-    hasPermissionGroup,
-    getAllPermissionGroups,
-    getPermissionsByGroup,
-    updatePermissionGroup,
-    hasPermissionGroupByName,
+  createPermissionGroup,
+  hasPermissionGroup,
+  getAllPermissionGroups,
+  getPermissionsByGroup,
+  updatePermissionGroup,
+  hasPermissionGroupByName,
 };

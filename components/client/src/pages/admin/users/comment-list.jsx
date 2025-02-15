@@ -1,6 +1,6 @@
-import React from "react";
-import moment from "moment";
-import { Link } from "react-router-dom";
+import React from 'react';
+import moment from 'moment';
+import { Link } from 'react-router-dom';
 
 function CommentList({ comments = [] }) {
   return (
@@ -15,16 +15,16 @@ function CommentList({ comments = [] }) {
                   {_comment.chapter.comic.name}
                 </span>
               </Link>
-              {" - "}
+              {' - '}
               <Link
                 to={`${toComicUrl}/chapter/${_comment.chapter.name}&${_comment.chapter.id}`}
                 target="_blank"
               >
                 <span className="font-semibold">{_comment.chapter.name}</span>
               </Link>
-              {" - "}
+              {' - '}
               <span>
-                {moment(_comment.createdAt).format("HH:mm DD/MM/YYYY")}
+                {moment(_comment.createdAt).format('HH:mm DD/MM/YYYY')}
               </span>
             </div>
             <div>

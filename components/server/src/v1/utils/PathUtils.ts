@@ -1,4 +1,4 @@
-import * as path from "path";
+import * as path from 'path';
 /**
  * Retrieves the full path contains host and suffix which in parameter.
  *

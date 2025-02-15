@@ -4,7 +4,7 @@ import { getToken, hasToken } from "../utils/TokenManager";
 
 if (!process.env.HTTP_SERVER_API) {
   console.warn(
-    "The application cannot determine process.env.HTTP_SERVE_API and now using the default url."
+    "The application cannot determine process.env.HTTP_SERVE_API and now using the default url.",
   );
 }
 
@@ -28,7 +28,7 @@ AxiosInstance.interceptors.request.use(
   },
   function error(error) {
     return Promise.reject(error);
-  }
+  },
 );
 
 /**
@@ -51,7 +51,7 @@ AxiosInstance.interceptors.response.use(
       console.groupEnd();
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export default AxiosInstance;

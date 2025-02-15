@@ -20,19 +20,19 @@ function Register() {
   const [username, setUsername, isUsernameValid, usernameInvalidReason] =
     useInputValue(
       (x) => x.length > 4,
-      "The username length must greater than 4"
+      "The username length must greater than 4",
     );
 
   const [password, setPassword, isPasswordValid, passwordInvalidReason] =
     useInputValue(
       (password) =>
         password.length >= 8 && new RegExp(/([A-Z])+/).test(password),
-      `Password length must greater than 8 and contains one-uppercase letter`
+      `Password length must greater than 8 and contains one-uppercase letter`,
     );
 
   const [email, setEmail, isEmailValid, emailInvalidReason] = useInputValue(
     (email) => new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/).test(email),
-    "The email is invalid format"
+    "The email is invalid format",
   );
 
   const handleOnSubmit = (e) => {

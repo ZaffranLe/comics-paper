@@ -20,7 +20,7 @@ export function useInputValue(predicate, cause) {
       console.warn(cause);
     }
     setDisabled(
-      value !== "" && (predicate !== undefined ? predicate(value) : true)
+      value !== "" && (predicate !== undefined ? predicate(value) : true),
     );
   }, [value]);
 

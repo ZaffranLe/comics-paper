@@ -1,20 +1,20 @@
-import React, { useEffect } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import { Loader, NotFound } from "../../../components";
-import * as comicApi from "../../../utils/api/comics";
-import Select from "react-select";
-import { chapterViewTypes } from "../../../utils/constants";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { classNames } from "../../../utils/common";
-import moment from "moment";
-import { useSelector } from "react-redux";
-import { v1 } from "uuid";
+import React, { useEffect } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { Loader, NotFound } from '../../../components';
+import * as comicApi from '../../../utils/api/comics';
+import Select from 'react-select';
+import { chapterViewTypes } from '../../../utils/constants';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { classNames } from '../../../utils/common';
+import moment from 'moment';
+import { useSelector } from 'react-redux';
+import { v1 } from 'uuid';
 
 function ComicChapter() {
   const COLOR_MODE = {
-    DARK: "dark",
-    LIGHT: "light",
+    DARK: 'dark',
+    LIGHT: 'light',
   };
   const MIN_FONT_SIZE = 12;
   const MAX_FONT_SIZE = 24;
@@ -23,7 +23,7 @@ function ComicChapter() {
   const [comic, setComic] = React.useState(null);
   const [chapter, setChapter] = React.useState(null);
   const [comments, setComments] = React.useState([]);
-  const [commentContent, setCommentContent] = React.useState("");
+  const [commentContent, setCommentContent] = React.useState('');
   const [chapterOptions, setChapterOptions] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const [fontSize, setFontSize] = React.useState(DEFAULT_FONT_SIZE);
@@ -54,7 +54,7 @@ function ComicChapter() {
 
   useEffect(() => {
     const [chapterSlug, chapterId] =
-      params && params.chapterUrl && params.chapterUrl.split("&");
+      params && params.chapterUrl && params.chapterUrl.split('&');
     if (comic) {
       fetchChapter(comic.id, chapterId);
     }
@@ -81,14 +81,14 @@ function ComicChapter() {
         label: _chapter.name,
         value: `${_chapter.name}&${_chapter.id}`,
       }));
-      console.log("_comic = ", _comic, "chapterOptions", _chapterOptions);
+      console.log('_comic = ', _comic, 'chapterOptions', _chapterOptions);
       setChapterOptions(_chapterOptions);
       setComic(_comic);
       increaseComicView(_comic.id);
     } catch (e) {
       toast.error(
         e.response?.data?.error?.message ||
-          "Lấy thông tin truyện thất bại! Vui lòng thử lại sau."
+          'Lấy thông tin truyện thất bại! Vui lòng thử lại sau.',
       );
       console.error(e);
     }
@@ -96,7 +96,7 @@ function ComicChapter() {
 
   const fetchChapter = async (comicId, chapterId) => {
     console.info(
-      `Trying to fetch the CHAPTER with comicId=${comicId}, and chapterId=${chapterId}`
+      `Trying to fetch the CHAPTER with comicId=${comicId}, and chapterId=${chapterId}`,
     );
     try {
       setLoading(true);
@@ -112,7 +112,7 @@ function ComicChapter() {
     } catch (e) {
       toast.error(
         e.response?.data?.error?.message ||
-          "Lấy thông tin chương truyện thất bại! Vui lòng thử lại sau."
+          'Lấy thông tin chương truyện thất bại! Vui lòng thử lại sau.',
       );
       console.error(e);
     } finally {
@@ -128,7 +128,7 @@ function ComicChapter() {
     } catch (e) {
       toast.error(
         e.response?.data?.error?.message ||
-          "Lấy thông tin chương truyện thất bại! Vui lòng thử lại sau."
+          'Lấy thông tin chương truyện thất bại! Vui lòng thử lại sau.',
       );
       console.error(e);
     }
@@ -170,11 +170,11 @@ function ComicChapter() {
         },
         ...comments,
       ]);
-      setCommentContent("");
+      setCommentContent('');
     } catch (e) {
       toast.error(
         e.response?.data?.error?.message ||
-          "Bình luận thất bại! Vui lòng thử lại sau."
+          'Bình luận thất bại! Vui lòng thử lại sau.',
       );
       console.error(e);
     }
@@ -214,17 +214,17 @@ function ComicChapter() {
                 <>
                   <div
                     className={classNames(
-                      "divide-y p-4 rounded-xl",
-                      colorMode === COLOR_MODE.DARK && "bg-gray-800 text-white"
+                      'divide-y p-4 rounded-xl',
+                      colorMode === COLOR_MODE.DARK && 'bg-gray-800 text-white',
                     )}
                     style={{ fontSize }}
                   >
                     <div className="flex gap-2 pb-4">
                       <div
                         className={classNames(
-                          "cursor-pointer flex items-center border-2 border-gray-800 px-2 h-10 rounded-lg text-sm font-bold",
+                          'cursor-pointer flex items-center border-2 border-gray-800 px-2 h-10 rounded-lg text-sm font-bold',
                           colorMode === COLOR_MODE.DARK &&
-                            "border-2 border-white"
+                            'border-2 border-white',
                         )}
                         onClick={decreaseFontSize}
                       >
@@ -233,9 +233,9 @@ function ComicChapter() {
                       </div>
                       <div
                         className={classNames(
-                          "cursor-pointer flex items-center border-2 border-gray-800 px-2 h-10 rounded-lg text-2xl font-bold",
+                          'cursor-pointer flex items-center border-2 border-gray-800 px-2 h-10 rounded-lg text-2xl font-bold',
                           colorMode === COLOR_MODE.DARK &&
-                            "border-2 border-white"
+                            'border-2 border-white',
                         )}
                         onClick={increaseFontSize}
                       >
@@ -244,13 +244,13 @@ function ComicChapter() {
                       <div
                         onClick={switchColorMode}
                         className={classNames(
-                          "text-xl cursor-pointer flex items-center border-2 border-gray-800 px-2 h-10 rounded-lg",
+                          'text-xl cursor-pointer flex items-center border-2 border-gray-800 px-2 h-10 rounded-lg',
                           colorMode === COLOR_MODE.DARK &&
-                            "border-2 border-white"
+                            'border-2 border-white',
                         )}
                       >
                         <FontAwesomeIcon
-                          icon={colorMode === COLOR_MODE.DARK ? "moon" : "sun"}
+                          icon={colorMode === COLOR_MODE.DARK ? 'moon' : 'sun'}
                           fixedWidth
                         />
                       </div>
@@ -296,10 +296,10 @@ function ComicChapter() {
                         <span className="font-semibold">
                           {_comment.author.nickname || _comment.author.username}
                         </span>
-                        {" - "}
+                        {' - '}
                         <span>
                           {moment(_comment.createdAt).format(
-                            "HH:mm DD/MM/YYYY"
+                            'HH:mm DD/MM/YYYY',
                           )}
                         </span>
                       </div>
@@ -334,7 +334,7 @@ function NavigateSection({ comic, chapter, chapterOptions }) {
 
   const getIndexOfChapter = () => {
     const _indexOfChapter = comic.chapters.findIndex(
-      (_chapter) => _chapter.id === chapter.id
+      (_chapter) => _chapter.id === chapter.id,
     );
     return _indexOfChapter;
   };
@@ -344,7 +344,7 @@ function NavigateSection({ comic, chapter, chapterOptions }) {
     const _newChapter = comic.chapters[_indexOfChapter + numberOfIndex];
 
     navigate(
-      `../comics/${comic.slug}/chapter/${_newChapter.name}&${_newChapter.id}`
+      `../comics/${comic.slug}/chapter/${_newChapter.name}&${_newChapter.id}`,
     );
   };
 
@@ -354,18 +354,18 @@ function NavigateSection({ comic, chapter, chapterOptions }) {
       <div className="text-sm my-4">
         <Link className="font-semibold" to="/">
           Trang chủ
-        </Link>{" "}
-        /{" "}
+        </Link>{' '}
+        /{' '}
         <Link className="font-semibold" to="/comics">
           Danh sách truyện
-        </Link>{" "}
-        /{" "}
+        </Link>{' '}
+        /{' '}
         <Link
           className="font-semibold"
           to={`/comics/${comic.slug}&${comic.id}`}
         >
           {comic.name}
-        </Link>{" "}
+        </Link>{' '}
         / {chapter.name}
       </div>
       <div className="my-4 flex items-center">

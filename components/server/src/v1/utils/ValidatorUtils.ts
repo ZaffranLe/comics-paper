@@ -1,4 +1,4 @@
-import validator from "validator";
+import validator from 'validator';
 /**
  * Check whether the given value is a valid nickname.
  * Nickname must be a string with maximum length
@@ -14,7 +14,7 @@ export function isValidNickname(str: string): boolean {
 
   // Check whether the name must be alphanumeric
   //  and also ignore the "_" and dot "."
-  if (!validator.isAlphanumeric(str, "en-US", { ignore: "_." })) {
+  if (!validator.isAlphanumeric(str, 'en-US', { ignore: '_.' })) {
     return false;
   }
 
@@ -58,7 +58,7 @@ export function isValidPassword(str: string): boolean {
   // Check at least 1 uppercase
   let currentUppercase = -1;
   for (let i = 0; i < str.length; i++) {
-    if (str[i] >= "A" && str[i] <= "Z") {
+    if (str[i] >= 'A' && str[i] <= 'Z') {
       currentUppercase = i;
       break;
     }

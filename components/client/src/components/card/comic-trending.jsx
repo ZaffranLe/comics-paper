@@ -1,7 +1,7 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
-import { Link } from "react-router-dom";
-import { getImageUrl } from "../../utils/common";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { getImageUrl } from '../../utils/common';
 
 function ComicTrending({ comic, idx }) {
   return (
@@ -23,8 +23,8 @@ function ComicTrending({ comic, idx }) {
           <div className="col-span-5">
             <div className="font-bold group-hover:underline">{comic.name}</div>
             <div>
-              <FontAwesomeIcon icon="star" className="text-orange-400" />{" "}
-              {(Number(comic.reviewRating) || 0).toFixed(2)} -{" "}
+              <FontAwesomeIcon icon="star" className="text-orange-400" />{' '}
+              {(Number(comic.reviewRating) || 0).toFixed(2)} -{' '}
               {comic.reviewCount} đánh giá
             </div>
           </div>

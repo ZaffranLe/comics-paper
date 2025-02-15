@@ -23,7 +23,10 @@ function ComicDetail() {
       setIsLoading(true);
       const comicResp = await comicApi.getComicById(id);
       const comic = comicResp.data.comic;
-      const apiList = [comicApi.getAllComicChapters(id), comicApi.getReviewsByComic(id)];
+      const apiList = [
+        comicApi.getAllComicChapters(id),
+        comicApi.getReviewsByComic(id),
+      ];
       const resps = await Promise.all(apiList);
       comic.chapters = resps[0].data;
       comic.reviews = resps[1].data;
@@ -67,45 +70,54 @@ function ComicDetail() {
 
   return (
     <>
-      <div className='flex gap-x-8'>
+      <div className="flex gap-x-8">
         <div>
-          <img className='h-100 w-75' src={getImageUrl(comic.thumbnailImg)} alt={comic?.name} />
+          <img
+            className="h-100 w-75"
+            src={getImageUrl(comic.thumbnailImg)}
+            alt={comic?.name}
+          />
         </div>
-        <div className='flex-grow'>
-          <h1 className='text-2xl font-bold'>{comic.name}</h1>
-          <div className='text-2xl'>
+        <div className="flex-grow">
+          <h1 className="text-2xl font-bold">{comic.name}</h1>
+          <div className="text-2xl">
             {ratingIcons.map((_icon, _idx) => (
-              <FontAwesomeIcon className='text-yellow-400' icon={_icon} key={_idx} />
+              <FontAwesomeIcon
+                className="text-yellow-400"
+                icon={_icon}
+                key={_idx}
+              />
             ))}{' '}
             {avgRating} - {comic.views || 0}{' '}
-            <FontAwesomeIcon className='text-blue-500' icon='eye' />
+            <FontAwesomeIcon className="text-blue-500" icon="eye" />
           </div>
           <div>
-            <table className='w-full'>
+            <table className="w-full">
               <thead>
-                <th className='w-30'></th>
+                <th className="w-30"></th>
                 <th></th>
               </thead>
               <tbody>
                 <tr>
-                  <td className='font-bold'>Đánh giá</td>
+                  <td className="font-bold">Đánh giá</td>
                   <td>
-                    Trung bình {avgRating}/5 trên tổng số {comic.reviews.length} đánh giá
+                    Trung bình {avgRating}/5 trên tổng số {comic.reviews.length}{' '}
+                    đánh giá
                   </td>
                 </tr>
                 <tr>
-                  <td className='font-bold'>Tác giả</td>
+                  <td className="font-bold">Tác giả</td>
                   <td>{comic.author}</td>
                 </tr>
                 <tr>
-                  <td className='font-bold'>Danh mục</td>
+                  <td className="font-bold">Danh mục</td>
                   <td>{comic.category}</td>
                 </tr>
                 <tr>
-                  <td className='font-bold'>Thể loại</td>
+                  <td className="font-bold">Thể loại</td>
                   <td>
                     {comic.tags.map((_tag) => (
-                      <span key={_tag.id} className='mx-2 first:ml-0 last:mr-0'>
+                      <span key={_tag.id} className="mx-2 first:ml-0 last:mr-0">
                         {_tag.keyword}
                       </span>
                     ))}
@@ -113,8 +125,8 @@ function ComicDetail() {
                 </tr>
               </tbody>
             </table>
-            <h2 className='text-xl font-bold'>Tóm tắt</h2>
-            <p className='h-37.5 w-3/4 overflow-auto'>{comic.description}</p>
+            <h2 className="text-xl font-bold">Tóm tắt</h2>
+            <p className="h-37.5 w-3/4 overflow-auto">{comic.description}</p>
           </div>
         </div>
       </div>

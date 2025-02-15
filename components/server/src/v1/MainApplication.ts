@@ -1,14 +1,14 @@
-import * as express from "express";
-import { setupDatabase } from "./Database";
-import { setupRoutes } from "./Router";
+import * as express from 'express';
+import { setupDatabase } from './Database';
+import { setupRoutes } from './Router';
 import {
   setupDefaultPermissionRelationship,
   setupPermission,
   setupPermissionGroup,
-} from "./Permission";
+} from './Permission';
 
 async function init(app: express.Application) {
-  console.log("v1: Initializing application...");
+  console.log('v1: Initializing application...');
 
   // Set up database
   await setupDatabase();

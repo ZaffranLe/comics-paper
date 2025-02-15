@@ -4,23 +4,24 @@ Organizing code in a well-structured and readable manner reduces development tim
 
 **Any new suggestion of bad practice can be put into here**.
 
-Here’s a completed version of your documentation with more clarity and structure:  
-
+Here’s a completed version of your documentation with more clarity and structure:
 
 ## React Import Related Path
 
 In a React project, code should not use relative paths for imports. Instead, it is recommended to register TypeScript path aliases to ensure cleaner and more maintainable imports.
 
 ### Incorrect (Relative Path Import)
+
 ```tsx
-import Button from "../../components/Button";
-import Header from "../../../layout/Header";
+import Button from '../../components/Button';
+import Header from '../../../layout/Header';
 ```
 
 ### Correct (Using TypeScript Alias)
+
 ```tsx
-import Button from "@/components/Button";
-import Header from "@/layout/Header";
+import Button from '@/components/Button';
+import Header from '@/layout/Header';
 ```
 
 ### Setting Up TypeScript Aliases
@@ -28,7 +29,7 @@ import Header from "@/layout/Header";
 To configure path aliases in a React project using TypeScript, follow these steps:
 
 1. Open the `tsconfig.json` file and add the following configuration under `compilerOptions`:
-   
+
    ```json
    {
      "compilerOptions": {
@@ -44,6 +45,7 @@ To configure path aliases in a React project using TypeScript, follow these step
 2. Update your `vite.config.ts` (for Vite) or `webpack.config.js` (for Webpack) to recognize the aliases:
 
    - **For Vite (`vite.config.ts`)**:
+
      ```ts
      import { defineConfig } from 'vite';
      import react from '@vitejs/plugin-react';
@@ -60,6 +62,7 @@ To configure path aliases in a React project using TypeScript, follow these step
      ```
 
    - **For Webpack (`webpack.config.js`)**:
+
      ```js
      const path = require('path');
 
@@ -75,6 +78,7 @@ To configure path aliases in a React project using TypeScript, follow these step
 3. Restart the development server for changes to take effect.
 
 ### Project Structure Example
+
 ```
 |- react-folder
   |-- src

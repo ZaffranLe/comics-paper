@@ -1,10 +1,10 @@
-import { PermissionRelationshipController } from "./controllers/PermissionRelationshipController";
-import { PermissionController } from "./controllers/PermissionController";
-import { Locale } from "./Locale";
-import { Logger } from "./utils/Logger";
-import { PermissionGroupController } from "./controllers/PermissionGroupController";
-import { PermissionGroupEnum } from "./interfaces/PermissionGroupInterface";
-import { PermissionEnum } from "./interfaces/PermissionInterface";
+import { PermissionRelationshipController } from './controllers/PermissionRelationshipController';
+import { PermissionController } from './controllers/PermissionController';
+import { Locale } from './Locale';
+import { Logger } from './utils/Logger';
+import { PermissionGroupController } from './controllers/PermissionGroupController';
+import { PermissionGroupEnum } from './interfaces/PermissionGroupInterface';
+import { PermissionEnum } from './interfaces/PermissionInterface';
 
 /**
  * Generate a permission group whether not existed.
@@ -12,14 +12,14 @@ import { PermissionEnum } from "./interfaces/PermissionInterface";
 async function generatePermissionGroup(
   id: number,
   name: string,
-  description: string
+  description: string,
 ) {
   if (!(await PermissionGroupController.hasPermissionGroup(id))) {
     Logger.info(`Generating permission group ${id} (${name})...`);
     await PermissionGroupController.createPermissionGroup(
       id,
       name,
-      description
+      description,
     );
   }
 }
@@ -30,7 +30,7 @@ async function generatePermissionGroup(
 async function generatePermission(
   id: number,
   name: string,
-  description: string
+  description: string,
 ) {
   if (!(await PermissionController.hasPermission(id))) {
     Logger.info(`Generating permission ${id} (${name})...`);
@@ -42,13 +42,13 @@ async function generateRelation(permissionGroup: number, permissionId: number) {
   if (
     !(await PermissionRelationshipController.hasRelation(
       permissionId,
-      permissionGroup
+      permissionGroup,
     ))
   ) {
     Logger.info(`Generating relation ${permissionId} (${permissionGroup})...`);
     await PermissionRelationshipController.addRelation(
       permissionId,
-      permissionGroup
+      permissionGroup,
     );
   }
 }
@@ -63,21 +63,21 @@ async function setupPermissionGroup() {
   generatePermissionGroup(
     PermissionGroupEnum.ADMIN,
     Locale.PermissionGroup.Admin.Name,
-    Locale.PermissionGroup.Admin.Description
+    Locale.PermissionGroup.Admin.Description,
   );
 
   // User
   generatePermissionGroup(
     PermissionGroupEnum.USER,
     Locale.PermissionGroup.User.Name,
-    Locale.PermissionGroup.User.Description
+    Locale.PermissionGroup.User.Description,
   );
 
   // Mod
   generatePermissionGroup(
     PermissionGroupEnum.MOD,
     Locale.PermissionGroup.Mod.Name,
-    Locale.PermissionGroup.Mod.Description
+    Locale.PermissionGroup.Mod.Description,
   );
 
   // Print all
@@ -99,145 +99,145 @@ async function setupPermission() {
   generatePermission(
     PermissionEnum.ADMIN_CREATE_USER,
     Locale.Permission.AdminCreateUser.Name,
-    Locale.Permission.AdminCreateUser.Description
+    Locale.Permission.AdminCreateUser.Description,
   );
 
   // Delete user permission
   generatePermission(
     PermissionEnum.ADMIN_DELETE_USER,
     Locale.Permission.AdminDeleteUser.Name,
-    Locale.Permission.AdminDeleteUser.Description
+    Locale.Permission.AdminDeleteUser.Description,
   );
 
   // Update user permission
   generatePermission(
     PermissionEnum.ADMIN_UPDATE_USER,
     Locale.Permission.AdminUpdateUser.Name,
-    Locale.Permission.AdminUpdateUser.Description
+    Locale.Permission.AdminUpdateUser.Description,
   );
 
   // Create permission group permission
   generatePermission(
     PermissionEnum.ADMIN_CREATE_PERMISSION_GROUP,
     Locale.Permission.AdminCreatePermissionGroup.Name,
-    Locale.Permission.AdminCreatePermissionGroup.Description
+    Locale.Permission.AdminCreatePermissionGroup.Description,
   );
 
   // Delete permission group permission
   generatePermission(
     PermissionEnum.ADMIN_DELETE_PERMISSION_GROUP,
     Locale.Permission.AdminDeletePermissionGroup.Name,
-    Locale.Permission.AdminDeletePermissionGroup.Description
+    Locale.Permission.AdminDeletePermissionGroup.Description,
   );
 
   // Update permission group permission
   generatePermission(
     PermissionEnum.ADMIN_UPDATE_PERMISSION_GROUP,
     Locale.Permission.AdminUpdatePermissionGroup.Name,
-    Locale.Permission.AdminUpdatePermissionGroup.Description
+    Locale.Permission.AdminUpdatePermissionGroup.Description,
   );
 
   // Users permissions
   generatePermission(
     PermissionEnum.USER_ROLE_CHANGE,
     Locale.Permission.UserRoleChange.Name,
-    Locale.Permission.UserRoleChange.Description
+    Locale.Permission.UserRoleChange.Description,
   );
 
   generatePermission(
     PermissionEnum.USER_UPDATE_PROFILE,
     Locale.Permission.UserUpdateProfile.Name,
-    Locale.Permission.UserUpdateProfile.Description
+    Locale.Permission.UserUpdateProfile.Description,
   );
 
   // Resources
   generatePermission(
     PermissionEnum.RESOURCE_CREATE,
     Locale.Permission.ResourceCreate.Name,
-    Locale.Permission.ResourceCreate.Description
+    Locale.Permission.ResourceCreate.Description,
   );
 
   generatePermission(
     PermissionEnum.RESOURCE_ACCESS_ALL,
     Locale.Permission.ResourceAccessAll.Name,
-    Locale.Permission.ResourceAccessAll.Description
+    Locale.Permission.ResourceAccessAll.Description,
   );
 
   generatePermission(
     PermissionEnum.RESOURCE_UPDATE,
     Locale.Permission.ResourceUpdate.Name,
-    Locale.Permission.ResourceUpdate.Description
+    Locale.Permission.ResourceUpdate.Description,
   );
 
   generatePermission(
     PermissionEnum.RESOURCE_DELETE,
     Locale.Permission.ResourceDelete.Name,
-    Locale.Permission.ResourceDelete.Description
+    Locale.Permission.ResourceDelete.Description,
   );
 
   generatePermission(
     PermissionEnum.COMIC_CREATE,
     Locale.Permission.ComicCreate.Name,
-    Locale.Permission.ComicCreate.Description
+    Locale.Permission.ComicCreate.Description,
   );
 
   generatePermission(
     PermissionEnum.COMIC_UPDATE,
     Locale.Permission.ComicUpdate.Name,
-    Locale.Permission.ComicUpdate.Description
+    Locale.Permission.ComicUpdate.Description,
   );
 
   generatePermission(
     PermissionEnum.COMIC_DELETE,
     Locale.Permission.ComicDelete.Name,
-    Locale.Permission.ComicDelete.Description
+    Locale.Permission.ComicDelete.Description,
   );
 
   generatePermission(
     PermissionEnum.COMIC_CHAPTER_CREATE,
     Locale.Permission.ComicChapterCreate.Name,
-    Locale.Permission.ComicChapterCreate.Description
+    Locale.Permission.ComicChapterCreate.Description,
   );
 
   generatePermission(
     PermissionEnum.GRANT_PERMISSION_TO_GROUP,
     Locale.Permission.GrantPermissionToGroup.Name,
-    Locale.Permission.GrantPermissionToGroup.Description
+    Locale.Permission.GrantPermissionToGroup.Description,
   );
   generatePermission(
     PermissionEnum.REVOKE_PERMISSION_FROM_GROUP,
     Locale.Permission.RevokePermissionFromGroup.Name,
-    Locale.Permission.RevokePermissionFromGroup.Description
+    Locale.Permission.RevokePermissionFromGroup.Description,
   );
 
   generatePermission(
     PermissionEnum.COMIC_TAG_CREATE,
     Locale.Permission.ComicTagCreate.Name,
-    Locale.Permission.ComicTagCreate.Description
+    Locale.Permission.ComicTagCreate.Description,
   );
 
   generatePermission(
     PermissionEnum.COMIC_BOOK_TAG_REF_CREATE,
     Locale.Permission.ComicBookTagRefCreate.Name,
-    Locale.Permission.ComicBookTagRefCreate.Description
+    Locale.Permission.ComicBookTagRefCreate.Description,
   );
 
   generatePermission(
     PermissionEnum.COMIC_BOOK_TAG_REF_DELETE,
     Locale.Permission.ComicBookTagRefDelete.Name,
-    Locale.Permission.ComicBookTagRefDelete.Description
+    Locale.Permission.ComicBookTagRefDelete.Description,
   );
 
   generatePermission(
     PermissionEnum.COMIC_CHAPTER_COMMENT,
     Locale.Permission.ComicChapterComment.Name,
-    Locale.Permission.ComicChapterComment.Description
+    Locale.Permission.ComicChapterComment.Description,
   );
 
   generatePermission(
     PermissionEnum.REVIEW_CREATE,
     Locale.Permission.ReviewCreate.Name,
-    Locale.Permission.ReviewCreate.Description
+    Locale.Permission.ReviewCreate.Description,
   );
 
   // console.log("All permissions: ");
@@ -251,7 +251,7 @@ async function setupDefaultPermissionRelationship() {
   generateRelation(PermissionGroupEnum.ADMIN, PermissionEnum.ADMIN_UPDATE_USER);
   generateRelation(
     PermissionGroupEnum.ADMIN,
-    PermissionEnum.ADMIN_CREATE_PERMISSION_GROUP
+    PermissionEnum.ADMIN_CREATE_PERMISSION_GROUP,
   );
   // Admin can modify resource
   generateRelation(PermissionGroupEnum.ADMIN, PermissionEnum.RESOURCE_CREATE);
@@ -259,7 +259,7 @@ async function setupDefaultPermissionRelationship() {
   // Admin can access all Resources
   generateRelation(
     PermissionGroupEnum.ADMIN,
-    PermissionEnum.RESOURCE_ACCESS_ALL
+    PermissionEnum.RESOURCE_ACCESS_ALL,
   );
   // Admin can modify(update ) resource
   generateRelation(PermissionGroupEnum.ADMIN, PermissionEnum.RESOURCE_UPDATE);
@@ -271,21 +271,21 @@ async function setupDefaultPermissionRelationship() {
   //    able to generate new permission, permission group and grant
   generateRelation(
     PermissionGroupEnum.ADMIN,
-    PermissionEnum.ADMIN_DELETE_PERMISSION_GROUP
+    PermissionEnum.ADMIN_DELETE_PERMISSION_GROUP,
   );
 
   generateRelation(
     PermissionGroupEnum.ADMIN,
-    PermissionEnum.ADMIN_UPDATE_PERMISSION_GROUP
+    PermissionEnum.ADMIN_UPDATE_PERMISSION_GROUP,
   );
   generateRelation(
     PermissionGroupEnum.ADMIN,
-    PermissionEnum.GRANT_PERMISSION_TO_GROUP
+    PermissionEnum.GRANT_PERMISSION_TO_GROUP,
   );
 
   generateRelation(
     PermissionGroupEnum.ADMIN,
-    PermissionEnum.REVOKE_PERMISSION_FROM_GROUP
+    PermissionEnum.REVOKE_PERMISSION_FROM_GROUP,
   );
 
   // able to create new comic
@@ -298,7 +298,7 @@ async function setupDefaultPermissionRelationship() {
   // Comic chapter permissions
   generateRelation(
     PermissionGroupEnum.ADMIN,
-    PermissionEnum.COMIC_CHAPTER_CREATE
+    PermissionEnum.COMIC_CHAPTER_CREATE,
   );
 
   // Tags
@@ -307,11 +307,11 @@ async function setupDefaultPermissionRelationship() {
   generateRelation(PermissionGroupEnum.ADMIN, PermissionEnum.COMIC_TAG_DELETE);
   generateRelation(
     PermissionGroupEnum.ADMIN,
-    PermissionEnum.COMIC_BOOK_TAG_REF_CREATE
+    PermissionEnum.COMIC_BOOK_TAG_REF_CREATE,
   );
   generateRelation(
     PermissionGroupEnum.ADMIN,
-    PermissionEnum.COMIC_BOOK_TAG_REF_DELETE
+    PermissionEnum.COMIC_BOOK_TAG_REF_DELETE,
   );
   // Mod permissions
   // Able to create a new comic
@@ -323,35 +323,35 @@ async function setupDefaultPermissionRelationship() {
   // Comic chapters
   generateRelation(
     PermissionGroupEnum.MOD,
-    PermissionEnum.COMIC_CHAPTER_CREATE
+    PermissionEnum.COMIC_CHAPTER_CREATE,
   );
 
   // tags
   generateRelation(PermissionGroupEnum.MOD, PermissionEnum.COMIC_TAG_CREATE);
   generateRelation(
     PermissionGroupEnum.MOD,
-    PermissionEnum.COMIC_BOOK_TAG_REF_CREATE
+    PermissionEnum.COMIC_BOOK_TAG_REF_CREATE,
   );
   generateRelation(
     PermissionGroupEnum.MOD,
-    PermissionEnum.COMIC_BOOK_TAG_REF_DELETE
+    PermissionEnum.COMIC_BOOK_TAG_REF_DELETE,
   );
   // User permissions
   generateRelation(
     PermissionGroupEnum.USER,
-    PermissionEnum.USER_UPDATE_PROFILE
+    PermissionEnum.USER_UPDATE_PROFILE,
   );
   generateRelation(
     PermissionGroupEnum.USER,
-    PermissionEnum.COMIC_CHAPTER_COMMENT
+    PermissionEnum.COMIC_CHAPTER_COMMENT,
   );
   generateRelation(
     PermissionGroupEnum.MOD,
-    PermissionEnum.COMIC_CHAPTER_COMMENT
+    PermissionEnum.COMIC_CHAPTER_COMMENT,
   );
   generateRelation(
     PermissionGroupEnum.ADMIN,
-    PermissionEnum.COMIC_CHAPTER_COMMENT
+    PermissionEnum.COMIC_CHAPTER_COMMENT,
   );
 
   generateRelation(PermissionGroupEnum.USER, PermissionEnum.REVIEW_CREATE);

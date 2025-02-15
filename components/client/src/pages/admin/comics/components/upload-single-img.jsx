@@ -1,5 +1,5 @@
-import React from "react";
-import { getImageUrl } from "../../../../utils/common";
+import React from 'react';
+import { getImageUrl } from '../../../../utils/common';
 function UploadSingleImg({ block, handleChangeImage }) {
   return (
     <>
@@ -7,7 +7,7 @@ function UploadSingleImg({ block, handleChangeImage }) {
         <label
           htmlFor={block.id}
           className={
-            "h-40 border-gray-700 border rounded-lg flex items-center cursor-pointer select-none overflow-hidden"
+            'h-40 border-gray-700 border rounded-lg flex items-center cursor-pointer select-none overflow-hidden'
           }
         >
           <img

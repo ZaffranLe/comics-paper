@@ -1,23 +1,23 @@
-import React, { useEffect } from "react";
-import { Link, Outlet } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { checkTokenValid, classNames } from "../../utils/common";
-import { ROLE } from "../../utils/constants";
+import React, { useEffect } from 'react';
+import { Link, Outlet } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { checkTokenValid, classNames } from '../../utils/common';
+import { ROLE } from '../../utils/constants';
 
 function MenuItem({ item, onClick, activeMenu }) {
   return (
     <>
       <div
         className={classNames(
-          activeMenu.includes(item.path) ? "bg-gray-600" : "hover:bg-gray-500",
-          "flex font-semibold cursor-pointer my-1 p-2 rounded"
+          activeMenu.includes(item.path) ? 'bg-gray-600' : 'hover:bg-gray-500',
+          'flex font-semibold cursor-pointer my-1 p-2 rounded',
         )}
         onClick={() => onClick(item)}
       >
         <div className="grow">
-          {item.icon && <FontAwesomeIcon icon={item.icon} fixedWidth />}{" "}
+          {item.icon && <FontAwesomeIcon icon={item.icon} fixedWidth />}{' '}
           {item.name}
         </div>
       </div>
@@ -37,10 +37,10 @@ function AdminLayout() {
     if (!isAuthenticated) {
       const tokenValid = checkTokenValid();
       if (!tokenValid) {
-        navigate("/");
+        navigate('/');
       }
     } else if (user.role?.id !== ROLE.ADMIN) {
-      navigate("/");
+      navigate('/');
     }
   }, [isAuthenticated, user, navigate]);
 
@@ -52,24 +52,24 @@ function AdminLayout() {
 
   const menu = [
     {
-      name: "Tài khoản",
-      path: "/dashboard/users",
-      icon: "user",
+      name: 'Tài khoản',
+      path: '/dashboard/users',
+      icon: 'user',
     },
     {
-      name: "Thể loại truyện",
-      path: "/dashboard/book-tags",
-      icon: "tags",
+      name: 'Thể loại truyện',
+      path: '/dashboard/book-tags',
+      icon: 'tags',
     },
     {
-      name: "Truyện",
-      path: "/dashboard/comics",
-      icon: "book",
+      name: 'Truyện',
+      path: '/dashboard/comics',
+      icon: 'book',
     },
     {
-      name: "Thoát",
-      path: "/",
-      icon: "door",
+      name: 'Thoát',
+      path: '/',
+      icon: 'door',
     },
   ];
   if (!isAuthenticated || !user || user.role?.id !== ROLE.ADMIN) {

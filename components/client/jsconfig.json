@@ -4,28 +4,13 @@
     "module": "commonjs",
     "baseUrl": "./src",
     "paths": {
-      "components/*": [
-        "./components/*"
-      ],
-      "pages/*": [
-        "./pages/*"
-      ],
-      "assets/*": [
-        "./assets/*"
-      ],
-      "redux/*": [
-        "./redux/*"
-      ],
-      "utils/*": [
-        "./utils/*"
-      ]
+      "components/*": ["./components/*"],
+      "pages/*": ["./pages/*"],
+      "assets/*": ["./assets/*"],
+      "redux/*": ["./redux/*"],
+      "utils/*": ["./utils/*"]
     }
   },
-  "include": [
-    "**/*.js",
-    "**/*.jsx"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["**/*.js", "**/*.jsx"],
+  "exclude": ["node_modules"]
 }

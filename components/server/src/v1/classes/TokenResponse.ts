@@ -1,9 +1,9 @@
-import { TokenResponseInterface } from "../interfaces/TokenInterface";
+import { TokenResponseInterface } from '../interfaces/TokenInterface';
 
 export class TokenResponse implements TokenResponseInterface {
-    token: string;
+  token: string;
 
-    constructor(token: string) {
-        this.token = token;
-    }
+  constructor(token: string) {
+    this.token = token;
+  }
 }

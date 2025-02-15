@@ -1,33 +1,33 @@
-import * as express from "express";
-import ComicRouter from "./routes/ComicRouter";
-import CommentRouter from "./routes/CommentRouter";
-import { PermissionRouter } from "./routes/PermissionRouter";
-import ResourceRouter from "./routes/ResourceRouter";
-import ReviewRouter from "./routes/ReviewRouter";
-import UserRouter from "./routes/UserRouter";
+import * as express from 'express';
+import ComicRouter from './routes/ComicRouter';
+import CommentRouter from './routes/CommentRouter';
+import { PermissionRouter } from './routes/PermissionRouter';
+import ResourceRouter from './routes/ResourceRouter';
+import ReviewRouter from './routes/ReviewRouter';
+import UserRouter from './routes/UserRouter';
 
 /**
  * Class for all available routers
  */
 export const Router = [
   {
-    Path: "/permissions",
+    Path: '/permissions',
     Router: PermissionRouter,
   },
   {
-    Path: "/users",
+    Path: '/users',
     Router: UserRouter,
   },
   {
-    Path: "/resources",
+    Path: '/resources',
     Router: ResourceRouter,
   },
   {
-    Path: "/comics",
+    Path: '/comics',
     Router: ComicRouter,
   },
-  { Path: "/comments", Router: CommentRouter },
-  { Path: "/reviews", Router: ReviewRouter },
+  { Path: '/comments', Router: CommentRouter },
+  { Path: '/reviews', Router: ReviewRouter },
 ];
 
 export async function setupRoutes(app: express.Application) {

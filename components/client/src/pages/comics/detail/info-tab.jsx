@@ -1,7 +1,7 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 function InfoTab({ comic, handleFollowComic }) {
   const MAX_RATING = 5;
@@ -19,14 +19,14 @@ function InfoTab({ comic, handleFollowComic }) {
     const _ratingIcons = [];
     while (stars >= 1) {
       stars -= 1;
-      _ratingIcons.push("fa-star");
+      _ratingIcons.push('fa-star');
     }
     while (stars >= 0.5) {
       stars -= 0.5;
-      _ratingIcons.push("fa-star-half-alt");
+      _ratingIcons.push('fa-star-half-alt');
     }
     for (let i = 0; i < MAX_RATING - Math.round(_avgRating); i++) {
-      _ratingIcons.push("far fa-star");
+      _ratingIcons.push('far fa-star');
     }
     setRatingIcons(_ratingIcons);
     return _avgRating;
@@ -45,8 +45,8 @@ function InfoTab({ comic, handleFollowComic }) {
             icon={_icon}
             key={_idx}
           />
-        ))}{" "}
-        {avgRating} - {comic.views || 0}{" "}
+        ))}{' '}
+        {avgRating} - {comic.views || 0}{' '}
         <FontAwesomeIcon className="text-blue-500" icon="eye" />
       </div>
       <div>
@@ -55,7 +55,7 @@ function InfoTab({ comic, handleFollowComic }) {
             <tr>
               <td className="font-bold">Đánh giá</td>
               <td>
-                Trung bình {avgRating}/5 trên tổng số {comic.reviews.length}{" "}
+                Trung bình {avgRating}/5 trên tổng số {comic.reviews.length}{' '}
                 đánh giá
               </td>
             </tr>
@@ -84,7 +84,7 @@ function InfoTab({ comic, handleFollowComic }) {
             onClick={handleFollowComic}
             className="p-2 mr-2 ring-2 ring-gray-800 rounded-xl hover:bg-gray-800 hover:text-white font-semibold"
           >
-            {comic.isFollow ? "Bỏ theo dõi" : "Theo dõi"}
+            {comic.isFollow ? 'Bỏ theo dõi' : 'Theo dõi'}
           </button>
         )}
         {comic.chapters.length > 0 && (

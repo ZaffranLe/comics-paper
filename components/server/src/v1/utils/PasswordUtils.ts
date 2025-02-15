@@ -1,4 +1,4 @@
-import * as bcryptjs from "bcryptjs";
+import * as bcryptjs from 'bcryptjs';
 /**
  * Hash a provided string
  *
@@ -8,7 +8,7 @@ import * as bcryptjs from "bcryptjs";
 function hash(password: string) {
   return bcryptjs.hashSync(
     password,
-    parseInt(process.env.USER_PASSWORD_SALT_ROUNDING)
+    parseInt(process.env.USER_PASSWORD_SALT_ROUNDING),
   );
 }
 

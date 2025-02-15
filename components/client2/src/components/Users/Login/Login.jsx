@@ -16,13 +16,13 @@ export default function Login() {
   const [username, setUsername, isUsernameValid, usernameInvalidReason] =
     useInputValue(
       (x) => x.length > 4,
-      "The username length must greater than 4"
+      "The username length must greater than 4",
     );
 
   const [password, setPassword, isPasswordValid, passwordInvalidReason] =
     useInputValue(
       (password) => password.length >= 8,
-      `Password length must greater than 8 and contains one-uppercase letter`
+      `Password length must greater than 8 and contains one-uppercase letter`,
     );
   const navigate = useNavigate();
   /**

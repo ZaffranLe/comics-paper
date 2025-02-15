@@ -1,6 +1,6 @@
-import { Tables } from "../Database";
-import { ComicChapterInterface } from "../interfaces/ComicChapterInterface";
-import DatabaseBuilder from "../utils/DatabaseBuilder";
+import { Tables } from '../Database';
+import { ComicChapterInterface } from '../interfaces/ComicChapterInterface';
+import DatabaseBuilder from '../utils/DatabaseBuilder';
 
 /**
  * Create new comic chapter.
@@ -13,109 +13,107 @@ import DatabaseBuilder from "../utils/DatabaseBuilder";
  * @returns an interface after created
  */
 async function createChapter(
-    name: string,
-    comicId: number,
-    postedBy: number,
-    viewType: number,
-    blocks: Array<any>,
-    chapterNumber: string
+  name: string,
+  comicId: number,
+  postedBy: number,
+  viewType: number,
+  blocks: Array<any>,
+  chapterNumber: string,
 ): Promise<ComicChapterInterface> {
-    // Field check
-    if (!name || !comicId || !postedBy) {
-        throw new Error("Missing parameters");
-    }
+  // Field check
+  if (!name || !comicId || !postedBy) {
+    throw new Error('Missing parameters');
+  }
 
-    const chapter: ComicChapterInterface = {
-        name,
-        comicId,
-        postedBy,
-        viewType,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        length: blocks.length,
-        chapterNumber,
-    };
+  const chapter: ComicChapterInterface = {
+    name,
+    comicId,
+    postedBy,
+    viewType,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    length: blocks.length,
+    chapterNumber,
+  };
 
-    const transaction = await DatabaseBuilder.transaction();
-    try {
-        const insertedChapter = await transaction(Tables.ComicChapter).insert(
-            chapter
-        );
-        blocks = blocks.map((_block) => ({
-            chapterId: insertedChapter[0],
-            index: _block.index,
-            content: _block.content,
-        }));
-        await transaction(Tables.ComicChapterBlock).insert(blocks);
-        await transaction(Tables.Comic)
-            .update({ updatedAt: new Date() })
-            .where({ id: comicId });
-        await transaction.commit();
-    } catch (e) {
-        await transaction.rollback();
-        throw e;
-    }
+  const transaction = await DatabaseBuilder.transaction();
+  try {
+    const insertedChapter = await transaction(Tables.ComicChapter).insert(
+      chapter,
+    );
+    blocks = blocks.map((_block) => ({
+      chapterId: insertedChapter[0],
+      index: _block.index,
+      content: _block.content,
+    }));
+    await transaction(Tables.ComicChapterBlock).insert(blocks);
+    await transaction(Tables.Comic)
+      .update({ updatedAt: new Date() })
+      .where({ id: comicId });
+    await transaction.commit();
+  } catch (e) {
+    await transaction.rollback();
+    throw e;
+  }
 
-    return chapter;
+  return chapter;
 }
 
 async function updateChapter(
-    id: number,
-    name: string,
-    comicId: number,
-    postedBy: number,
-    viewType: number,
-    blocks: Array<any>,
-    chapterNumber: string
+  id: number,
+  name: string,
+  comicId: number,
+  postedBy: number,
+  viewType: number,
+  blocks: Array<any>,
+  chapterNumber: string,
 ): Promise<ComicChapterInterface> {
-    // Field check
-    if (!name || !comicId || !postedBy) {
-        throw new Error("Missing parameters");
-    }
+  // Field check
+  if (!name || !comicId || !postedBy) {
+    throw new Error('Missing parameters');
+  }
 
-    const chapter: ComicChapterInterface = {
-        name,
-        comicId,
-        postedBy,
-        viewType,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        length: blocks.length,
-        chapterNumber,
-    };
+  const chapter: ComicChapterInterface = {
+    name,
+    comicId,
+    postedBy,
+    viewType,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    length: blocks.length,
+    chapterNumber,
+  };
 
-    const transaction = await DatabaseBuilder.transaction();
-    try {
-        await transaction(Tables.ComicChapter).update(chapter).where({ id });
-        blocks = blocks.map((_block) => ({
-            id: _block.id,
-            chapterId: id,
-            index: _block.index,
-            content: _block.content,
-        }));
-        await transaction(Tables.ComicChapterBlock)
-            .del()
-            .where({ chapterId: id });
-        await transaction(Tables.ComicChapterBlock).insert(blocks);
-        await transaction.commit();
-    } catch (e) {
-        await transaction.rollback();
-        throw e;
-    }
+  const transaction = await DatabaseBuilder.transaction();
+  try {
+    await transaction(Tables.ComicChapter).update(chapter).where({ id });
+    blocks = blocks.map((_block) => ({
+      id: _block.id,
+      chapterId: id,
+      index: _block.index,
+      content: _block.content,
+    }));
+    await transaction(Tables.ComicChapterBlock).del().where({ chapterId: id });
+    await transaction(Tables.ComicChapterBlock).insert(blocks);
+    await transaction.commit();
+  } catch (e) {
+    await transaction.rollback();
+    throw e;
+  }
 
-    return chapter;
+  return chapter;
 }
 
 async function deleteChapter(chapterId: number) {
-    const transaction = await DatabaseBuilder.transaction();
-    try {
-        await transaction(Tables.ComicChapterBlock).del().where({ chapterId });
-        await transaction(Tables.ComicChapter).del().where({ id: chapterId });
-        await transaction.commit();
-    } catch (e) {
-        await transaction.rollback();
-        throw e;
-    }
+  const transaction = await DatabaseBuilder.transaction();
+  try {
+    await transaction(Tables.ComicChapterBlock).del().where({ chapterId });
+    await transaction(Tables.ComicChapter).del().where({ id: chapterId });
+    await transaction.commit();
+  } catch (e) {
+    await transaction.rollback();
+    throw e;
+  }
 }
 
 /**
@@ -124,26 +122,26 @@ async function deleteChapter(chapterId: number) {
  *
  */
 async function getChaptersFromComic(
-    comicId: number,
-    filter?: {
-        limit?: number;
-        page?: number;
-        sortedBy?: string;
-        order?: "asc" | "desc";
-    }
+  comicId: number,
+  filter?: {
+    limit?: number;
+    page?: number;
+    sortedBy?: string;
+    order?: 'asc' | 'desc';
+  },
 ): Promise<ComicChapterInterface[]> {
-    // check parameters
-    if (!comicId) {
-        throw new Error("id is required");
-    }
-    // Retrieve comic
-    const chapter = await DatabaseBuilder(Tables.ComicChapter)
-        .where({ comicId })
-        // .limit(filter?.limit || null)
-        // .offset(filter?.page * filter?.limit || 0)
-        .orderBy(filter?.sortedBy || "createdAt", filter?.order || "desc");
+  // check parameters
+  if (!comicId) {
+    throw new Error('id is required');
+  }
+  // Retrieve comic
+  const chapter = await DatabaseBuilder(Tables.ComicChapter)
+    .where({ comicId })
+    // .limit(filter?.limit || null)
+    // .offset(filter?.page * filter?.limit || 0)
+    .orderBy(filter?.sortedBy || 'createdAt', filter?.order || 'desc');
 
-    return chapter;
+  return chapter;
 }
 
 /**
@@ -153,38 +151,38 @@ async function getChaptersFromComic(
  * @returns  the first chapter that having the id
  */
 async function getChapter(id: number): Promise<ComicChapterInterface> {
-    // check parameters
-    if (!id) {
-        throw new Error("id is required");
-    }
-    // Retrieve comic
-    const chapter = await DatabaseBuilder(Tables.ComicChapter)
-        .where({ id })
-        .first();
-    const blocks = await DatabaseBuilder(Tables.ComicChapterBlock)
-        .where({ chapterId: id })
-        .orderBy("index", "asc");
-    chapter.blocks = blocks;
-    return chapter;
+  // check parameters
+  if (!id) {
+    throw new Error('id is required');
+  }
+  // Retrieve comic
+  const chapter = await DatabaseBuilder(Tables.ComicChapter)
+    .where({ id })
+    .first();
+  const blocks = await DatabaseBuilder(Tables.ComicChapterBlock)
+    .where({ chapterId: id })
+    .orderBy('index', 'asc');
+  chapter.blocks = blocks;
+  return chapter;
 }
 
 async function getNewestChapters(): Promise<any[]> {
-    const fields = {
-        chapterId: "t1.id",
-        comicId: "t1.comicId",
-        createdAt: "t1.createdAt",
-        chapterName: "t1.name",
-        comicName: "t2.name",
-        comicCategory: "t2.category",
-        comicSlug: "t2.slug",
-        chapterNumber: "t1.chapterNumber",
-    };
-    const chapters = await DatabaseBuilder(`${Tables.ComicChapter} as t1`)
-        .join(`${Tables.Comic} AS t2`, "t1.comicId", "t2.id")
-        .columns(fields)
-        .orderBy("t1.createdAt", "desc")
-        .limit(10);
-    return chapters;
+  const fields = {
+    chapterId: 't1.id',
+    comicId: 't1.comicId',
+    createdAt: 't1.createdAt',
+    chapterName: 't1.name',
+    comicName: 't2.name',
+    comicCategory: 't2.category',
+    comicSlug: 't2.slug',
+    chapterNumber: 't1.chapterNumber',
+  };
+  const chapters = await DatabaseBuilder(`${Tables.ComicChapter} as t1`)
+    .join(`${Tables.Comic} AS t2`, 't1.comicId', 't2.id')
+    .columns(fields)
+    .orderBy('t1.createdAt', 'desc')
+    .limit(10);
+  return chapters;
 }
 
 /**
@@ -194,22 +192,22 @@ async function getNewestChapters(): Promise<any[]> {
  * @param length a block length of this chapter
  */
 async function updateChapterLength(chapterId: number, length: number) {
-    if (!chapterId) {
-        throw new Error("id is required");
-    }
-    await DatabaseBuilder(Tables.ComicChapter)
-        .where({ id: chapterId })
-        .update({ length });
+  if (!chapterId) {
+    throw new Error('id is required');
+  }
+  await DatabaseBuilder(Tables.ComicChapter)
+    .where({ id: chapterId })
+    .update({ length });
 }
 
 const ComicChapterController = {
-    createChapter,
-    updateChapter,
-    deleteChapter,
-    getChaptersFromComic,
-    getChapter,
-    updateChapterLength,
-    getNewestChapters,
+  createChapter,
+  updateChapter,
+  deleteChapter,
+  getChaptersFromComic,
+  getChapter,
+  updateChapterLength,
+  getNewestChapters,
 };
 
 export default ComicChapterController;

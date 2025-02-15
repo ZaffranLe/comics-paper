@@ -1,9 +1,9 @@
-import { Tables } from "../Database";
+import { Tables } from '../Database';
 import {
-    ComicTagResponseInterface,
-    ComicTagsResponseInterface,
-} from "../interfaces/ComicTagInterface";
-import DatabaseBuilder from "../utils/DatabaseBuilder";
+  ComicTagResponseInterface,
+  ComicTagsResponseInterface,
+} from '../interfaces/ComicTagInterface';
+import DatabaseBuilder from '../utils/DatabaseBuilder';
 
 /**
  * Creates tag, puts it into database, and returns the tag.
@@ -12,11 +12,11 @@ import DatabaseBuilder from "../utils/DatabaseBuilder";
  * @returns an object bare uuid and keyword
  */
 async function createTag(keyword: string) {
-    const tag = {
-        keyword,
-    };
-    await DatabaseBuilder(Tables.ComicTag).insert(tag);
-    return tag;
+  const tag = {
+    keyword,
+  };
+  await DatabaseBuilder(Tables.ComicTag).insert(tag);
+  return tag;
 }
 
 /**
@@ -26,12 +26,12 @@ async function createTag(keyword: string) {
  * @returns an object bare uuid and keyword
  */
 async function updateTag(id: number, keyword: string) {
-    const tag = {
-        id,
-        keyword,
-    };
-    await DatabaseBuilder(Tables.ComicTag).update({ keyword }).where({ id });
-    return tag;
+  const tag = {
+    id,
+    keyword,
+  };
+  await DatabaseBuilder(Tables.ComicTag).update({ keyword }).where({ id });
+  return tag;
 }
 
 /**
@@ -41,8 +41,8 @@ async function updateTag(id: number, keyword: string) {
  * @returns an object bare uuid and keyword
  */
 async function deleteTag(id: number) {
-    await DatabaseBuilder(Tables.ComicTag).delete().where({ id });
-    return id;
+  await DatabaseBuilder(Tables.ComicTag).delete().where({ id });
+  return id;
 }
 
 /**
@@ -51,7 +51,7 @@ async function deleteTag(id: number) {
  * @returns an array of object bare uuid and keyword
  */
 async function getTags(): Promise<ComicTagsResponseInterface> {
-    return await DatabaseBuilder(Tables.ComicTag).select();
+  return await DatabaseBuilder(Tables.ComicTag).select();
 }
 
 /**
@@ -61,7 +61,7 @@ async function getTags(): Promise<ComicTagsResponseInterface> {
  * @returns an object bare uuid and keyword
  */
 async function getTag(keyword: string): Promise<ComicTagResponseInterface> {
-    return await DatabaseBuilder(Tables.ComicTag).where({ keyword }).first();
+  return await DatabaseBuilder(Tables.ComicTag).where({ keyword }).first();
 }
 
 /**
@@ -70,15 +70,15 @@ async function getTag(keyword: string): Promise<ComicTagResponseInterface> {
  * @returns a tag object, null if not found.
  */
 async function getTagById(tagId: number) {
-    return await DatabaseBuilder(Tables.ComicTag).where({ id: tagId }).first();
+  return await DatabaseBuilder(Tables.ComicTag).where({ id: tagId }).first();
 }
 
 const ComicTagController = {
-    createTag,
-    updateTag,
-    deleteTag,
-    getTags,
-    getTag,
-    getTagById,
+  createTag,
+  updateTag,
+  deleteTag,
+  getTags,
+  getTag,
+  getTagById,
 };
 export default ComicTagController;

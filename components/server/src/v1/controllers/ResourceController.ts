@@ -1,6 +1,6 @@
-import { Tables } from "../Database";
-import { ResourceInterface } from "../interfaces/ResourceInterface";
-import DatabaseBuilder from "../utils/DatabaseBuilder";
+import { Tables } from '../Database';
+import { ResourceInterface } from '../interfaces/ResourceInterface';
+import DatabaseBuilder from '../utils/DatabaseBuilder';
 
 /**
  * Create new resource metadata into database.
@@ -11,34 +11,34 @@ import DatabaseBuilder from "../utils/DatabaseBuilder";
  * @param uploader who upload this resource
  */
 async function createResourceMetadata(
-    originalName: string,
-    fileName: string,
-    path: string,
-    size: number,
-    uploader: number
+  originalName: string,
+  fileName: string,
+  path: string,
+  size: number,
+  uploader: number,
 ): Promise<ResourceInterface> {
-    // Check all parameters
-    if (!originalName || !fileName || !path || !size || !uploader) {
-        throw new Error("Missing parameters");
-    }
+  // Check all parameters
+  if (!originalName || !fileName || !path || !size || !uploader) {
+    throw new Error('Missing parameters');
+  }
 
-    // Resource metadata
-    const metadata = {
-        originalName,
-        fileName,
-        path,
-        size,
-        uploader,
-        uploadedAt: new Date(),
-    };
+  // Resource metadata
+  const metadata = {
+    originalName,
+    fileName,
+    path,
+    size,
+    uploader,
+    uploadedAt: new Date(),
+  };
 
-    // Execute it
-    const insertedResource = await DatabaseBuilder(Tables.Resource).insert(
-        metadata
-    );
+  // Execute it
+  const insertedResource = await DatabaseBuilder(Tables.Resource).insert(
+    metadata,
+  );
 
-    // Return metadata of the file
-    return { ...metadata, id: insertedResource[0] };
+  // Return metadata of the file
+  return { ...metadata, id: insertedResource[0] };
 }
 /**
  * Retrieves resource metadata from database.
@@ -47,19 +47,19 @@ async function createResourceMetadata(
  * @returns a resource interface object
  */
 async function getResourceMetadata(id: string): Promise<ResourceInterface> {
-    // Check all parameters
-    if (!id) {
-        throw new Error("Missing parameters");
-    }
+  // Check all parameters
+  if (!id) {
+    throw new Error('Missing parameters');
+  }
 
-    // Resource metadata
-    const metadata = await DatabaseBuilder(Tables.Resource)
-        .select()
-        .where({ id })
-        .first();
+  // Resource metadata
+  const metadata = await DatabaseBuilder(Tables.Resource)
+    .select()
+    .where({ id })
+    .first();
 
-    // Return metadata of the file
-    return metadata;
+  // Return metadata of the file
+  return metadata;
 }
 /**
  * Retrieves all resources from database
@@ -67,38 +67,38 @@ async function getResourceMetadata(id: string): Promise<ResourceInterface> {
  * @returns an array of resource interface object
  */
 async function getResources(
-    limit?: number,
-    page?: number,
-    orderBy?: string,
-    order?: string
+  limit?: number,
+  page?: number,
+  orderBy?: string,
+  order?: string,
 ): Promise<ResourceInterface[]> {
-    // Check valid limit parameter
-    if (limit && !Number.isInteger(limit)) {
-        throw new Error("Limit must be a integer");
-    }
+  // Check valid limit parameter
+  if (limit && !Number.isInteger(limit)) {
+    throw new Error('Limit must be a integer');
+  }
 
-    // Check valid page parameter
-    if (page && !Number.isInteger(page)) {
-        throw new Error("Page must be a integer");
-    }
+  // Check valid page parameter
+  if (page && !Number.isInteger(page)) {
+    throw new Error('Page must be a integer');
+  }
 
-    // Page must higher than 0
-    if (page && page < 0) {
-        throw new Error("Page must be higher than 0");
-    }
+  // Page must higher than 0
+  if (page && page < 0) {
+    throw new Error('Page must be higher than 0');
+  }
 
-    // Check valid order parameter
-    if (order && !["asc", "desc"].includes(order)) {
-        throw new Error("Order must be asc or desc");
-    }
+  // Check valid order parameter
+  if (order && !['asc', 'desc'].includes(order)) {
+    throw new Error('Order must be asc or desc');
+  }
 
-    // Resource metadata
-    // Return metadata of the file
-    return await DatabaseBuilder(Tables.Resource)
-        .select()
-        .limit(limit)
-        .offset(page * limit)
-        .orderBy(orderBy, order);
+  // Resource metadata
+  // Return metadata of the file
+  return await DatabaseBuilder(Tables.Resource)
+    .select()
+    .limit(limit)
+    .offset(page * limit)
+    .orderBy(orderBy, order);
 }
 
 /**
@@ -106,7 +106,7 @@ async function getResources(
  * @returns a number of resources contain in database.
  */
 async function countAllResources(): Promise<number> {
-    return await DatabaseBuilder(Tables.Resource).count();
+  return await DatabaseBuilder(Tables.Resource).count();
 }
 
 /**
@@ -117,27 +117,25 @@ async function countAllResources(): Promise<number> {
  * @returns true whether the resource was updated, false otherwise
  */
 async function updateResource(id: string, name: string): Promise<boolean> {
-    // Check all parameters
-    if (!id || !name) {
-        throw new Error("Missing parameters");
-    }
+  // Check all parameters
+  if (!id || !name) {
+    throw new Error('Missing parameters');
+  }
 
-    // Resource metadata
-    return (
-        (await DatabaseBuilder(Tables.Resource)
-            .update({ name })
-            .where({ id })) == 1
-    );
+  // Resource metadata
+  return (
+    (await DatabaseBuilder(Tables.Resource).update({ name }).where({ id })) == 1
+  );
 }
 
 async function deleteResource(id: string): Promise<boolean> {
-    // Check all parameters
-    if (!id) {
-        throw new Error("Missing parameters");
-    }
+  // Check all parameters
+  if (!id) {
+    throw new Error('Missing parameters');
+  }
 
-    // Resource metadata
-    return (await DatabaseBuilder(Tables.Resource).delete().where({ id })) == 1;
+  // Resource metadata
+  return (await DatabaseBuilder(Tables.Resource).delete().where({ id })) == 1;
 }
 
 /**
@@ -147,27 +145,25 @@ async function deleteResource(id: string): Promise<boolean> {
  * @returns true whether the resource existed, false otherwise
  */
 async function hasResource(id: number): Promise<boolean> {
-    // Check all parameters
-    if (!id) {
-        throw new Error("Missing parameters");
-    }
+  // Check all parameters
+  if (!id) {
+    throw new Error('Missing parameters');
+  }
 
-    // Resource metadata
-    return (
-        (await DatabaseBuilder(Tables.Resource).where({ id }).first()) != null
-    );
+  // Resource metadata
+  return (await DatabaseBuilder(Tables.Resource).where({ id }).first()) != null;
 }
 
 /**
  * Export resource controller.
  */
 const ResourceController = {
-    createResourceMetadata,
-    getResourceMetadata,
-    getResources,
-    updateResource,
-    deleteResource,
-    hasResource,
-    countAllResources,
+  createResourceMetadata,
+  getResourceMetadata,
+  getResources,
+  updateResource,
+  deleteResource,
+  hasResource,
+  countAllResources,
 };
 export default ResourceController;

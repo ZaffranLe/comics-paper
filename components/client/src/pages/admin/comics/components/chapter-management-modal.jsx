@@ -1,20 +1,20 @@
-import React from "react";
-import { Modal } from "../../../../components";
-import * as comicApi from "../../../../utils/api/comics";
-import { chapterViewTypeOptions } from "../../../../utils/constants";
-import ListChapter from "./list-chapter";
-import UpdateChapter from "./update-chapter";
+import React from 'react';
+import { Modal } from '../../../../components';
+import * as comicApi from '../../../../utils/api/comics';
+import { chapterViewTypeOptions } from '../../../../utils/constants';
+import ListChapter from './list-chapter';
+import UpdateChapter from './update-chapter';
 
 function ChapterList({ open, onClose, updateComic, onDeleteChapter }) {
   const DEFAULT_CHAPTER_INFO = {
     id: null,
-    name: "",
+    name: '',
     viewType: chapterViewTypeOptions[0].value,
     viewTypeOption: chapterViewTypeOptions[0],
-    comicId: "",
+    comicId: '',
     length: 0,
     blocks: [],
-    chapterNumber: "",
+    chapterNumber: '',
   };
   const [chapters, setChapters] = React.useState([]);
   const [isUpdatingChapter, setIsUpdatingChapter] = React.useState(false);

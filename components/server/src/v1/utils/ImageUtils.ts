@@ -1,4 +1,4 @@
-import jimp from "jimp";
+import jimp from 'jimp';
 
 /**
  * Process and then retrieve output buffer.

@@ -1,12 +1,12 @@
-import React from "react";
-import * as comicApi from "../../../utils/api/comics";
-import * as bookTagApi from "../../../utils/api/book-tags";
-import { ComicThumbnail, ConfirmModal } from "../../../components";
-import { toast } from "react-toastify";
-import { v1 as uuidv1 } from "uuid";
-import UpdateComic from "./components/update-modal";
-import ContextMenu from "./components/context-menu-modal";
-import ChapterList from "./components/chapter-management-modal";
+import React from 'react';
+import * as comicApi from '../../../utils/api/comics';
+import * as bookTagApi from '../../../utils/api/book-tags';
+import { ComicThumbnail, ConfirmModal } from '../../../components';
+import { toast } from 'react-toastify';
+import { v1 as uuidv1 } from 'uuid';
+import UpdateComic from './components/update-modal';
+import ContextMenu from './components/context-menu-modal';
+import ChapterList from './components/chapter-management-modal';
 
 function Comics() {
   const [comics, setComics] = React.useState([]);
@@ -14,7 +14,7 @@ function Comics() {
   const [updateComic, setUpdateComic] = React.useState(null);
   const [randomKey, setRandomKey] = React.useState(0);
   const [confirmModal, setConfirmModal] = React.useState({
-    content: "",
+    content: '',
     onClose: () => {},
     onConfirm: () => {},
     open: false,
@@ -37,7 +37,7 @@ function Comics() {
     try {
       const resp = await bookTagApi.getAllBookTag();
       setBookTagOptions(
-        resp.data.map((_tag) => ({ label: _tag.keyword, value: _tag.id }))
+        resp.data.map((_tag) => ({ label: _tag.keyword, value: _tag.id })),
       );
     } catch (e) {
       console.error(e);
@@ -71,10 +71,10 @@ function Comics() {
     // try catch is in UpdateComic
     if (updateComic) {
       await comicApi.updateComic(updateComic.id, comic);
-      toast.success("Cập nhật truyện thành công");
+      toast.success('Cập nhật truyện thành công');
     } else {
       await comicApi.createComic(comic);
-      toast.success("Tạo truyện thành công");
+      toast.success('Tạo truyện thành công');
     }
     await fetchComics();
   };
@@ -93,11 +93,11 @@ function Comics() {
         setConfirmModal({ ...confirmModal, loading: true });
         try {
           await comicApi.deleteComic(comic.id);
-          toast.success("Xóa truyện thành công");
+          toast.success('Xóa truyện thành công');
           await fetchComics();
         } catch (e) {
           console.error(e);
-          toast.error("Xóa truyện thất bại, vui lòng thử lại sau.");
+          toast.error('Xóa truyện thất bại, vui lòng thử lại sau.');
         } finally {
           setConfirmModal({
             ...confirmModal,
@@ -123,12 +123,12 @@ function Comics() {
         setConfirmModal({ ...confirmModal, loading: true });
         try {
           await comicApi.deleteComicChapter(updateComic.id, chapterId);
-          toast.success("Xóa truyện thành công");
+          toast.success('Xóa truyện thành công');
           setChapterListModal(true);
           await fetchComics();
         } catch (e) {
           console.error(e);
-          toast.error("Xóa truyện thất bại, vui lòng thử lại sau.");
+          toast.error('Xóa truyện thất bại, vui lòng thử lại sau.');
         } finally {
           setConfirmModal({
             ...confirmModal,

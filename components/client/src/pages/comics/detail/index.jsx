@@ -1,14 +1,14 @@
-import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Loader, NotFound } from "../../../components";
-import InfoSection from "./info-section";
-import * as comicApi from "../../../utils/api/comics";
-import { toast } from "react-toastify";
-import moment from "moment";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useSelector, useDispatch } from "react-redux";
-import * as authActions from "../../../redux/slices/auth";
-import { getImageUrl } from "../../../utils/common";
+import React from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Loader, NotFound } from '../../../components';
+import InfoSection from './info-section';
+import * as comicApi from '../../../utils/api/comics';
+import { toast } from 'react-toastify';
+import moment from 'moment';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useSelector, useDispatch } from 'react-redux';
+import * as authActions from '../../../redux/slices/auth';
+import { getImageUrl } from '../../../utils/common';
 
 function ComicDetail() {
   const [comic, setComic] = React.useState(null);
@@ -16,7 +16,7 @@ function ComicDetail() {
   const [reviewData, setReviewData] = React.useState({
     reviewExist: false,
     ratingIcons: [0, 0, 0, 0, 0],
-    content: "",
+    content: '',
   });
   const {
     profile: { info: user },
@@ -44,7 +44,7 @@ function ComicDetail() {
     } catch (e) {
       toast.error(
         e.response?.data?.error?.message ||
-          "Lấy thông tin truyện thất bại! Vui lòng thử lại sau."
+          'Lấy thông tin truyện thất bại! Vui lòng thử lại sau.',
       );
       console.error(e);
     } finally {
@@ -61,7 +61,7 @@ function ComicDetail() {
       document.title = `${comic.name} - Virtuoso Translation`;
       if (user) {
         const _reviewExist = comic.reviews.find(
-          (_review) => _review.user.id === user.id
+          (_review) => _review.user.id === user.id,
         );
         setReviewData({ ...reviewData, reviewExist: _reviewExist });
       }
@@ -78,7 +78,7 @@ function ComicDetail() {
     setReviewData({
       ...reviewData,
       ratingIcons: reviewData.ratingIcons.map((_rate, _idx) =>
-        _idx <= rating ? 1 : 0
+        _idx <= rating ? 1 : 0,
       ),
     });
   };
@@ -97,21 +97,21 @@ function ComicDetail() {
       };
       await comicApi.createReview(_review);
       toast.success(
-        "Cảm ơn bạn đã đóng góp cho truyện này! Đánh giá sẽ được hiển thị sau khi quản trị viên duyệt."
+        'Cảm ơn bạn đã đóng góp cho truyện này! Đánh giá sẽ được hiển thị sau khi quản trị viên duyệt.',
       );
       setReviewData({
         reviewExist: true,
         ratingIcons: [0, 0, 0, 0, 0],
-        content: "",
+        content: '',
       });
     } catch (e) {
-      toast.error("Gửi đánh giá thất bại! Vui lòng thử lại sau.");
+      toast.error('Gửi đánh giá thất bại! Vui lòng thử lại sau.');
       console.error(e);
     }
   };
 
   const handleOpenLoginModal = () => {
-    dispatch(authActions.setLoginModal("login"));
+    dispatch(authActions.setLoginModal('login'));
   };
 
   const handleFollowComic = async () => {
@@ -166,7 +166,7 @@ function ComicDetail() {
                         Chương {_chapter.chapterNumber} - {_chapter.name}
                       </div>
                       <span className="font-light">
-                        {moment(_chapter.createdAt).format("HH:mm DD/MM/YYYY")}
+                        {moment(_chapter.createdAt).format('HH:mm DD/MM/YYYY')}
                       </span>
                     </div>
                   ))
@@ -186,7 +186,7 @@ function ComicDetail() {
                       <FontAwesomeIcon
                         key={_idx}
                         className="text-yellow-400 cursor-pointer text-xl"
-                        icon={_rate ? "fa-star" : "far fa-star"}
+                        icon={_rate ? 'fa-star' : 'far fa-star'}
                         onClick={() => handleUpdateRating(_idx)}
                       />
                     ))}
@@ -207,13 +207,13 @@ function ComicDetail() {
                 {!user.id && comic.reviews.length === 0 && (
                   <>
                     <span className="text-lg">
-                      Chưa có đánh giá nào.{" "}
+                      Chưa có đánh giá nào.{' '}
                       <span
                         className="font-bold cursor-pointer hover:underline"
                         onClick={handleOpenLoginModal}
                       >
                         Đăng nhập
-                      </span>{" "}
+                      </span>{' '}
                       để trở thành người đầu tiên đưa ra nhận xét về bộ truyện
                       này nhé
                     </span>
@@ -225,9 +225,9 @@ function ComicDetail() {
                       <span className="font-semibold">
                         {_review.user.nickname || _review.user.username}
                       </span>
-                      {" - "}
+                      {' - '}
                       <span>
-                        {moment(_review.createdAt).format("HH:mm DD/MM/YYYY")}
+                        {moment(_review.createdAt).format('HH:mm DD/MM/YYYY')}
                       </span>
                     </div>
                     <div>
@@ -236,7 +236,7 @@ function ComicDetail() {
                           key={_idx}
                           className="text-yellow-400 cursor-pointer text-xl"
                           icon={
-                            _idx < _review.rating ? "fa-star" : "far fa-star"
+                            _idx < _review.rating ? 'fa-star' : 'far fa-star'
                           }
                         />
                       ))}

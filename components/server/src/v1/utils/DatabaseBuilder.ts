@@ -1,6 +1,6 @@
-import knex, { Knex } from "knex";
-import { getCurrentConfiguration } from "../Configuration";
-import { Logger } from "./Logger";
+import knex, { Knex } from 'knex';
+import { getCurrentConfiguration } from '../Configuration';
+import { Logger } from './Logger';
 
 /**
  * Database builder structure to retrieve database queries.
@@ -8,17 +8,17 @@ import { Logger } from "./Logger";
  */
 console.log(
   `database configuration: ` +
-    JSON.stringify(getCurrentConfiguration().Database, null, 2)
+    JSON.stringify(getCurrentConfiguration().Database, null, 2),
 );
 
 const DatabaseBuilder = knex({
-  client: "mysql2",
+  client: 'mysql2',
   connection: {
-    host: getCurrentConfiguration().Database.Host || "localhost",
-    port: parseInt(getCurrentConfiguration().Database.Port || "3306"),
-    user: getCurrentConfiguration().Database.Username || "root",
-    password: getCurrentConfiguration().Database.Password || "",
-    database: getCurrentConfiguration().Database.Database || "",
+    host: getCurrentConfiguration().Database.Host || 'localhost',
+    port: parseInt(getCurrentConfiguration().Database.Port || '3306'),
+    user: getCurrentConfiguration().Database.Username || 'root',
+    password: getCurrentConfiguration().Database.Password || '',
+    database: getCurrentConfiguration().Database.Database || '',
   },
   debug: getCurrentConfiguration().Database.EnableLogging || false,
 });
@@ -26,7 +26,7 @@ export default DatabaseBuilder;
 
 export async function createTable(
   tableName: string,
-  callback: (table: Knex.CreateTableBuilder) => void
+  callback: (table: Knex.CreateTableBuilder) => void,
 ) {
   if (await DatabaseBuilder.schema.hasTable(tableName)) {
     Logger.warn(`Table ${tableName} already exists.`);

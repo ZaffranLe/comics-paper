@@ -1,6 +1,6 @@
-import express from "express";
-import { getAuth } from "../middlewares/AuthMiddleware";
-import { UserFunction } from "./functions/UserFunction";
+import express from 'express';
+import { getAuth } from '../middlewares/AuthMiddleware';
+import { UserFunction } from './functions/UserFunction';
 const router = express.Router();
 
 router.get(`/profile`, getAuth, UserFunction.getProfile);
@@ -13,9 +13,9 @@ router.put(`/profile`, getAuth, UserFunction.updateProfile);
 router.put(`/change-password`, getAuth, UserFunction.updateUserPassword);
 router.get(`/`, getAuth, UserFunction.getAllUsers);
 
-router.get("/:id", UserFunction.getUserFromId);
+router.get('/:id', UserFunction.getUserFromId);
 
-router.get("/detail/:id", UserFunction.getUserDetail);
+router.get('/detail/:id', UserFunction.getUserDetail);
 
 const UserRouter = router;
 export default UserRouter;

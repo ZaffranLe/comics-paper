@@ -1,18 +1,18 @@
-import { Tables } from "../Database";
+import { Tables } from '../Database';
 import {
-    PermissionGroupEnum,
-    PermissionGroupInterface,
-} from "../interfaces/PermissionGroupInterface";
-import { PermissionInterface } from "../interfaces/PermissionInterface";
+  PermissionGroupEnum,
+  PermissionGroupInterface,
+} from '../interfaces/PermissionGroupInterface';
+import { PermissionInterface } from '../interfaces/PermissionInterface';
 import {
-    UserResponseInterface,
-    UsersResponseInterface,
-} from "../interfaces/UserInterface";
-import DatabaseBuilder from "../utils/DatabaseBuilder";
-import PasswordUtils from "../utils/PasswordUtils";
-import commentController from "./ComicCommentController";
-import comicController from "./ComicController";
-import reviewController from "./ReviewController";
+  UserResponseInterface,
+  UsersResponseInterface,
+} from '../interfaces/UserInterface';
+import DatabaseBuilder from '../utils/DatabaseBuilder';
+import PasswordUtils from '../utils/PasswordUtils';
+import commentController from './ComicCommentController';
+import comicController from './ComicController';
+import reviewController from './ReviewController';
 
 /**
  *  Create a native relation between user and permission group.
@@ -22,9 +22,9 @@ import reviewController from "./ReviewController";
  * @returns
  */
 async function createUserPermission(userId: number, permissionGroup: number) {
-    return DatabaseBuilder.insert({ userId, permissionGroup }).into(
-        Tables.UserPermission
-    );
+  return DatabaseBuilder.insert({ userId, permissionGroup }).into(
+    Tables.UserPermission,
+  );
 }
 
 /**
@@ -39,29 +39,27 @@ async function createUserPermission(userId: number, permissionGroup: number) {
  * @returns a user interface which generated from database
  */
 async function createUser(
-    username: string,
-    password: string,
-    email?: string,
-    nickname?: string,
-    introduction?: string | "" // optional
+  username: string,
+  password: string,
+  email?: string,
+  nickname?: string,
+  introduction?: string | '', // optional
 ) {
-    // Hash a password, more secure (who dont want huh?)
-    const hashedPassword = PasswordUtils.hash(password);
+  // Hash a password, more secure (who dont want huh?)
+  const hashedPassword = PasswordUtils.hash(password);
 
-    // Creating new user
-    const response: UserResponseInterface = {
-        username,
-        password: hashedPassword,
-        email: email || null,
-        nickname: nickname || null,
-        introduction: introduction || null,
-    };
-    const insertedUser = await DatabaseBuilder.insert(response).into(
-        Tables.User
-    );
-    await createUserPermission(insertedUser[0], PermissionGroupEnum.USER);
+  // Creating new user
+  const response: UserResponseInterface = {
+    username,
+    password: hashedPassword,
+    email: email || null,
+    nickname: nickname || null,
+    introduction: introduction || null,
+  };
+  const insertedUser = await DatabaseBuilder.insert(response).into(Tables.User);
+  await createUserPermission(insertedUser[0], PermissionGroupEnum.USER);
 
-    return response;
+  return response;
 }
 
 /**
@@ -72,28 +70,28 @@ async function createUser(
  * @returns a user whether exists, null otherwise.
  */
 async function getUserFromUUID(id: string): Promise<UserResponseInterface> {
-    // parameter error
-    if (!id) {
-        throw new Error("Invalid user uuid parameter");
-    }
+  // parameter error
+  if (!id) {
+    throw new Error('Invalid user uuid parameter');
+  }
 
-    // select from database
-    const user = await DatabaseBuilder(Tables.User)
-        .select()
-        .where({ id })
-        .first();
-    if (user == null) {
-        return null;
-    }
+  // select from database
+  const user = await DatabaseBuilder(Tables.User)
+    .select()
+    .where({ id })
+    .first();
+  if (user == null) {
+    return null;
+  }
 
-    return {
-        id: user.id,
-        username: user.username,
-        password: user.password,
-        email: user.email,
-        nickname: user.nickname,
-        introduction: user.introduction,
-    };
+  return {
+    id: user.id,
+    username: user.username,
+    password: user.password,
+    email: user.email,
+    nickname: user.nickname,
+    introduction: user.introduction,
+  };
 }
 
 /**
@@ -101,16 +99,16 @@ async function getUserFromUUID(id: string): Promise<UserResponseInterface> {
  * @returns an array of users.
  */
 async function getUsers(): Promise<UsersResponseInterface> {
-    // select from database
-    const users = await DatabaseBuilder(Tables.User).select([
-        "id",
-        "username",
-        "email",
-        "nickname",
-        "introduction",
-    ]);
+  // select from database
+  const users = await DatabaseBuilder(Tables.User).select([
+    'id',
+    'username',
+    'email',
+    'nickname',
+    'introduction',
+  ]);
 
-    return users;
+  return users;
 }
 
 /**
@@ -120,15 +118,15 @@ async function getUsers(): Promise<UsersResponseInterface> {
  * @returns true whether exists, false otherwise
  */
 async function hasUserByUUID(id: number) {
-    // undefined id or null string
-    if (!id) {
-        throw new Error("Invalid user uuid parameter");
-    }
-    const user = await DatabaseBuilder(Tables.User)
-        .select()
-        .where({ id })
-        .first();
-    return user != null;
+  // undefined id or null string
+  if (!id) {
+    throw new Error('Invalid user uuid parameter');
+  }
+  const user = await DatabaseBuilder(Tables.User)
+    .select()
+    .where({ id })
+    .first();
+  return user != null;
 }
 
 /**
@@ -137,15 +135,15 @@ async function hasUserByUUID(id: number) {
  * @returns true whether exists, false otherwise
  */
 async function hasUserByUsername(username: string) {
-    // undefined username or null string
-    if (!username) {
-        throw new Error("Invalid username parameter");
-    }
-    const user = await DatabaseBuilder(Tables.User)
-        .select()
-        .where({ username })
-        .first();
-    return user != null;
+  // undefined username or null string
+  if (!username) {
+    throw new Error('Invalid username parameter');
+  }
+  const user = await DatabaseBuilder(Tables.User)
+    .select()
+    .where({ username })
+    .first();
+  return user != null;
 }
 
 /**
@@ -154,13 +152,13 @@ async function hasUserByUsername(username: string) {
  * @returns a user whether exists, null otherwise
  */
 async function getUserFromUsername(username: string) {
-    if (!username) {
-        throw new Error("Invalid username parameter");
-    }
-    return await DatabaseBuilder(Tables.User)
-        .select()
-        .where({ username })
-        .first();
+  if (!username) {
+    throw new Error('Invalid username parameter');
+  }
+  return await DatabaseBuilder(Tables.User)
+    .select()
+    .where({ username })
+    .first();
 }
 
 /**
@@ -170,29 +168,29 @@ async function getUserFromUsername(username: string) {
  *
  */
 async function getPermissionGroupFromUserId(
-    userId: number
+  userId: number,
 ): Promise<PermissionGroupInterface> {
-    // Must not be empty and format of uuid
-    if (!userId) {
-        throw new Error("Invalid user id parameter");
-    }
-    const response = await DatabaseBuilder(Tables.UserPermission)
-        // .select("id", "name", "description")
-        // select full name  (contains table name)
-        .select(
-            `${Tables.PermissionGroup}.id`,
-            `${Tables.PermissionGroup}.name`,
-            `${Tables.PermissionGroup}.description`
-        )
-        .where({ userId })
-        .innerJoin(
-            Tables.PermissionGroup,
-            `${Tables.UserPermission}.permissionGroup`,
-            `${Tables.PermissionGroup}.id`
-        )
-        .first();
-    // Return
-    return response;
+  // Must not be empty and format of uuid
+  if (!userId) {
+    throw new Error('Invalid user id parameter');
+  }
+  const response = await DatabaseBuilder(Tables.UserPermission)
+    // .select("id", "name", "description")
+    // select full name  (contains table name)
+    .select(
+      `${Tables.PermissionGroup}.id`,
+      `${Tables.PermissionGroup}.name`,
+      `${Tables.PermissionGroup}.description`,
+    )
+    .where({ userId })
+    .innerJoin(
+      Tables.PermissionGroup,
+      `${Tables.UserPermission}.permissionGroup`,
+      `${Tables.PermissionGroup}.id`,
+    )
+    .first();
+  // Return
+  return response;
 }
 
 /**
@@ -203,40 +201,40 @@ async function getPermissionGroupFromUserId(
  * @returns a permission list from provided user
  */
 async function getAllPermissionsFromUserId(userId: number) {
-    // Must not be empty and format of uuid
-    if (!userId) {
-        throw new Error("Invalid user id parameter");
-    }
-    // Select the user group
-    const selectUserGroupQuery = DatabaseBuilder(Tables.UserPermission)
-        .select(`up.permissionGroup`)
-        .from({ up: Tables.UserPermission })
-        .where({ "up.userId": userId });
+  // Must not be empty and format of uuid
+  if (!userId) {
+    throw new Error('Invalid user id parameter');
+  }
+  // Select the user group
+  const selectUserGroupQuery = DatabaseBuilder(Tables.UserPermission)
+    .select(`up.permissionGroup`)
+    .from({ up: Tables.UserPermission })
+    .where({ 'up.userId': userId });
 
-    // Select the permission from a group
-    const selectPermissionsFromGroupQuery = await DatabaseBuilder(
-        Tables.Permission
-    )
-        .select({
-            PermissionId: "p.id",
-            PermissionName: "p.name",
-            PermissionDescription: "p.description",
-        })
-        .from({ pr: Tables.PermissionRelationship })
-        .innerJoin({ p: Tables.Permission }, "pr.permissionId", "p.id")
-        .where({ "pr.permissionGroup": selectUserGroupQuery });
+  // Select the permission from a group
+  const selectPermissionsFromGroupQuery = await DatabaseBuilder(
+    Tables.Permission,
+  )
+    .select({
+      PermissionId: 'p.id',
+      PermissionName: 'p.name',
+      PermissionDescription: 'p.description',
+    })
+    .from({ pr: Tables.PermissionRelationship })
+    .innerJoin({ p: Tables.Permission }, 'pr.permissionId', 'p.id')
+    .where({ 'pr.permissionGroup': selectUserGroupQuery });
 
-    // Return as an interface array
-    const response: PermissionInterface[] = selectPermissionsFromGroupQuery.map(
-        ({ PermissionId, PermissionName, PermissionDescription }) => {
-            return {
-                id: PermissionId,
-                name: PermissionName,
-                description: PermissionDescription,
-            };
-        }
-    );
-    return response;
+  // Return as an interface array
+  const response: PermissionInterface[] = selectPermissionsFromGroupQuery.map(
+    ({ PermissionId, PermissionName, PermissionDescription }) => {
+      return {
+        id: PermissionId,
+        name: PermissionName,
+        description: PermissionDescription,
+      };
+    },
+  );
+  return response;
 }
 
 /**
@@ -247,42 +245,42 @@ async function getAllPermissionsFromUserId(userId: number) {
  * @returns true whether user permitted that permission, false otherwise;
  */
 async function hasPermissionByUserId(
-    userId: number,
-    permissionId: number
+  userId: number,
+  permissionId: number,
 ): Promise<boolean> {
-    // Must not be empty and format of uuid
-    if (!userId) {
-        throw new Error("Invalid user id parameter");
-    }
+  // Must not be empty and format of uuid
+  if (!userId) {
+    throw new Error('Invalid user id parameter');
+  }
 
-    // Must not be empty
-    if (!permissionId) {
-        throw new Error("Invalid permission id parameter");
-    }
+  // Must not be empty
+  if (!permissionId) {
+    throw new Error('Invalid permission id parameter');
+  }
 
-    // Select the user group
-    const selectUserGroupQuery = DatabaseBuilder(Tables.UserPermission)
-        .select(`up.permissionGroup`)
-        .from({ up: Tables.UserPermission })
-        .where({ "up.userId": userId });
+  // Select the user group
+  const selectUserGroupQuery = DatabaseBuilder(Tables.UserPermission)
+    .select(`up.permissionGroup`)
+    .from({ up: Tables.UserPermission })
+    .where({ 'up.userId': userId });
 
-    // Select the permission from a group
-    const response = await DatabaseBuilder(Tables.Permission)
-        .select({
-            PermissionId: "p.id",
-            PermissionName: "p.name",
-            PermissionDescription: "p.description",
-        })
-        .from({ pr: Tables.PermissionRelationship })
-        .innerJoin({ p: Tables.Permission }, "pr.permissionId", "p.id")
-        .where({
-            "pr.permissionGroup": selectUserGroupQuery,
-            "p.id": permissionId,
-        })
-        .first();
+  // Select the permission from a group
+  const response = await DatabaseBuilder(Tables.Permission)
+    .select({
+      PermissionId: 'p.id',
+      PermissionName: 'p.name',
+      PermissionDescription: 'p.description',
+    })
+    .from({ pr: Tables.PermissionRelationship })
+    .innerJoin({ p: Tables.Permission }, 'pr.permissionId', 'p.id')
+    .where({
+      'pr.permissionGroup': selectUserGroupQuery,
+      'p.id': permissionId,
+    })
+    .first();
 
-    // Return as an interface array
-    return response != null;
+  // Return as an interface array
+  return response != null;
 }
 
 /**
@@ -294,29 +292,29 @@ async function hasPermissionByUserId(
  * @returns a rows affected.
  */
 async function updateUserProfile(
-    userId: number,
-    nickname: string,
-    introduction: string,
-    email: string
+  userId: number,
+  nickname: string,
+  introduction: string,
+  email: string,
 ) {
-    // Validate identifier
-    if (!userId) {
-        throw new Error("Invalid user id parameter");
-    }
+  // Validate identifier
+  if (!userId) {
+    throw new Error('Invalid user id parameter');
+  }
 
-    // Check user existence
-    if (!(await hasUserByUUID(userId))) {
-        throw new Error("User not found");
-    }
+  // Check user existence
+  if (!(await hasUserByUUID(userId))) {
+    throw new Error('User not found');
+  }
 
-    // Update user profile
-    return await DatabaseBuilder(Tables.User)
-        .update({
-            nickname,
-            introduction,
-            email,
-        })
-        .where({ id: userId });
+  // Update user profile
+  return await DatabaseBuilder(Tables.User)
+    .update({
+      nickname,
+      introduction,
+      email,
+    })
+    .where({ id: userId });
 }
 
 /**
@@ -326,27 +324,27 @@ async function updateUserProfile(
  * @returns true whether changed, false otherwise
  */
 async function updateUserPassword(id: number, password: string) {
-    // Validate identifier
-    if (!id) {
-        throw new Error("Invalid user uuid parameter");
-    }
+  // Validate identifier
+  if (!id) {
+    throw new Error('Invalid user uuid parameter');
+  }
 
-    // Check user existence
-    if (!(await hasUserByUUID(id))) {
-        throw new Error("User not found");
-    }
+  // Check user existence
+  if (!(await hasUserByUUID(id))) {
+    throw new Error('User not found');
+  }
 
-    // Using bcrypt to hash password
-    const hashedPassword = PasswordUtils.hash(password);
+  // Using bcrypt to hash password
+  const hashedPassword = PasswordUtils.hash(password);
 
-    // Update user profile
-    return (
-        (await DatabaseBuilder(Tables.User)
-            .update({
-                password: hashedPassword,
-            })
-            .where({ id: id })) == 1
-    );
+  // Update user profile
+  return (
+    (await DatabaseBuilder(Tables.User)
+      .update({
+        password: hashedPassword,
+      })
+      .where({ id: id })) == 1
+  );
 }
 
 /**
@@ -355,48 +353,48 @@ async function updateUserPassword(id: number, password: string) {
  * @param permissionRole a permission group identifier to grant
  */
 async function updatePermissionRole(userId: number, permissionRole: number) {
-    // Update a permission group to user
-    return await DatabaseBuilder(Tables.UserPermission)
-        .update({ permissionGroup: permissionRole })
-        .where({ userId });
+  // Update a permission group to user
+  return await DatabaseBuilder(Tables.UserPermission)
+    .update({ permissionGroup: permissionRole })
+    .where({ userId });
 }
 
 async function getUserDetail(userId: string) {
-    const user = await getUserFromUUID(userId);
-    delete user.password;
-    const comics = await comicController.getAllComics({ postedBy: userId });
-    const reviews = await reviewController.getReviewsByUserId(userId);
-    const comments = await commentController.getCommentByUserId(userId);
-    return {
-        user,
-        comics,
-        reviews,
-        comments,
-    };
+  const user = await getUserFromUUID(userId);
+  delete user.password;
+  const comics = await comicController.getAllComics({ postedBy: userId });
+  const reviews = await reviewController.getReviewsByUserId(userId);
+  const comments = await commentController.getCommentByUserId(userId);
+  return {
+    user,
+    comics,
+    reviews,
+    comments,
+  };
 }
 
 async function hasUserByEmail(email: string) {
-    const selectedUsers = await DatabaseBuilder(Tables.User)
-        .select("*")
-        .where({ email });
+  const selectedUsers = await DatabaseBuilder(Tables.User)
+    .select('*')
+    .where({ email });
 
-    return selectedUsers.length !== 0;
+  return selectedUsers.length !== 0;
 }
 
 export const UserController = {
-    createUserPermission,
-    createUser,
-    getUserFromUUID,
-    getUsers,
-    hasUserByUUID,
-    hasUserByUsername,
-    getUserFromUsername,
-    getPermissionGroupFromUserId,
-    getAllPermissionsFromUserId,
-    hasPermissionByUserId,
-    updateUserProfile,
-    updateUserPassword,
-    updatePermissionRole,
-    getUserDetail,
-    hasUserByEmail,
+  createUserPermission,
+  createUser,
+  getUserFromUUID,
+  getUsers,
+  hasUserByUUID,
+  hasUserByUsername,
+  getUserFromUsername,
+  getPermissionGroupFromUserId,
+  getAllPermissionsFromUserId,
+  hasPermissionByUserId,
+  updateUserProfile,
+  updateUserPassword,
+  updatePermissionRole,
+  getUserDetail,
+  hasUserByEmail,
 };

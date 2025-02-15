@@ -1,5 +1,5 @@
-import { Tables } from "../Database";
-import DatabaseBuilder from "../utils/DatabaseBuilder";
+import { Tables } from '../Database';
+import DatabaseBuilder from '../utils/DatabaseBuilder';
 
 /**
  * Creates tag reference objects.
@@ -8,7 +8,7 @@ import DatabaseBuilder from "../utils/DatabaseBuilder";
  * @param tagId a tag identifier to create reference
  */
 async function createRefTag(comicId: number, tagId: number) {
-    await DatabaseBuilder(Tables.ComicBookTag).insert({ comicId, tagId });
+  await DatabaseBuilder(Tables.ComicBookTag).insert({ comicId, tagId });
 }
 
 /**
@@ -19,12 +19,12 @@ async function createRefTag(comicId: number, tagId: number) {
  * @returns true whether the reference exists in the database, false otherwise.
  */
 async function hasRef(comicId: number, tagId: number) {
-    const result = await DatabaseBuilder(Tables.ComicBookTag)
-        .where({ comicId, tagId })
-        .select();
-    console.log(result);
+  const result = await DatabaseBuilder(Tables.ComicBookTag)
+    .where({ comicId, tagId })
+    .select();
+  console.log(result);
 
-    return result.length > 0;
+  return result.length > 0;
 }
 
 /**
@@ -33,11 +33,11 @@ async function hasRef(comicId: number, tagId: number) {
  * @returns a list of tags associated with this comic
  */
 async function getRefsByComicId(comicId: number) {
-    return await DatabaseBuilder()
-        .from({ cbt: Tables.ComicBookTag })
-        .where({ comicId })
-        .select({ keyword: "ct.keyword", id: "ct.id" })
-        .innerJoin({ ct: Tables.ComicTag }, "ct.id", "cbt.tagId");
+  return await DatabaseBuilder()
+    .from({ cbt: Tables.ComicBookTag })
+    .where({ comicId })
+    .select({ keyword: 'ct.keyword', id: 'ct.id' })
+    .innerJoin({ ct: Tables.ComicTag }, 'ct.id', 'cbt.tagId');
 }
 
 /**
@@ -46,16 +46,14 @@ async function getRefsByComicId(comicId: number) {
  * @param tagId a tag identifier to delete reference
  */
 async function deleteRef(comicId: number, tagId: number) {
-    await DatabaseBuilder(Tables.ComicBookTag)
-        .where({ comicId, tagId })
-        .delete();
+  await DatabaseBuilder(Tables.ComicBookTag).where({ comicId, tagId }).delete();
 }
 
 const ComicBookTagController = {
-    createRefTag,
-    hasRef,
-    getRefsByComicId,
-    deleteRef,
+  createRefTag,
+  hasRef,
+  getRefsByComicId,
+  deleteRef,
 };
 
 export default ComicBookTagController;

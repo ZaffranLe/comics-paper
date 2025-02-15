@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useDispatch, useSelector } from "react-redux";
-import * as authActions from "../../../redux/slices/auth";
-import _ from "lodash";
-import slugify from "slugify";
-import * as comicApi from "../../../utils/api/comics";
-import { ROLE } from "../../../utils/constants";
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useDispatch, useSelector } from 'react-redux';
+import * as authActions from '../../../redux/slices/auth';
+import _ from 'lodash';
+import slugify from 'slugify';
+import * as comicApi from '../../../utils/api/comics';
+import { ROLE } from '../../../utils/constants';
 
 export default function UserHeader() {
   const [pageMenuOpen, setPageMenuOpen] = useState(false);
@@ -20,7 +20,7 @@ export default function UserHeader() {
   const navigate = useNavigate();
 
   const handleOpenLoginModal = () => {
-    dispatch(authActions.setLoginModal("login"));
+    dispatch(authActions.setLoginModal('login'));
   };
 
   const handleLogout = () => {
@@ -56,14 +56,14 @@ export default function UserHeader() {
 
   const pageMenu = [
     {
-      name: "Trang chủ",
-      key: "home",
-      path: "/",
+      name: 'Trang chủ',
+      key: 'home',
+      path: '/',
     },
     {
-      name: "Danh sách truyện",
-      key: "comic",
-      path: "/comics",
+      name: 'Danh sách truyện',
+      key: 'comic',
+      path: '/comics',
     },
   ];
   return (
@@ -182,7 +182,7 @@ export default function UserHeader() {
                       <div
                         className="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100"
                         role="menuitem"
-                        onClick={() => navigate("/follow")}
+                        onClick={() => navigate('/follow')}
                       >
                         Truyện theo dõi
                       </div>

@@ -1,5 +1,5 @@
-import * as jwt from "jsonwebtoken";
-import { TokenResponse } from "../classes/TokenResponse";
+import * as jwt from 'jsonwebtoken';
+import { TokenResponse } from '../classes/TokenResponse';
 
 /**
  * Generate a token from any data from parameter.
@@ -7,8 +7,8 @@ import { TokenResponse } from "../classes/TokenResponse";
  * @returns a token object
  */
 export async function generateToken(baredData: any): Promise<TokenResponse> {
-    const token = jwt.sign(baredData, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRATION_TIME,
-    });
-    return new TokenResponse(token);
+  const token = jwt.sign(baredData, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRATION_TIME,
+  });
+  return new TokenResponse(token);
 }
