@@ -1,4 +1,4 @@
-const { toast } = require("react-toastify");
+const { toast } = require('react-toastify');
 
 /**
  *
@@ -8,7 +8,7 @@ async function toastHandler(promise) {
   try {
     await promise;
   } catch (e) {
-    toast.error(e.response?.data?.error?.message || "");
+    toast.error(e.response?.data?.error?.message || '');
     console.error(e);
   }
 }

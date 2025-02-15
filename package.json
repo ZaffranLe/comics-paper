@@ -10,7 +10,8 @@
   "scripts": {
     "postinstall": "cd components/client && bun install && cd ../server && bun install",
     "init": "bun run scripts/generate-environment.ts",
-    "dev": "concurrently --name \"client\" \"(cd components/client && bun run start)\" --name \"server\" \"(cd components/server && bun run dev)\" --prefix-colors \"blue,green\""
+    "dev": "concurrently --name \"client\" \"(cd components/client && bun run start)\" --name \"server\" \"(cd components/server && bun run dev)\" --prefix-colors \"blue,green\"",
+    "lint": "concurrently \"cd components/server && bun run lint\" \"cd components/client && bun run lint\""
   },
   "dependencies": {
     "bun": "^1.2.2",
