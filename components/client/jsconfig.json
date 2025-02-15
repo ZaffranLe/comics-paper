@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "baseUrl": "./src",
+    "paths": {
+      "components/*": ["./components/*"],
+      "pages/*": ["./pages/*"],
+      "assets/*": ["./assets/*"],
+      "redux/*": ["./redux/*"],
+      "utils/*": ["./utils/*"]
+    }
+  },
+  "include": ["**/*.js", "**/*.jsx"],
+  "exclude": ["node_modules"]
+}

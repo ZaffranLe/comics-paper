@@ -1,0 +1,45 @@
+services:
+  mysql:
+    image: mysql:8.4.4
+    container_name: mysql_database
+    restart: always
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app_network
+
+  nginx:
+    image: nginx:stable
+    container_name: nginx_server
+    restart: always
+    ports:
+      - '80:80'
+    volumes:
+      - ./configs/nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - app_network
+
+  adminer:
+    image: adminer:4.8.1 # Fixed version for consistency
+    container_name: adminer
+    restart: always
+    ports:
+      - '8080:8080'
+    networks:
+      - app_network
+
+volumes:
+  mysql_data:
+
+networks:
+  app_network:
+    driver: bridge

@@ -1,17 +1,29 @@
 {
-    "name": "comics-paper",
-    "private": true,
-    "scripts": {
-        "install": "npm run install:server",
-        "install:server": "cd servers && npm install",
-        "test": "npm run test:server",
-        "test:server": "cd servers && npm test",
-        "start:server": "cd servers && cross-env NODE_ENV=production npm run start",
-        "start:client": "cd client && cross-env NODE_ENV=production npm run start",
-        "start": "concurrently -r \"npm:start:*\" "
-    },
-    "devDependencies": {
-        "concurrently": "^8.0.1",
-        "cross-env": "^7.0.3"
-    }
+  "name": "comics-paper-platform",
+  "version": "0.0.1",
+  "license": "MIT",
+  "author": {
+    "name": "PlayerNguyen",
+    "email": "nhnguyen.forwork@gmail.com",
+    "url": "https://github.com/PlayerNguyen"
+  },
+  "scripts": {
+    "postinstall": "cd components/client && bun install && cd ../server && bun install",
+    "init": "bun run scripts/generate-environment.ts",
+    "dev": "concurrently --name \"client\" \"(cd components/client && bun run start)\" --name \"server\" \"(cd components/server && bun run dev)\" --prefix-colors \"blue,green\"",
+    "lint": "concurrently \"cd components/server && bun run lint\" \"cd components/client && bun run lint\""
+  },
+  "dependencies": {
+    "bun": "^1.2.2",
+    "concurrently": "^8.0.1",
+    "cross-env": "^7.0.3"
+  },
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
 }

@@ -15,11 +15,11 @@ jobs:
       matrix:
         node-version: [12.x, 14.x, 16.x]
     env:
-      MYSQL_TEST_HOST: "localhost"
-      MYSQL_TEST_PORT: "3306"
-      MYSQL_TEST_USER: "root"
-      MYSQL_TEST_PASSWORD: "root"
-      MYSQL_TEST_DATABASE: "comics_paper_test"
+      MYSQL_TEST_HOST: 'localhost'
+      MYSQL_TEST_PORT: '3306'
+      MYSQL_TEST_USER: 'root'
+      MYSQL_TEST_PASSWORD: 'root'
+      MYSQL_TEST_DATABASE: 'comics_paper_test'
       MYSQL_TEST_ENABLE_LOGGING: false
 
     steps:
@@ -32,7 +32,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
+          cache: 'npm'
       - run: npm ci
       - run: npm run build --if-present
       - run: npm test
